@@ -43,5 +43,5 @@ public interface CustomPlayerFilter {
      * @param possibleSpeaker The {@link Player} who is being checked to see if they can be heard
      * @return {@code true} if the listener should be able to hear the possibleSpeaker
      */
-    boolean isPlayerValidListener(Player listener, Player possibleSpeaker);
+    boolean isPlayerValidListener(Object listener, Object possibleSpeaker);
 }
