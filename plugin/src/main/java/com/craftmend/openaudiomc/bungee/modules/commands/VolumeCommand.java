@@ -39,7 +39,7 @@ public class VolumeCommand {
                 .getClient(context.getSource().getPlayer().getUuid());
 
         if (!clientConnection.isConnected()) {
-            context.getSource().sendMessage(Text.literal(Platform.translateColors(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID.getString())));
+            context.getSource().sendFeedback(() -> {return Text.literal(Platform.translateColors(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID.getString()));}, false);
             return 0;
         }
 
@@ -53,7 +53,7 @@ public class VolumeCommand {
         } catch (Exception e) {
             String message = Platform.translateColors(
                     OpenAudioMc.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID));
-            context.getSource().sendMessage(Text.literal(message));
+            context.getSource().sendFeedback(() -> {return Text.literal(message);}, false);
         }
         return 0;
     }
