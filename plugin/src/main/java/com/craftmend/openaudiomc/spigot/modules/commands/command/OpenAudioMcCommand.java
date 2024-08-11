@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Locale;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
-import com.craftmend.openaudiomc.generic.commands.objects.CommandError;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.platform.OaColor;
 import com.craftmend.openaudiomc.spigot.modules.playlists.PlaylistService;
@@ -25,6 +24,8 @@ import com.openaudiofabric.OpenAudioFabric;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -37,24 +38,28 @@ public class OpenAudioMcCommand {
                 .register(literal("openaudiomc").requires(source -> source.hasPermissionLevel(2))
                         .then(literal("playlist")
                                 .then(literal("create")
-                                        .then(argument("playlistName", StringArgumentType.string())
+                                        .then(argument("playlist_name", StringArgumentType.string())
                                                 .executes(OpenAudioMcCommand::playlistCreate)))
                                 .then(literal("delete")
-                                        .then(argument("playlistName", StringArgumentType.string())
+                                        .then(argument("playlist_name", StringArgumentType.string())
                                                 .suggests(playlistsSuggestor())
                                                 .executes(OpenAudioMcCommand::playlistDelete)))
                                 .then(literal("list")
                                         .executes(OpenAudioMcCommand::playlistList))
                                 .then(literal("remove")
-                                        .then(argument("playlistName", StringArgumentType.string())
+                                        .then(argument("playlist_name", StringArgumentType.string())
                                                 .suggests(playlistsSuggestor())
                                                 .then(argument("track_index", IntegerArgumentType.integer())
                                                         .executes(OpenAudioMcCommand::playlistRemove))))
                                 .then(literal("view")
-                                        .then(argument("playlistName", StringArgumentType.string())
+                                        .then(argument("playlist_name", StringArgumentType.string())
                                                 .suggests(playlistsSuggestor())
                                                 .executes(OpenAudioMcCommand::playlistView)))
-                                .then(literal("add"))
+                                .then(literal("add")
+                                        .then(argument("playlist_name", StringArgumentType.string())
+                                        .suggests(playlistsSuggestor())
+                                                .then(argument("source_url", StringArgumentType.string())
+                                                        .executes(OpenAudioMcCommand::playlistAdd))))
                                 .executes(OpenAudioMcCommand::sendVersion)));
         dispatcher.register(literal("oa").redirect(oaCommandNode));
         dispatcher.register(literal("oam").redirect(oaCommandNode));
@@ -91,7 +96,7 @@ public class OpenAudioMcCommand {
     }
 
     public static int playlistCreate(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        String name = StringArgumentType.getString(context, "playlist").toLowerCase(Locale.ROOT);
+        String name = StringArgumentType.getString(context, "playlist_name").toLowerCase(Locale.ROOT);
 
         if (playlistService.getPlaylist(name) != null) {
             context.getSource().sendError(Text.literal("A playlist with that name already exists"));
@@ -107,7 +112,7 @@ public class OpenAudioMcCommand {
     }
 
     private static int playlistDelete(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        String name = StringArgumentType.getString(context, "playlist").toLowerCase(Locale.ROOT);
+        String name = StringArgumentType.getString(context, "playlist_name").toLowerCase(Locale.ROOT);
 
         if (playlistService.getPlaylist(name) == null) {
             context.getSource().sendError(Text.literal("A playlist with that name does not exist"));
@@ -142,7 +147,7 @@ public class OpenAudioMcCommand {
     }
 
     private static int playlistRemove(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        Playlist playlist = playlistService.getPlaylist(StringArgumentType.getString(context, "playlist").toLowerCase(Locale.ROOT));
+        Playlist playlist = playlistService.getPlaylist(StringArgumentType.getString(context, "playlist_name").toLowerCase(Locale.ROOT));
         Integer index = IntegerArgumentType.getInteger(context, "track_index");
 
         if (playlist == null) {
@@ -161,22 +166,40 @@ public class OpenAudioMcCommand {
     }
 
     private static int playlistView(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        Playlist playlist = playlistService.getPlaylist(StringArgumentType.getString(context, "playlist").toLowerCase(Locale.ROOT));
+        Playlist playlist = playlistService.getPlaylist(StringArgumentType.getString(context, "playlist_name").toLowerCase(Locale.ROOT));
 
         if (playlist == null) {
-            throw new CommandError("A playlist with that name does not exist");
+            context.getSource().sendError(Text.literal("A playlist with that name does not exist"));
+            return 0;
         }
 
         if (playlist.getEntries().isEmpty()) {
-            message(sender, "Playlist " + playlist.getName() + " by " + playlist.getCreatedBy() + " is empty");
-            return;
+            context.getSource().sendError(Text.literal("Playlist " + playlist.getName() + " by " + playlist.getCreatedBy() + " is empty"));
+            return 0;
         }
 
-        message(sender, "Playlist " + playlist.getName() + " by " + playlist.getCreatedBy() + " has " + playlist.getEntries().size() + " tracks");
+        context.getSource().sendFeedback(() -> {return Text.literal("Playlist " + playlist.getName() + " by " + playlist.getCreatedBy() + " has " + playlist.getEntries().size() + " tracks");}, false);
         for (PlaylistEntry orderedEntry : playlist.getOrderedEntries()) {
-            clickable(sender, OaColor.RED + " - " + OaColor.DARK_RED + orderedEntry.getIndex() + OaColor.AQUA + " " + orderedEntry.getMedia(), "openaudio playlist remove " + playlist.getName() + " " + orderedEntry.getIndex());
+            context.getSource().sendFeedback(() -> {return Text.literal(OaColor.RED + " - " + OaColor.DARK_RED + orderedEntry.getIndex() + OaColor.AQUA + " " + orderedEntry.getMedia()).setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "openaudio playlist remove " + playlist.getName() + " " + orderedEntry.getIndex())));}, false);
         }
 
-        message(sender, "You can click on a track to remove it from the playlist"); 
+        context.getSource().sendFeedback(() -> {return Text.literal("You can click on a track to remove it from the playlist");}, false); 
+        return 1;
+    }
+
+    private static int playlistAdd(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        Playlist playlist = playlistService.getPlaylist(StringArgumentType.getString(context, "playlist_name").toLowerCase(Locale.ROOT));
+        String source = StringArgumentType.getString(context, "source_url");
+
+        if (playlist == null) {
+            context.getSource().sendError(Text.literal("A playlist with that name does not exist"));
+            return 1;
+        }
+
+        playlist.addEntry(new PlaylistEntry(source));
+
+        getPlaylistService().saveAll();
+        context.getSource().sendFeedback(() -> {return Text.literal("Added " + source + " to playlist " + playlist.getName());}, false);
+        return 1;
     }
 }
