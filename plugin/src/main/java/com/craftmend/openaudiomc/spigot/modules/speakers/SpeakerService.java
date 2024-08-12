@@ -24,6 +24,9 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.listeners.SpeakerDestro
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
@@ -44,8 +47,8 @@ public class SpeakerService extends Service {
     public static final SpeakerType DEFAULT_SPEAKER_TYPE = SpeakerType.SPEAKER_3D;
     @Getter private final Map<MappedLocation, Speaker> speakerMap = new ConcurrentHashMap<>();
     private final Map<String, SpeakerMedia> speakerMediaMap = new ConcurrentHashMap<>();
-    @Getter private Material playerSkullItem;
-    @Getter private Material playerSkullBlock;
+    @Getter private Item playerSkullItem;
+    @Getter private Block playerSkullBlock;
     @Getter private ServerVersion version;
     private final IRayTracer estimatedRayTracer = new DummyTracer();
 
