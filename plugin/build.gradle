@@ -32,6 +32,8 @@ dependencies {
 	
 	implementation include(project(':openaudiomc-api'))
 	implementation 'com.github.Mindgamesnl:storm:e1f961b'
+
+	implementation 'com.squareup.okhttp3:okhttp:4.7.0'
 }
 
 processResources {

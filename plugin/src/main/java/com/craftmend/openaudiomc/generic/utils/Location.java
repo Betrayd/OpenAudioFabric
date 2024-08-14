@@ -6,6 +6,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -31,6 +32,11 @@ public class Location {
         this.position = new Vector3d(x, y, z);
         this.yaw = yaw;
         this.pitch = pitch;
+    }
+
+    public static Location locationFromEntity(Entity e)
+    {
+        return new Location(e.getWorld(), e.getX(), e.getY(), e.getZ(), e.getYaw(), e.getPitch());
     }
 
     public World getWorld() {

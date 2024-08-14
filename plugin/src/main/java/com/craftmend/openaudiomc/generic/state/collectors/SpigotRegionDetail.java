@@ -4,7 +4,6 @@ import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.state.interfaces.StateDetail;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.regions.RegionModule;
-import org.bukkit.ChatColor;
 
 public class SpigotRegionDetail implements StateDetail {
     @Override
@@ -21,7 +20,7 @@ public class SpigotRegionDetail implements StateDetail {
             RegionModule regionModule = OpenAudioMcSpigot.getInstance().getRegionModule();
             int toIgnore = regionModule.getRegionsWithoutWorld().size() * regionModule.getWorldCount();
             int totalWithoutLegacy = regionModule.getRegionCount() - regionModule.getRegionsWithoutWorld().size();
-            return "Loaded Audio Regions: " + ChatColor.AQUA + "" + totalWithoutLegacy + " " + ChatColor.GRAY + "(" + regionModule.getWorldCount() + " worlds) " + ChatColor.DARK_GRAY + "[" + toIgnore + " legacy regions]";
+            return "Loaded Audio Regions: " + "\u00A73" + "" + totalWithoutLegacy + " " + "\u00A77" + "(" + regionModule.getWorldCount() + " worlds) " + "\u00A78" + "[" + toIgnore + " legacy regions]";
         }
     }
 }

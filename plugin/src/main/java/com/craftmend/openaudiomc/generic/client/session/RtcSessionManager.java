@@ -14,6 +14,7 @@ import com.craftmend.openaudiomc.generic.node.packets.ForceMuteMicrophonePacket;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.user.User;
+import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.generic.utils.data.RandomString;
 import com.craftmend.openaudiomc.generic.voicechat.bus.VoiceApiConnection;
 import com.craftmend.openaudiomc.spigot.modules.players.SpigotPlayerService;

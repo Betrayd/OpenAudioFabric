@@ -1,15 +1,16 @@
 package com.craftmend.openaudiomc.spigot.services.world;
 
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
+import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.io.Serializable;
+
+import org.joml.Vector3d;
 
 @Getter
 @NoArgsConstructor
@@ -23,8 +24,8 @@ public class Vector3 implements Serializable {
     private double z = 0;
 
     public static Vector3 from(ClientConnection peer) {
-        Player player = (Player) peer.getUser().getOriginal();
-        return from(player.getLocation());
+        PlayerEntity player = (PlayerEntity) peer.getUser().getOriginal();
+        return from(Location.locationFromEntity(player));
     }
 
     @Override
@@ -35,8 +36,8 @@ public class Vector3 implements Serializable {
         return x == otherVector.getX() && y == otherVector.getY() && z == otherVector.getZ();
     }
 
-    public Vector toBukkit() {
-        return new Vector(x, y, z);
+    public Vector3d toBukkit() {
+        return new Vector3d(x, y, z);
     }
 
     public static Vector3 from(Location location) {
