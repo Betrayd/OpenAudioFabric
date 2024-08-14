@@ -18,26 +18,23 @@ import com.craftmend.openaudiomc.generic.networking.payloads.client.voice.Client
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.VoiceChannelService;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.filters.FilterService;
+
+import net.minecraft.server.MinecraftServer;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class VoiceApiImpl implements VoiceApi {
-
+    
     @Override
     public boolean hasPeer(Client haystack, Client needle) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
-            throw new IllegalStateException("This method is only available on the spigot platform");
-        }
 
         return hasPeer(haystack, needle.getActor().getUniqueId());
     }
 
     @Override
     public boolean hasPeer(Client haystack, UUID needle) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
-            throw new IllegalStateException("This method is only available on the spigot platform");
-        }
 
         ClientConnection clientConnection = (ClientConnection) haystack;
         return clientConnection.getRtcSessionManager().isPeer(needle);
@@ -45,9 +42,6 @@ public class VoiceApiImpl implements VoiceApi {
 
     @Override
     public void updatePeerOptions(Client client, Client peerToUpdate, VoicePeerOptions options) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
-            throw new IllegalStateException("This method is only available on the spigot platform");
-        }
 
         Objects.requireNonNull(peerToUpdate, "Peer cannot be null");
         Objects.requireNonNull(options, "Options cannot be null");
@@ -69,9 +63,6 @@ public class VoiceApiImpl implements VoiceApi {
     }
 
     private boolean isProximityPeer(Client haystack, Client needle) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
-            throw new IllegalStateException("This method is only available on the spigot platform");
-        }
 
         ClientConnection haystackConnection = (ClientConnection) haystack;
         return haystackConnection.getRtcSessionManager().getCurrentProximityPeers().contains(needle.getActor().getUniqueId());
@@ -89,9 +80,6 @@ public class VoiceApiImpl implements VoiceApi {
 
     @Override
     public void addStaticPeer(Client client, Client peerToAdd, boolean visible, boolean mutual, DisplayOverride displayOverride) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
-            throw new IllegalStateException("This method is only available on the spigot platform");
-        }
 
         if (displayOverride != null && displayOverride.getName() != null && displayOverride.getName().length() > 32) {
             throw new IllegalArgumentException("Display name cannot be longer than 32 characters");

@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.speakers.utils;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 import com.craftmend.openaudiomc.OpenAudioMc;

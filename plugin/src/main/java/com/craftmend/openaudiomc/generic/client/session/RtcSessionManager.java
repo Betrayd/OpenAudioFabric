@@ -23,7 +23,6 @@ import com.craftmend.openaudiomc.spigot.modules.voicechat.channels.Channel;
 import com.craftmend.openaudiomc.spigot.services.world.Vector3;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Location;
 
 import java.io.Serializable;
 import java.util.HashSet;
