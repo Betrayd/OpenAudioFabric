@@ -14,7 +14,7 @@ rootProject.name = 'OpenAudioMc-Parent'
 // include(':OpenAudioMc-jutils')
 // include(':openaudiomc-voice-permission')
 include(':openaudiomc-api')
-include(':openaudiomc')
+// include(':openaudiomc')
 include(':plugin')
 // include(':oa-mapmigrator')
 // include(':openaudiomc-skywars')
