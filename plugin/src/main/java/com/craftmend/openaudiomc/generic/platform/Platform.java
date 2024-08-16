@@ -1,58 +1,32 @@
 package com.craftmend.openaudiomc.generic.platform;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
-import com.craftmend.openaudiomc.bungee.modules.player.objects.BungeePlayerSelector;
-import com.craftmend.openaudiomc.generic.commands.selectors.SelectorTranslator;
-import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotPlayerSelector;
-import com.craftmend.openaudiomc.velocity.modules.player.objects.VelocityPlayerSelector;
-import com.craftmend.openaudiomc.velocity.utils.VelocityChatColor;
+import net.minecraft.util.Formatting;
 
-public enum Platform {
-
-    UNKNOWN,
-    SPIGOT,
-    BUNGEE,
-    VELOCITY,
-    STANDALONE,
-    ;
+public class Platform {
 
     public static String translateColors(String input) {
-        switch (OpenAudioMc.getInstance().getPlatform()) {
-            case SPIGOT:
-                return org.bukkit.ChatColor.translateAlternateColorCodes('&', input);
-            case BUNGEE:
-                return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', input);
-            case VELOCITY:
-                return VelocityChatColor.translateAlternateColorCodes('&', input);
-            default:
-                return input; // unknown platform
-        }
+        return translateAlternateColorCodes('&', input);
     }
 
-    public static SelectorTranslator<?> getSelectorTranslator() {
-        switch (OpenAudioMc.getInstance().getPlatform()){
-            case SPIGOT:
-                return new SpigotPlayerSelector();
-            case BUNGEE:
-                return new BungeePlayerSelector();
-            case VELOCITY:
-                return new VelocityPlayerSelector();
-            default:
-                return new FallbackPlayerSelector();
+    public static String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
+        char[] b = textToTranslate.toCharArray();
+
+        for (int i = 0; i < b.length - 1; ++i) {
+            if (b[i] == altColorChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
+                b[i] = 167;
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
+            }
         }
+
+        return new String(b);
     }
 
     public static String makeColor(String color) {
-        switch (OpenAudioMc.getInstance().getPlatform()){
-            case SPIGOT:
-                return org.bukkit.ChatColor.valueOf(color).toString();
-            case BUNGEE:
-                return net.md_5.bungee.api.ChatColor.valueOf(color).toString();
-            case VELOCITY:
-                return VelocityChatColor.valueOf(color).toString();
-            default:
-                return ""; // unknown platform
+            Formatting mcColor = Formatting.byName(color);
+            if(mcColor != null)
+            {
+                return  "\u00A7" + mcColor.getCode();
+            }
+            return ""; //Unknown color
         }
     }
-
-}
