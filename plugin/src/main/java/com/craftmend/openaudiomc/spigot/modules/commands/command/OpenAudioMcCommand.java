@@ -7,12 +7,12 @@ import java.util.Collection;
 import java.util.Locale;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
-import com.craftmend.openaudiomc.generic.commands.objects.CommandError;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.media.MediaService;
 import com.craftmend.openaudiomc.generic.media.utils.Validation;
 import com.craftmend.openaudiomc.generic.platform.OaColor;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
+import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.spigot.modules.playlists.PlaylistService;
 import com.craftmend.openaudiomc.spigot.modules.playlists.models.Playlist;
 import com.craftmend.openaudiomc.spigot.modules.playlists.models.PlaylistEntry;
@@ -29,11 +29,15 @@ import com.openaudiofabric.OpenAudioFabric;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 import net.minecraft.server.command.ServerCommandSource;
 
 public class OpenAudioMcCommand {

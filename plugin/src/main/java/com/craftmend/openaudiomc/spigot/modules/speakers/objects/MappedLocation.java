@@ -48,9 +48,9 @@ public class MappedLocation implements Loc {
         return null;
     }
 
-    public static MappedLocation fromLocation(Location location) {
+    /*public static MappedLocation fromLocation(Location location) {
         return new MappedLocation(location.getBlockX(), location.getBlockY(), location.getBlockZ(), location.getWorld().getRegistryKey().toString());
-    }
+    }*/
 
     private World parseWorld(MinecraftServer server)
     {
