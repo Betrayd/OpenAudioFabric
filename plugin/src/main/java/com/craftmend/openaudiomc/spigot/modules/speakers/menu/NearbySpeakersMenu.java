@@ -1,4 +1,4 @@
-package com.craftmend.openaudiomc.spigot.modules.speakers.menu;
+/*package com.craftmend.openaudiomc.spigot.modules.speakers.menu;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
@@ -41,4 +41,4 @@ public class NearbySpeakersMenu extends Menu {
 
         openFor(player);
     }
-}
+}*/

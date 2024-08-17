@@ -1,4 +1,4 @@
-package com.craftmend.openaudiomc.spigot.modules.speakers.menu;
+/*package com.craftmend.openaudiomc.spigot.modules.speakers.menu;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
@@ -22,7 +22,7 @@ public class SelectedSpeakerMenu extends Menu {
          *  - Open settings
          *  - Delete lol
          */
-
+/* 
         // teleport
         setItem(2, new Item(Material.ARROW)
             .setName(ChatColor.WHITE + "Teleport")
@@ -52,4 +52,4 @@ public class SelectedSpeakerMenu extends Menu {
                 })
         );
     }
-}
+}*/

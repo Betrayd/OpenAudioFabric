@@ -288,7 +288,7 @@ public class OpenAudioMcCommand {
         context.getSource().sendFeedback(() -> {
             return Text.literal("Starting garbage collector...");
         }, false);
-        SpeakerGarbageCollection sgc = new SpeakerGarbageCollection();
+        SpeakerGarbageCollection sgc = new SpeakerGarbageCollection(context.getSource().getServer());
         // run the wrapper twice to force a cache refresh at the end
         sgc.run();
         context.getSource().sendFeedback(() -> {

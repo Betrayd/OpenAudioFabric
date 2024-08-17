@@ -1,37 +1,67 @@
 package com.craftmend.openaudiomc.spigot.modules.speakers.listeners;
 
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
+import com.craftmend.openaudiomc.generic.utils.BlockStateChangedCallback;
+import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
+import com.mojang.logging.LogUtils;
+
 import lombok.AllArgsConstructor;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.block.BlockState;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 @AllArgsConstructor
-public class SpeakerDestroyListener implements Listener {
+public class SpeakerDestroyListener {
 
-    private OpenAudioMc openAudioMc;
     private SpeakerService speakerService;
 
-    @EventHandler
-    public void onExplode(EntityExplodeEvent event) {
-        for (Block broken : event.blockList()) {
-            if (SpeakerUtils.isSpeakerSkull(broken)) {
-                MappedLocation location = new MappedLocation(broken.getLocation());
-                Speaker speaker = speakerService.getSpeaker(location);
-                if (speaker != null) {
-                    broken.getWorld().dropItem(
-                            broken.getLocation(),
-                            SpeakerUtils.getSkull(speaker.getSource(), speaker.getRadius())
-                    );
-                }
-            }
+    private static SpeakerDestroyListener singleton = null;
+
+    SpeakerDestroyListener() {
+        if (SpeakerDestroyListener.singleton == null) {
+            SpeakerDestroyListener.singleton = this;
+            BlockStateChangedCallback.EVENT.register((BlockPos pos, BlockState state, boolean moved, World world, CallbackInfoReturnable<BlockState> cir) -> {
+                this.blockStateChanged(pos, state, moved, world, cir);
+            });
+        } else {
+            LogUtils.getLogger().warn("tried to create a new SpeakerCreateListener but one already exists!");
         }
     }
 
+    public void blockStateChanged(BlockPos pos, BlockState state, boolean moved, World world, CallbackInfoReturnable<BlockState> cir)
+    {
+        if(world instanceof ServerWorld serverWorld && SpeakerUtils.isSpeakerSkull(world.getBlockEntity(pos)))
+        {
+            MappedLocation location = new MappedLocation(new Location(serverWorld, pos.getX(), pos.getY(), pos.getZ()));
+            Speaker speaker = speakerService.getSpeaker(location);
+            if (speaker == null) return;
+
+            speakerService.unlistSpeaker(location);
+
+            //save to config
+            OpenAudioMc.getService(DatabaseService.class).getRepository(Speaker.class).delete(speaker);
+            for(ServerPlayerEntity p : serverWorld.getPlayers())
+            {
+                if(p.hasPermissionLevel(2))
+                {
+                    p.sendMessage(Text.literal(MagicValue.COMMAND_PREFIX.get(String.class) + "\u00A7c" + "Speaker destroyed at " + pos.toString()));
+                }
+            }
+        }   
+    }
+
+    /*
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Block broken = event.getBlock();
@@ -69,6 +99,6 @@ public class SpeakerDestroyListener implements Listener {
         //        || player.hasPermission("openaudiomc.speakers.*")
         //        || player.hasPermission("openaudiomc.*")
         //        || player.hasPermission("openaudiomc.speakers.destroy");
-    }
+    }*/
 
 }

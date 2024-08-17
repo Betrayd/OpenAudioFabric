@@ -1,4 +1,4 @@
-package com.craftmend.openaudiomc.spigot.modules.speakers.menu;
+/*package com.craftmend.openaudiomc.spigot.modules.speakers.menu;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
@@ -161,4 +161,4 @@ public class SpeakerMenu extends Menu {
                 });
     }
 
-}
+}*/
