@@ -28,6 +28,9 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
 	// // Fabric API. This is technically optional, but you probably want it anyway.
 	// modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
@@ -36,6 +39,8 @@ dependencies {
 
 	implementation 'com.squareup.okhttp3:okhttp:4.7.0'
 	implementation 'io.socket:socket.io-client:1.0.0'
+
+
 	api 'org.projectlombok:lombok:1.18.34'
 	
 }

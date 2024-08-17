@@ -1,73 +1,101 @@
 package com.craftmend.openaudiomc.spigot.modules.speakers.listeners;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
-import com.craftmend.openaudiomc.generic.database.DatabaseService;
-import com.craftmend.openaudiomc.generic.environment.MagicValue;
-import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
-import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
-import com.craftmend.openaudiomc.api.speakers.ExtraSpeakerOptions;
-import com.craftmend.openaudiomc.api.speakers.SpeakerType;
-import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
-import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
-import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
-import de.tr7zw.changeme.nbtapi.NBTItem;
-import lombok.AllArgsConstructor;
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
-
 import java.util.EnumSet;
 import java.util.UUID;
 
-@AllArgsConstructor
-public class SpeakerCreateListener implements Listener {
+import com.craftmend.openaudiomc.OpenAudioMc;
+import com.craftmend.openaudiomc.api.speakers.ExtraSpeakerOptions;
+import com.craftmend.openaudiomc.api.speakers.SpeakerType;
+import com.craftmend.openaudiomc.generic.database.DatabaseService;
+import com.craftmend.openaudiomc.generic.environment.MagicValue;
+import com.craftmend.openaudiomc.generic.utils.BlockPlaceCallback;
+import com.craftmend.openaudiomc.generic.utils.Location;
+import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
+import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
+import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
+import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
+import com.mojang.logging.LogUtils;
 
-    private OpenAudioMcSpigot openAudioMcSpigot;
+import lombok.AllArgsConstructor;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+
+@AllArgsConstructor
+public class SpeakerCreateListener {
+
     private SpeakerService speakerService;
 
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        Block placed = event.getBlockPlaced();
-        if (SpeakerUtils.isSpeakerSkull(placed)) {
-            if (!isAllowed(event.getPlayer())) {
-                event.getPlayer().sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + "You are not allowed to place OpenAudioMc speakers, please ask the server administrator for more information.");
-                event.setCancelled(true);
-                return;
-            }
+    private final MinecraftServer server;
+    private static SpeakerCreateListener singleton = null;
 
-            NBTItem nbti = new NBTItem(event.getItemInHand());
-            String src = nbti.getString("oa-src");
-            Integer radius = nbti.getInteger("oa-radius");
-
-            if (src == null) {
-                event.getPlayer().sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + "This speaker seems to be invalid. Please spawn a new one.");
-                return;
-            }
-
-            UUID id = UUID.randomUUID();
-            MappedLocation location = new MappedLocation(placed.getLocation());
-
-            SpeakerType speakerType = speakerService.getCollector().guessSpeakerType(location.toBukkit(), src);
-            Speaker speaker = new Speaker(src, id, radius, location, speakerType, EnumSet.noneOf(ExtraSpeakerOptions.class));
-            speakerService.registerSpeaker(speaker);
-
-            // save
-            OpenAudioMc.getService(DatabaseService.class)
-                    .getRepository(Speaker.class)
-                    .save(speaker);
-
-            event.getPlayer().sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + ChatColor.GREEN + "Placed a " + speakerType.getName() + " speaker" + ChatColor.GRAY + " (guessed bases on other nearby speakers, click placed speaker to edit)");
+    SpeakerCreateListener(MinecraftServer server) {
+        this.server = server;
+        if (SpeakerCreateListener.singleton == null) {
+            SpeakerCreateListener.singleton = this;
+            BlockPlaceCallback.EVENT.register((context, state) -> {
+                return this.onBlockPlace(context, state);
+            });
+        } else {
+            LogUtils.getLogger().warn("tried to create a new SpeakerCreateListener but one already exists!");
         }
     }
 
-    private boolean isAllowed(Player player) {
-        return player.isOp()
-                || player.hasPermission("openaudiomc.speakers.*")
-                || player.hasPermission("openaudiomc.*")
-                || player.hasPermission("openaudiomc.speakers.create");
+    public ActionResult onBlockPlace(ItemPlacementContext context, BlockState state) {
+        PlayerEntity player = context.getPlayer();
+        if (player == null || context.getBlockPos() == null || context.getHand() == null) {
+            return ActionResult.PASS;
+        }
+
+        if (player instanceof ServerPlayerEntity serverPlayer) {
+            if (SpeakerUtils.isSpeakerSkull(serverPlayer.getServerWorld().getBlockEntity(context.getBlockPos()))) {
+                if (!isAllowed(serverPlayer)) {
+                    serverPlayer.sendMessage(Text.literal(MagicValue.COMMAND_PREFIX.get(String.class) + "You are not allowed to place OpenAudioMc speakers, please ask the server administrator for more information."));
+                    return ActionResult.FAIL;
+                }
+
+                NbtCompound nbti = serverPlayer.getStackInHand(context.getHand()).getNbt();
+                String src = nbti.getString("oa-src");
+                Integer radius = nbti.getInt("oa-radius");
+
+                if (src == null) {
+                    serverPlayer.sendMessage(Text.literal(MagicValue.COMMAND_PREFIX.get(String.class) + "This speaker seems to be invalid. Please spawn a new one."));
+                    return ActionResult.FAIL;
+                }
+
+                UUID id = UUID.randomUUID();
+                MappedLocation location = new MappedLocation(new Location(serverPlayer.getServerWorld(), context.getBlockPos().getX(), context.getBlockPos().getY(), context.getBlockPos().getZ()));
+
+                SpeakerType speakerType = speakerService.getCollector().guessSpeakerType(server, location.toLocation(server), src);
+                Speaker speaker = new Speaker(src, id, radius, location, speakerType,
+                        EnumSet.noneOf(ExtraSpeakerOptions.class));
+                speakerService.registerSpeaker(speaker);
+
+                // save
+                OpenAudioMc.getService(DatabaseService.class)
+                        .getRepository(Speaker.class)
+                        .save(speaker);
+
+                serverPlayer
+                        .sendMessage(Text.literal(MagicValue.COMMAND_PREFIX.get(String.class) + "\u00A72" + "Placed a "
+                        + speakerType.getName() + " speaker" + "\u00A77"
+                        + " (guessed bases on other nearby speakers, click placed speaker to edit)"));
+                return ActionResult.PASS;
+            }
+        }
+        return ActionResult.PASS;
+    }
+
+    private boolean isAllowed(PlayerEntity player) {
+        return player.hasPermissionLevel(2);
+        // || player.hasPermission("openaudiomc.speakers.*")
+        // || player.hasPermission("openaudiomc.*")
+        // || player.hasPermission("openaudiomc.speakers.create");
     }
 
 }

@@ -6,18 +6,19 @@ import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
 import com.craftmend.openaudiomc.generic.storage.enums.GcStrategy;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
-import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
+import com.craftmend.openaudiomc.generic.utils.Location;
+import com.craftmend.openaudiomc.generic.utils.OARunnable;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
-import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
+
+import net.minecraft.server.MinecraftServer;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SpeakerGarbageCollection extends BukkitRunnable {
+public class SpeakerGarbageCollection extends OARunnable {
 
     private SpeakerService speakerService;
     private static int PROCESSED_SPEAKERS = 0;
@@ -25,9 +26,13 @@ public class SpeakerGarbageCollection extends BukkitRunnable {
     private final int FRACTION_GROUP_SIZE = 50;
     private boolean forceRun = false;
 
-    public SpeakerGarbageCollection(SpeakerService speakerService) {
+    private final MinecraftServer server;
+
+    public SpeakerGarbageCollection(MinecraftServer server, SpeakerService speakerService) {
+        super();
+        this.server = server;
         this.speakerService = speakerService;
-        runTaskTimer(OpenAudioMcSpigot.getInstance(), 600, 600);
+        runTaskTimer(600, 600);
         OpenAudioMc.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(() -> {
             if (PROCESSED_SPEAKERS != 0) {
                 OpenAudioLogger.info("The garbage collector found and processed " + PROCESSED_SPEAKERS + " broken speakers");
@@ -36,7 +41,9 @@ public class SpeakerGarbageCollection extends BukkitRunnable {
         }, 20 * 30, 20 * 30);
     }
 
-    public SpeakerGarbageCollection() {
+    public SpeakerGarbageCollection(MinecraftServer server) {
+        super();
+        this.server = server;
         this.forceRun = true;
         this.speakerService = OpenAudioMc.getService(SpeakerService.class);
     }
@@ -69,24 +76,27 @@ public class SpeakerGarbageCollection extends BukkitRunnable {
                     }
 
                     // check if the chunk is loaded, if not, don't do shit lmao
-                    Location bukkitLocation = mappedLocation.toBukkit();
+                    Location bukkitLocation = mappedLocation.toLocation(server);
                     if (bukkitLocation == null || bukkitLocation.getWorld() == null) {
                         OpenAudioLogger.warn("Can't find world " + mappedLocation.getWorld() + " so speaker " + speaker.getSpeakerId() + " is being deleted");
                         remove(speaker);
-                    } else if (bukkitLocation.getChunk().isLoaded() || forceRun) {
-                        if (forceRun && !bukkitLocation.getChunk().isLoaded()) {
-                            OpenAudioLogger.info("Attempting to load chunk " + bukkitLocation.getChunk().toString() + " for a forced speaker check...");
-                            bukkitLocation.getChunk().load();
-                            if (!bukkitLocation.getChunk().isLoaded()) {
-                                OpenAudioLogger.warn("Failed to load chunk! please try again later...");
+                    } 
+                    else {
+                        boolean isChunkLoaded = bukkitLocation.getWorld().getChunkManager().isChunkLoaded(bukkitLocation.getChunkPos().x, bukkitLocation.getChunkPos().z);
+                        if (isChunkLoaded || forceRun) {
+                            if (forceRun && !isChunkLoaded) {
+                                OpenAudioLogger.info("Attempting to load chunk " + bukkitLocation.getChunk().toString() + " for a forced speaker check...");
+                                if (!isChunkLoaded) {
+                                    OpenAudioLogger.warn("Failed to load chunk! please try again later...");
+                                }
+                                return;
                             }
-                            return;
-                        }
-
-                        if (!SpeakerUtils.isSpeakerSkull(speaker.getLocation().getBlock())) {
-                            remove(speaker);
-                        } else {
-                            speaker.setValidated(true);
+    
+                            if (!SpeakerUtils.isSpeakerSkull(speaker.getLocation().getBlockEntity(server))) {
+                                remove(speaker);
+                            } else {
+                                speaker.setValidated(true);
+                            }
                         }
                     }
                 });

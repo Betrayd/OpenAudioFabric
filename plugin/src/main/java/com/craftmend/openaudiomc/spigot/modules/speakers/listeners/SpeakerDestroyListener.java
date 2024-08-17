@@ -8,13 +8,7 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
 import lombok.AllArgsConstructor;
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import net.minecraft.entity.player.PlayerEntity;
 
 @AllArgsConstructor
 public class SpeakerDestroyListener implements Listener {
@@ -70,11 +64,11 @@ public class SpeakerDestroyListener implements Listener {
         }
     }
 
-    private boolean isAllowed(Player player) {
-        return player.isOp()
-                || player.hasPermission("openaudiomc.speakers.*")
-                || player.hasPermission("openaudiomc.*")
-                || player.hasPermission("openaudiomc.speakers.destroy");
+    private boolean isAllowed(PlayerEntity player) {
+        return player.hasPermissionLevel(2);
+        //        || player.hasPermission("openaudiomc.speakers.*")
+        //        || player.hasPermission("openaudiomc.*")
+        //        || player.hasPermission("openaudiomc.speakers.destroy");
     }
 
 }
