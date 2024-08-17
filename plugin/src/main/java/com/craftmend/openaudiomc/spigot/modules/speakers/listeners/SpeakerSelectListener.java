@@ -1,4 +1,4 @@
-package com.craftmend.openaudiomc.spigot.modules.speakers.listeners;
+/*package com.craftmend.openaudiomc.spigot.modules.speakers.listeners;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
@@ -45,4 +45,4 @@ public class SpeakerSelectListener implements Listener {
                 || player.hasPermission("openaudiomc.speakers.manage");
     }
 
-}
+}*/

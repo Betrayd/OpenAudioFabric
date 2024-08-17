@@ -13,7 +13,7 @@ import com.craftmend.openaudiomc.api.speakers.ExtraSpeakerOptions;
 import com.craftmend.openaudiomc.api.speakers.SpeakerType;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.services.world.interfaces.IRayTracer;
-import com.craftmend.openaudiomc.spigot.modules.speakers.listeners.SpeakerSelectListener;
+//import com.craftmend.openaudiomc.spigot.modules.speakers.listeners.SpeakerSelectListener;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.*;
 import com.craftmend.openaudiomc.spigot.modules.speakers.tasks.SpeakerGarbageCollection;
 import com.craftmend.openaudiomc.spigot.services.world.tracing.DummyTracer;
@@ -25,10 +25,9 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.listeners.SpeakerDestro
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
-
-import org.bukkit.*;
-import org.bukkit.entity.Player;
+import net.minecraft.item.Items;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -55,9 +54,9 @@ public class SpeakerService extends Service {
     @Override
     public void onEnable() {
         openAudioMcSpigot.registerEvents(
-                new SpeakerSelectListener(this),
-                new SpeakerCreateListener(openAudioMcSpigot, this),
-                new SpeakerDestroyListener(OpenAudioMc.getInstance(), this)
+                //new SpeakerSelectListener(this),
+                new SpeakerCreateListener(server, this),
+                new SpeakerDestroyListener(this)
         );
 
         collector = new SpeakerCollector(this);
@@ -71,7 +70,7 @@ public class SpeakerService extends Service {
         }
 
         // setup garbage system
-        new SpeakerGarbageCollection(this);
+        new SpeakerGarbageCollection(server, this);
 
         // reset with new addon
         OpenAudioMc.getService(MediaService.class).getResetTriggers().add(() -> {
@@ -131,26 +130,8 @@ public class SpeakerService extends Service {
     private void initializeVersion() {
         version = OpenAudioMc.getService(ServerService.class).getVersion();
 
-        if (version == ServerVersion.MODERN) {
-            OpenAudioLogger.info("Enabling the 1.13 speaker system");
-            playerSkullItem = Material.PLAYER_HEAD;
-            playerSkullBlock = Material.PLAYER_HEAD;
-        } else {
-            OpenAudioLogger.info("Enabling the 1.12 speaker system");
-            try {
-                OpenAudioLogger.info("Hooking speakers attempt 1..");
-                playerSkullItem = Material.valueOf("SKULL_ITEM");
-                playerSkullBlock = Material.valueOf("SKULL");
-            } catch (Exception e) {
-                OpenAudioLogger.info("Failed hook speakers attempt 1..");
-            }
-
-            if (playerSkullItem == null) {
-                OpenAudioLogger.info("Speakers failed to hook. Hooking to a block.");
-                playerSkullItem = Material.JUKEBOX;
-                playerSkullBlock = Material.JUKEBOX;
-            }
-        }
+        playerSkullItem = Items.PLAYER_HEAD;
+        playerSkullBlock = Blocks.PLAYER_HEAD;
     }
 
     public Speaker registerSpeaker(Speaker speaker) {
