@@ -3,11 +3,11 @@ package com.craftmend.openaudiomc.generic.user;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.basic.Actor;
 import com.craftmend.openaudiomc.api.clients.Client;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
-import com.openaudiofabric.OpenAudioFabric;
 
 import net.minecraft.text.Text;
 
@@ -42,7 +42,7 @@ public interface User<T> extends Actor {
             return Optional.empty();
         }
 
-        return Optional.ofNullable(OpenAudioFabric.getService(NetworkingService.class).getClient(uuid));
+        return Optional.ofNullable(OpenAudioMc.getService(NetworkingService.class).getClient(uuid));
     }
 
     default boolean isGeyser() {

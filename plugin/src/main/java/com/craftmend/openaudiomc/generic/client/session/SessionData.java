@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.client.session;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.media.Media;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.oac.OpenaudioAccountService;
@@ -8,8 +9,6 @@ import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.client.helpers.SerializableClient;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -60,12 +59,12 @@ public class SessionData {
     }
 
     public void bumpConnectReminder() {
-        boolean remindToConnect = OpenAudioFabric.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_REMIND_TO_CONNECT);
+        boolean remindToConnect = OpenAudioMc.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_REMIND_TO_CONNECT);
 
         if (remindToConnect) {
-            int reminderInterval = OpenAudioFabric.getInstance().getConfiguration().getInt(StorageKey.SETTINGS_REMIND_TO_CONNECT_INTERVAL);
+            int reminderInterval = OpenAudioMc.getInstance().getConfiguration().getInt(StorageKey.SETTINGS_REMIND_TO_CONNECT_INTERVAL);
             if (!isConnected() && (Duration.between(getLastConnectPrompt(), Instant.now()).toMillis() * 1000) > reminderInterval) {
-                client.getUser().sendMessage(Platform.translateColors(OpenAudioFabric.getInstance().getConfiguration().getString(StorageKey.MESSAGE_PROMPT_TO_CONNECT)));
+                client.getUser().sendMessage(Platform.translateColors(OpenAudioMc.getInstance().getConfiguration().getString(StorageKey.MESSAGE_PROMPT_TO_CONNECT)));
                 setLastConnectPrompt(Instant.now());
             }
         }
@@ -103,8 +102,8 @@ public class SessionData {
         }
 
         if (isConnectedToRtc) {
-            if (!OpenAudioFabric.getService(OpenaudioAccountService.class).is(CraftmendTag.VOICECHAT)) {
-                OpenAudioFabric.getService(OpenaudioAccountService.class).addTag(CraftmendTag.VOICECHAT);
+            if (!OpenAudioMc.getService(OpenaudioAccountService.class).is(CraftmendTag.VOICECHAT)) {
+                OpenAudioMc.getService(OpenaudioAccountService.class).addTag(CraftmendTag.VOICECHAT);
             }
         }
     }

@@ -1,13 +1,12 @@
 package com.craftmend.openaudiomc.spigot.modules.placeholderapi;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.oac.OpenaudioAccountService;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.players.SpigotPlayerService;
 import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotConnection;
-import com.openaudiofabric.OpenAudioFabric;
-
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +37,7 @@ public class PlaceholderModule extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if(params.equals("is_connected")) {
-            boolean b = OpenAudioFabric.getService(
+            boolean b = OpenAudioMc.getService(
                             SpigotPlayerService.class
                     ).getClient(player.getUniqueId())
                     .getClientConnection()
@@ -51,7 +50,7 @@ public class PlaceholderModule extends PlaceholderExpansion {
         }
 
         if(params.equals("is_in_voicechat")) {
-            boolean b = OpenAudioFabric.getService(
+            boolean b = OpenAudioMc.getService(
                             SpigotPlayerService.class
                     ).getClient(player.getUniqueId())
                     .getClientConnection()
@@ -66,7 +65,7 @@ public class PlaceholderModule extends PlaceholderExpansion {
 
         if(params.equals("client_count")) {
             int clients = 0;
-            for (SpigotConnection spigotConnection : OpenAudioFabric.getService(SpigotPlayerService.class).getClients())
+            for (SpigotConnection spigotConnection : OpenAudioMc.getService(SpigotPlayerService.class).getClients())
                 if (spigotConnection.getClientConnection().isConnected())
                     clients++;
 
@@ -74,7 +73,7 @@ public class PlaceholderModule extends PlaceholderExpansion {
         }
 
         if(params.equals("voicechat_peers")) {
-            return Integer.toString(OpenAudioFabric.getService(
+            return Integer.toString(OpenAudioMc.getService(
                             SpigotPlayerService.class
                     ).getClient(player.getUniqueId())
                     .getClientConnection().getRtcSessionManager().getCurrentProximityPeers().size());
@@ -82,7 +81,7 @@ public class PlaceholderModule extends PlaceholderExpansion {
 
         if(params.equals("voicechat_count"))
             return Integer.toString(
-                    OpenAudioFabric.getService(
+                    OpenAudioMc.getService(
                             OpenaudioAccountService.class
                     ).getVoiceApiConnection()
                             .getUsedSlots()
@@ -90,14 +89,14 @@ public class PlaceholderModule extends PlaceholderExpansion {
 
         if(params.equals("voicechat_limit"))
             return Integer.toString(
-                    OpenAudioFabric.getService(
+                    OpenAudioMc.getService(
                                     OpenaudioAccountService.class
                             ).getVoiceApiConnection()
                             .getMaxSlots()
             );
 
         if(params.equals("token")) {
-            String token = OpenAudioFabric.getService(
+            String token = OpenAudioMc.getService(
                             AuthenticationService.class
                     ).getDriver()
                     .getSessionCacheMap()

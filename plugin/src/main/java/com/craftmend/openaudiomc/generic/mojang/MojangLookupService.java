@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.mojang;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.database.internal.Repository;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
@@ -10,8 +11,6 @@ import com.craftmend.openaudiomc.generic.rest.response.SectionError;
 import com.craftmend.openaudiomc.generic.service.Inject;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +25,7 @@ public class MojangLookupService extends Service {
     @Getter private Repository<MojangProfile> profileRepository;
 
     @Inject
-    public MojangLookupService(DatabaseService databaseService, TaskService ts, OpenAudioFabric openAudioMc) {
+    public MojangLookupService(DatabaseService databaseService, TaskService ts, OpenAudioMc openAudioMc) {
         profileRepository = databaseService.getRepository(MojangProfile.class);
         ts.scheduleAsyncRepeatingTask(() -> {
             OpenAudioLogger.info("Starting mojang cleanup, this can take a while...");

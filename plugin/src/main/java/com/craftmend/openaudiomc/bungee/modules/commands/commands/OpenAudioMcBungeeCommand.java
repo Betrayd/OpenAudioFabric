@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.bungee.modules.commands.commands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.bungee.OpenAudioMcBungee;
 import com.craftmend.openaudiomc.generic.commands.CommandService;
 import com.craftmend.openaudiomc.generic.commands.enums.CommandContext;
@@ -7,14 +8,12 @@ import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.generic.user.adapters.BungeeUserAdapter;
-import com.openaudiofabric.OpenAudioFabric;
-
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
 public class OpenAudioMcBungeeCommand extends Command {
 
-    private final CommandService commandService = OpenAudioFabric.getService(CommandService.class);
+    private final CommandService commandService = OpenAudioMc.getService(CommandService.class);
 
 
     public OpenAudioMcBungeeCommand() {

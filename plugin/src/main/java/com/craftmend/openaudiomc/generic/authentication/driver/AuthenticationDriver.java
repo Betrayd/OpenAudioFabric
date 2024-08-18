@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.authentication.driver;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.authentication.requests.ClientTokenRequestBody;
 import com.craftmend.openaudiomc.generic.authentication.requests.SimpleTokenResponse;
@@ -10,7 +11,6 @@ import com.craftmend.openaudiomc.generic.rest.routes.Endpoint;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.generic.utils.data.ConcurrentHeatMap;
-import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.generic.rest.Task;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class AuthenticationDriver {
 
     public Task<Boolean> activateToken(Authenticatable auth, String token) {
         Task<Boolean> task = new Task<>();
-        OpenAudioFabric.resolveDependency(TaskService.class).runAsync(() -> {
+        OpenAudioMc.resolveDependency(TaskService.class).runAsync(() -> {
             ClientTokenRequestBody requestBody = new ClientTokenRequestBody(
                     "ACCOUNT",
                     auth.getOwner().getName(),
@@ -69,7 +69,7 @@ public class AuthenticationDriver {
 
         Task<String> task = new Task<>();
 
-        OpenAudioFabric.resolveDependency(TaskService.class).runAsync(() -> {
+        OpenAudioMc.resolveDependency(TaskService.class).runAsync(() -> {
             // check ache, since there might be a value
             sessionCacheMap.clean();
             ConcurrentHeatMap<UUID, String>.Value entry = sessionCacheMap.get(authenticatable.getOwner().getUniqueId());

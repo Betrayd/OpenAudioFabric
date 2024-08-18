@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.media.tabcomplete;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.interfaces.TabCompleteProvider;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.media.MediaService;
@@ -8,7 +9,6 @@ import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.modules.playlists.PlaylistService;
 import com.craftmend.openaudiomc.spigot.modules.playlists.models.Playlist;
 import com.craftmend.openaudiomc.spigot.modules.shortner.AliasService;
-import com.openaudiofabric.OpenAudioFabric;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -33,8 +33,8 @@ public class MediaTabcompleteProvider implements TabCompleteProvider {
 
         boolean hasFiles = false;
 
-        if (OpenAudioFabric.getInstance().getServiceManager().isServiceEnabled(UploadIndexService.class)) {
-            Collection<String> all = OpenAudioFabric.getService(UploadIndexService.class).getAll();
+        if (OpenAudioMc.getInstance().getServiceManager().isServiceEnabled(UploadIndexService.class)) {
+            Collection<String> all = OpenAudioMc.getService(UploadIndexService.class).getAll();
             if (!all.isEmpty()) {
                 options.addAll(all);
                 hasFiles = true;
@@ -42,17 +42,17 @@ public class MediaTabcompleteProvider implements TabCompleteProvider {
         }
 
         // do we have playlists on this service?
-        if (OpenAudioFabric.getInstance().getServiceManager().isServiceEnabled(PlaylistService.class)) {
+        if (OpenAudioMc.getInstance().getServiceManager().isServiceEnabled(PlaylistService.class)) {
             // this might be false if we're not running on spigot
-            PlaylistService playlistService = OpenAudioFabric.getService(PlaylistService.class);
+            PlaylistService playlistService = OpenAudioMc.getService(PlaylistService.class);
             for (Playlist s : playlistService.getAll()) {
                 options.add("list:" + s.getName());
             }
             hasFiles = true;
         }
 
-        if (OpenAudioFabric.getInstance().getServiceManager().isServiceEnabled(AliasService.class)) {
-            AliasService aliasService = OpenAudioFabric.getService(AliasService.class);
+        if (OpenAudioMc.getInstance().getServiceManager().isServiceEnabled(AliasService.class)) {
+            AliasService aliasService = OpenAudioMc.getService(AliasService.class);
             for (String s : aliasService.getAliasMap().keySet()) {
                 options.add("a:" + s);
             }

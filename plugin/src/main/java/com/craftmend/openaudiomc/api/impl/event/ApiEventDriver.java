@@ -1,12 +1,11 @@
 package com.craftmend.openaudiomc.api.impl.event;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.OpenAudioMcBuild;
 import com.craftmend.openaudiomc.api.impl.event.enums.EventSupport;
 import com.craftmend.openaudiomc.api.interfaces.EventSupportFlag;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.platform.Platform;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.SneakyThrows;
 
 import java.util.HashMap;
@@ -95,8 +94,8 @@ public class ApiEventDriver {
         EventSupport support = getEventSupportFor(eventType);
         // is the plugin real?
         if (!OpenAudioMcBuild.IS_TESTING) {
-            if (OpenAudioFabric.getInstance() != null) {
-                if (!isSupported(support, OpenAudioFabric.getInstance().getPlatform(), OpenAudioFabric.getInstance().getInvoker().isNodeServer())) {
+            if (OpenAudioMc.getInstance() != null) {
+                if (!isSupported(support, OpenAudioMc.getInstance().getPlatform(), OpenAudioMc.getInstance().getInvoker().isNodeServer())) {
                     throw new IllegalStateException(support.getErrorMessage());
                 }
             }
@@ -161,7 +160,7 @@ public class ApiEventDriver {
     @Deprecated
     public boolean isSupported(Class<? extends AudioEvent> af) {
         try {
-            return isSupported(getEventSupportFor(af), OpenAudioFabric.getInstance().getPlatform(), OpenAudioFabric.getInstance().getInvoker().isNodeServer());
+            return isSupported(getEventSupportFor(af), OpenAudioMc.getInstance().getPlatform(), OpenAudioMc.getInstance().getInvoker().isNodeServer());
         } catch (InstantiationException | IllegalAccessException e) {
             return false;
         }

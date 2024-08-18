@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.client.session;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.events.client.*;
 import com.craftmend.openaudiomc.api.voice.VoicePeerOptions;
@@ -21,8 +22,6 @@ import com.craftmend.openaudiomc.spigot.modules.players.enums.PlayerLocationFoll
 import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotConnection;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.channels.Channel;
 import com.craftmend.openaudiomc.spigot.services.world.Vector3;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -139,13 +138,13 @@ public class RtcSessionManager implements Serializable {
      */
     public void preventSpeaking(boolean allow) {
         // platform dependant
-        if (OpenAudioFabric.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioFabric.getInstance().getInvoker().isNodeServer()) {
+        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMc.getInstance().getInvoker().isNodeServer()) {
             // forward to proxy
             User user = clientConnection.getUser();
-            OpenAudioFabric.resolveDependency(UserHooks.class).sendPacket(user, new ForceMuteMicrophonePacket(clientConnection.getOwner().getUniqueId(), allow));
+            OpenAudioMc.resolveDependency(UserHooks.class).sendPacket(user, new ForceMuteMicrophonePacket(clientConnection.getOwner().getUniqueId(), allow));
             return;
         }
-        VoiceApiConnection voiceService = OpenAudioFabric.getService(OpenaudioAccountService.class).getVoiceApiConnection();
+        VoiceApiConnection voiceService = OpenAudioMc.getService(OpenaudioAccountService.class).getVoiceApiConnection();
 
         if (allow) {
             voiceService.forceMute(clientConnection);
@@ -155,7 +154,7 @@ public class RtcSessionManager implements Serializable {
     }
 
     public void makePeersDrop() {
-        for (ClientConnection peer : OpenAudioFabric.getService(NetworkingService.class).getClients()) {
+        for (ClientConnection peer : OpenAudioMc.getService(NetworkingService.class).getClients()) {
             if (peer.getOwner().getUniqueId() == clientConnection.getOwner().getUniqueId())
                 continue;
 
@@ -179,7 +178,7 @@ public class RtcSessionManager implements Serializable {
     }
 
     public void forceUpdateLocation(Location location) {
-        for (ClientConnection peer : OpenAudioFabric.getService(NetworkingService.class).getClients()) {
+        for (ClientConnection peer : OpenAudioMc.getService(NetworkingService.class).getClients()) {
             if (peer.getOwner().getUniqueId() == clientConnection.getOwner().getUniqueId())
                 continue;
 
@@ -193,8 +192,8 @@ public class RtcSessionManager implements Serializable {
     }
 
     public void updateLocationWatcher() {
-        if (OpenAudioFabric.getInstance().getPlatform() == Platform.SPIGOT) {
-            SpigotConnection spigotConnection = OpenAudioFabric.getService(SpigotPlayerService.class).getClient(clientConnection.getOwner().getUniqueId());
+        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
+            SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(clientConnection.getOwner().getUniqueId());
             if (spigotConnection == null) {
                 // player logged out, ignoring
                 return;

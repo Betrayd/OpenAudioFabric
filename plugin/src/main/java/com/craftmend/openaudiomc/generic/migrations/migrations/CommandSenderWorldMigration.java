@@ -1,11 +1,10 @@
 package com.craftmend.openaudiomc.generic.migrations.migrations;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.migrations.MigrationWorker;
 import com.craftmend.openaudiomc.generic.migrations.interfaces.SimpleMigration;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
-import com.openaudiofabric.OpenAudioFabric;
-
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldType;
@@ -14,7 +13,7 @@ public class CommandSenderWorldMigration extends SimpleMigration {
 
     @Override
     public boolean shouldBeRun(MigrationWorker migrationWorker) {
-        Configuration config = OpenAudioFabric.getInstance().getConfiguration();
+        Configuration config = OpenAudioMc.getInstance().getConfiguration();
         return !config.hasStorageKey(StorageKey.SETTINGS_DEFAULT_WORLD_NAME);
     }
 

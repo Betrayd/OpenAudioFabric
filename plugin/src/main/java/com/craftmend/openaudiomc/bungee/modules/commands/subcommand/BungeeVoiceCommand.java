@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.bungee.modules.commands.subcommand;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.generic.node.enums.ProxiedCommand;
@@ -7,7 +8,6 @@ import com.craftmend.openaudiomc.generic.node.packets.CommandProxyPacket;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.modules.proxy.objects.CommandProxyPayload;
-import com.openaudiofabric.OpenAudioFabric;
 
 public class BungeeVoiceCommand extends SubCommand {
 
@@ -36,6 +36,6 @@ public class BungeeVoiceCommand extends SubCommand {
         payload.setArgs(args);
         payload.setProxiedCommand(ProxiedCommand.VOICE);
 
-        OpenAudioFabric.resolveDependency(UserHooks.class).sendPacket(sender, new CommandProxyPacket(payload));
+        OpenAudioMc.resolveDependency(UserHooks.class).sendPacket(sender, new CommandProxyPacket(payload));
     }
 }

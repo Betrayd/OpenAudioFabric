@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.networking.drivers;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.events.client.ClientAuthenticationEvent;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
@@ -11,8 +12,6 @@ import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService
 import com.craftmend.openaudiomc.generic.networking.interfaces.SocketDriver;
 import com.craftmend.openaudiomc.generic.networking.io.SocketConnection;
 import com.craftmend.openaudiomc.generic.networking.payloads.AcknowledgeClientPayload;
-import com.openaudiofabric.OpenAudioFabric;
-
 import io.socket.client.Ack;
 import io.socket.client.Socket;
 
@@ -23,7 +22,7 @@ public class ClientDriver implements SocketDriver {
     @Override
     public void boot(Socket socket, SocketConnection connector) {
         socket.on("acknowledgeClient", args -> {
-            AcknowledgeClientPayload payload = (AcknowledgeClientPayload) OpenAudioFabric.getGson().fromJson(
+            AcknowledgeClientPayload payload = (AcknowledgeClientPayload) OpenAudioMc.getGson().fromJson(
                     args[0].toString(),
                     AbstractPacket.class
             ).getData();
@@ -42,7 +41,7 @@ public class ClientDriver implements SocketDriver {
                     // allow
                     callback.call(true);
                     authenticatable.onConnect();
-                    for (INetworkingEvents event : OpenAudioFabric.getService(NetworkingService.class).getEvents()) {
+                    for (INetworkingEvents event : OpenAudioMc.getService(NetworkingService.class).getEvents()) {
                         event.onClientOpen(authenticatable);
                     }
                 } else {
@@ -54,17 +53,17 @@ public class ClientDriver implements SocketDriver {
 
         socket.on("data", args -> {
             try {
-                AbstractPacket abstractPacket = OpenAudioFabric.getGson().fromJson(args[0].toString(), AbstractPacket.class);
-                OpenAudioFabric.getService(NetworkingService.class).triggerPacket(abstractPacket);
+                AbstractPacket abstractPacket = OpenAudioMc.getGson().fromJson(args[0].toString(), AbstractPacket.class);
+                OpenAudioMc.getService(NetworkingService.class).triggerPacket(abstractPacket);
             } catch (Exception e) {
                 // ignore when we're shutting down
-                if (OpenAudioFabric.getInstance().isDisabled()) return;
+                if (OpenAudioMc.getInstance().isDisabled()) return;
                 OpenAudioLogger.error(e, "An incoming packet was attempted to be parsed but failed horribly and it broke. Please update your plugin, of if this is already the latest version, let me know of this exception. The received data was: " + args[0].toString());
             }
         });
     }
 
     private Authenticatable findSession(UUID id) {
-        return OpenAudioFabric.getService(NetworkingService.class).getClient(id);
+        return OpenAudioMc.getService(NetworkingService.class).getClient(id);
     }
 }

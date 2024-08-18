@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.rules;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
@@ -11,8 +12,6 @@ import com.craftmend.openaudiomc.spigot.modules.rules.rules.time.WorldTimeRule;
 import com.craftmend.openaudiomc.spigot.modules.rules.rules.world.WorldRule;
 import com.craftmend.openaudiomc.spigot.modules.rules.rules.world.WorldRuleTest;
 import com.craftmend.openaudiomc.spigot.modules.rules.storage.MediaRule;
-import com.openaudiofabric.OpenAudioFabric;
-
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;

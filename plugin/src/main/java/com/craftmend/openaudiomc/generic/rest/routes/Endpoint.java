@@ -1,10 +1,10 @@
 package com.craftmend.openaudiomc.generic.rest.routes;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.authentication.objects.ServerKeySet;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.rest.ServerEnvironment;
-import com.openaudiofabric.OpenAudioFabric;
 
 public enum Endpoint {
 
@@ -53,7 +53,7 @@ public enum Endpoint {
             burl = this.baseUrl;
 
             // possibly overwrite the base url for debug
-            if (OpenAudioFabric.SERVER_ENVIRONMENT == ServerEnvironment.DEVELOPMENT && this.debuggable) {
+            if (OpenAudioMc.SERVER_ENVIRONMENT == ServerEnvironment.DEVELOPMENT && this.debuggable) {
                 // do we have a debug url?
                 String debugUrl = MagicValue.readEnv("OA_DEBUG_URL");
                 if (debugUrl != null) {
@@ -63,7 +63,7 @@ public enum Endpoint {
         }
         String url = burl + path;
         if (this.replaceTokens) {
-            ServerKeySet keySet = OpenAudioFabric.getService(AuthenticationService.class).getServerKeySet();
+            ServerKeySet keySet = OpenAudioMc.getService(AuthenticationService.class).getServerKeySet();
             url = url.replace("_private_key_", keySet.getPrivateKey().getValue());
             url = url.replace("_public_key_", keySet.getPublicKey().getValue());
         }

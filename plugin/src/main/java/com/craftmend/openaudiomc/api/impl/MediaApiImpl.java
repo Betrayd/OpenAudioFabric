@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.api.impl;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.interfaces.Client;
 import com.craftmend.openaudiomc.api.interfaces.MediaApi;
 import com.craftmend.openaudiomc.api.media.Media;
@@ -13,7 +14,6 @@ import com.craftmend.openaudiomc.generic.networking.payloads.client.speakers.Cli
 import com.craftmend.openaudiomc.generic.networking.payloads.client.speakers.ClientSpeakerDestroyPayload;
 import com.craftmend.openaudiomc.generic.networking.payloads.client.speakers.objects.ClientSpeaker;
 import com.craftmend.openaudiomc.spigot.services.world.Vector3;
-import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.api.speakers.SpeakerType;
 
 import java.time.Instant;
@@ -43,13 +43,13 @@ public class MediaApiImpl implements MediaApi {
     @Override
     @Deprecated
     public void stopMedia(Client client) {
-        OpenAudioFabric.getService(NetworkingService.class).send(validateClient(client), new PacketClientDestroyMedia(null));
+        OpenAudioMc.getService(NetworkingService.class).send(validateClient(client), new PacketClientDestroyMedia(null));
     }
 
     @Override
     @Deprecated
     public void stopMedia(Client client, String id) {
-        OpenAudioFabric.getService(NetworkingService.class).send(validateClient(client), new PacketClientDestroyMedia(id));
+        OpenAudioMc.getService(NetworkingService.class).send(validateClient(client), new PacketClientDestroyMedia(id));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MediaApiImpl implements MediaApi {
         );
         ClientConnection connection = validateClient(client);
         connection.getSession().setApiSpeakers(connection.getSession().getApiSpeakers() + 1);
-        OpenAudioFabric.getService(NetworkingService.class).send(connection, new PacketClientCreateSpeaker(new ClientSpeakerCreatePayload(clientSpeaker)));
+        OpenAudioMc.getService(NetworkingService.class).send(connection, new PacketClientCreateSpeaker(new ClientSpeakerCreatePayload(clientSpeaker)));
         return clientSpeaker.getId();
     }
 
@@ -88,6 +88,6 @@ public class MediaApiImpl implements MediaApi {
         );
         ClientConnection connection = validateClient(client);
         connection.getSession().setApiSpeakers(connection.getSession().getApiSpeakers() - 1);
-        OpenAudioFabric.getService(NetworkingService.class).send(connection, new PacketClientRemoveSpeaker(new ClientSpeakerDestroyPayload(clientSpeaker)));
+        OpenAudioMc.getService(NetworkingService.class).send(connection, new PacketClientRemoveSpeaker(new ClientSpeakerDestroyPayload(clientSpeaker)));
     }
 }

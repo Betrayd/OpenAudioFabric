@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.commands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.enums.CommandContext;
 import com.craftmend.openaudiomc.generic.commands.helpers.CommandMiddewareExecutor;
 import com.craftmend.openaudiomc.generic.commands.interfaces.CommandMiddleware;
@@ -19,8 +20,6 @@ import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 
 import java.util.*;
@@ -61,7 +60,7 @@ public class CommandService extends Service {
         );
 
         // add accept sub command if the player is new
-        if (!OpenAudioFabric.getInstance().getConfiguration().getBoolean(StorageKey.LEGAL_ACCEPTED_TOS_AND_PRIVACY)) {
+        if (!OpenAudioMc.getInstance().getConfiguration().getBoolean(StorageKey.LEGAL_ACCEPTED_TOS_AND_PRIVACY)) {
             registerSubCommands(CommandContext.OPENAUDIOMC, new AcceptSubCommand());
         }
     }
@@ -148,7 +147,7 @@ public class CommandService extends Service {
                     }
                 }
             } else {
-                sender.sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + "You dont have the permissions to do this, sorry! (" + OpenAudioFabric.getInstance().getPlatform() + ")");
+                sender.sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + "You dont have the permissions to do this, sorry! (" + OpenAudioMc.getInstance().getPlatform() + ")");
             }
         } else {
             sender.sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + "Unknown sub command: " + args[0].toLowerCase());

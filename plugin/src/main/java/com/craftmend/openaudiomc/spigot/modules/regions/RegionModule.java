@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.regions;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.OpenAudioMcBuild;
 import com.craftmend.openaudiomc.api.media.Media;
 import com.craftmend.openaudiomc.generic.backups.BackupService;
@@ -21,8 +22,6 @@ import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties
 import com.craftmend.openaudiomc.spigot.modules.regions.registry.WorldRegionManager;
 import com.craftmend.openaudiomc.spigot.services.server.ServerService;
 import com.craftmend.openaudiomc.spigot.services.server.enums.ServerVersion;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -43,7 +42,7 @@ public class RegionModule {
         OpenAudioLogger.info("Turns out you have WorldGuard installed! enabling regions and the region tasks..");
 
         if (customAdapter == null) {
-            if (OpenAudioFabric.getService(ServerService.class).getVersion() == ServerVersion.MODERN) {
+            if (OpenAudioMc.getService(ServerService.class).getVersion() == ServerVersion.MODERN) {
                 OpenAudioLogger.info("Enabling the newer 1.13 regions");
                 regionAdapter = new ModernRegionAdapter(this);
             } else {
@@ -56,7 +55,7 @@ public class RegionModule {
         }
 
         //validate detection
-        if (customAdapter == null && OpenAudioFabric.getService(ServerService.class).getVersion() == ServerVersion.LEGACY) {
+        if (customAdapter == null && OpenAudioMc.getService(ServerService.class).getVersion() == ServerVersion.LEGACY) {
             try {
                 Class.forName("com.sk89q.worldguard.bukkit.WGBukkit");
             } catch (ClassNotFoundException e) {
@@ -68,7 +67,7 @@ public class RegionModule {
         // do cleanup
         cleanDuplicates();
 
-        for (RegionProperties region : OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class).values()) {
+        for (RegionProperties region : OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class).values()) {
 
             // update null values should be set to defaults
             if (region.getLoop() == null) region.setLoop(true);
@@ -89,7 +88,7 @@ public class RegionModule {
             }
         }
 
-        OpenAudioFabric.getService(MediaService.class).getResetTriggers().add(() -> {
+        OpenAudioMc.getService(MediaService.class).getResetTriggers().add(() -> {
             // clean media once a new media adapter is loaded, this ensures that they will be re-evaluated
             worldManagers.forEach((s, worldRegionManager) -> {worldRegionManager.dropMediaCache();});
         });
@@ -124,8 +123,8 @@ public class RegionModule {
         Map<String, RegionProperties> regionsWithoutWorld = new HashMap<>();
         List<RegionProperties> discardedRegions = new ArrayList<>();
 
-        Collection<RegionProperties> allRegions = OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class).values();
-        int totalCount = OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class).count();
+        Collection<RegionProperties> allRegions = OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class).values();
+        int totalCount = OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class).count();
 
         OpenAudioLogger.info("Scanning " + allRegions.size() + " regions for duplicates (out of " + totalCount + " total regions)");
 
@@ -196,13 +195,13 @@ public class RegionModule {
         }
 
         OpenAudioLogger.warn("Found " + discardedRegions.size() + " duplicate regions with old ID's, making a backup and then cleaning up...");
-        OpenAudioFabric.getService(BackupService.class).makeBackup(true);
+        OpenAudioMc.getService(BackupService.class).makeBackup(true);
 
         // remove all old regions
         for (RegionProperties discardedRegion : discardedRegions) {
             OpenAudioLogger.info("Removing region " + discardedRegion.getRegionName() + " with ID " + discardedRegion.getId());
             try {
-                OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class).delete(discardedRegion);
+                OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class).delete(discardedRegion);
             } catch (Exception e) {
                 OpenAudioLogger.error(e, "Failed to remove region " + discardedRegion.getRegionName() + " with ID " + discardedRegion.getId());
             }
@@ -210,14 +209,14 @@ public class RegionModule {
     }
 
     public void forceUpdateRegions() {
-        for (SpigotConnection client : OpenAudioFabric.getService(SpigotPlayerService.class).getClients()) {
+        for (SpigotConnection client : OpenAudioMc.getService(SpigotPlayerService.class).getClients()) {
             if (client.getRegionHandler() != null) client.getRegionHandler().tick();
         }
     }
 
     public Set<SpigotConnection> findPlayersInRegion(String regionName) {
         Set<SpigotConnection> clients = new HashSet<>();
-        for (SpigotConnection client : OpenAudioFabric.getService(SpigotPlayerService.class).getClients()) {
+        for (SpigotConnection client : OpenAudioMc.getService(SpigotPlayerService.class).getClients()) {
             Collection<IRegion> regionsAtClient = getRegionAdapter().getAudioRegions(client.getBukkitPlayer().getLocation());
             if (regionsAtClient.stream().anyMatch(region -> region.getId().equalsIgnoreCase(regionName))) {
                 clients.add(client);

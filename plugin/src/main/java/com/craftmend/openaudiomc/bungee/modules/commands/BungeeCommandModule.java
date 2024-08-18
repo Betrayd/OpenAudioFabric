@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.bungee.modules.commands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.bungee.OpenAudioMcBungee;
 import com.craftmend.openaudiomc.bungee.modules.commands.commands.BungeeAudioCommand;
 import com.craftmend.openaudiomc.bungee.modules.commands.commands.BungeeVolumeCommand;
@@ -15,8 +16,6 @@ import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.generic.user.adapters.BungeeUserAdapter;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

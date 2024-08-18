@@ -2,6 +2,7 @@ package com.craftmend.openaudiomc.spigot.modules.speakers.listeners;
 
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.utils.BlockStateChangedCallback;
@@ -11,7 +12,6 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
 import com.mojang.logging.LogUtils;
-import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.AllArgsConstructor;
 import net.minecraft.block.BlockState;
@@ -50,7 +50,7 @@ public class SpeakerDestroyListener {
             speakerService.unlistSpeaker(location);
 
             //save to config
-            OpenAudioFabric.getService(DatabaseService.class).getRepository(Speaker.class).delete(speaker);
+            OpenAudioMc.getService(DatabaseService.class).getRepository(Speaker.class).delete(speaker);
             for(ServerPlayerEntity p : serverWorld.getPlayers())
             {
                 if(p.hasPermissionLevel(2))

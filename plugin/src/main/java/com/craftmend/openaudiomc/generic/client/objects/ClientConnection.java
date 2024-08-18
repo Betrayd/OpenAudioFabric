@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.basic.Actor;
 import com.craftmend.openaudiomc.api.clients.Client;
@@ -46,7 +47,6 @@ import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
-import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -81,14 +81,14 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
             this.session.applySerializedSession(fromSerialized);
         }
         
-        if (OpenAudioFabric.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_SEND_URL_ON_JOIN))
-            OpenAudioFabric.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
+        if (OpenAudioMc.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_SEND_URL_ON_JOIN))
+            OpenAudioMc.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
                 if (!isConnected()) {
                     this.getAuth().publishSessionUrl();
                 }
             }, 20 * StorageKey.SETTINGS_SEND_URL_ON_JOIN_DELAY.getInt());
-        if (!OpenAudioFabric.getInstance().getInvoker().isNodeServer()) {
-            OpenAudioFabric.getService(GlobalConstantService.class).sendNotifications(user);
+        if (!OpenAudioMc.getInstance().getInvoker().isNodeServer()) {
+            OpenAudioMc.getService(GlobalConstantService.class).sendNotifications(user);
         }
 
         getDataStore().setWhenFinished(dataStore -> {
@@ -108,13 +108,13 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
     public void onConnect() {
         session.setSessionUpdated(true);
         if (isConnected()) return;
-        Configuration Configuration = OpenAudioFabric.getInstance().getConfiguration();
+        Configuration Configuration = OpenAudioMc.getInstance().getConfiguration();
 
         session.setConnected(true);
         session.setWaitingToken(false);
 
-        OpenAudioFabric.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
-                    OpenAudioFabric.getService(NetworkingService.class).send(this, new PacketClientProtocolRevisionPacket());
+        OpenAudioMc.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
+                    OpenAudioMc.getService(NetworkingService.class).send(this, new PacketClientProtocolRevisionPacket());
                     session.getOngoingMedia().forEach(this::sendMedia);
                     connectHandlers.forEach(Runnable::run);
                 },
@@ -122,11 +122,11 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
         );
 
         // am I a proxy thingy? then send it to my other thingy
-        OpenAudioFabric.resolveDependency(UserHooks.class).sendPacket(user, new ClientConnectedPacket(user.getUniqueId()));
+        OpenAudioMc.resolveDependency(UserHooks.class).sendPacket(user, new ClientConnectedPacket(user.getUniqueId()));
 
         EventApi.getInstance().callEvent(new ClientConnectEvent(this));
 
-        if (OpenAudioFabric.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.NODE)
+        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.NODE)
             return;
         String connectedMessage = Configuration.getString(StorageKey.MESSAGE_CLIENT_OPENED);
         user.sendMessage(Platform.translateColors(connectedMessage));
@@ -136,7 +136,7 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
     public void onDisconnect() {
         if (!isConnected()) return;
         // ignore if we're shutting down
-        if (OpenAudioFabric.getInstance().isDisabled()) return;
+        if (OpenAudioMc.getInstance().isDisabled()) return;
         session.setSessionUpdated(true);
         session.setApiSpeakers(0);
         session.setConnectedToRtc(false);
@@ -144,19 +144,19 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
         disconnectHandlers.forEach(Runnable::run);
 
         // am I a proxy thingy? then send it to my other thingy
-        OpenAudioFabric.resolveDependency(UserHooks.class).sendPacket(user, new ClientDisconnectedPacket(user.getUniqueId()));
+        OpenAudioMc.resolveDependency(UserHooks.class).sendPacket(user, new ClientDisconnectedPacket(user.getUniqueId()));
 
         EventApi.getInstance().callEvent(new ClientDisconnectEvent(this));
 
         // Don't send if i'm spigot and a node
-        if (OpenAudioFabric.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.NODE)
+        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.NODE)
             return;
-        String message = OpenAudioFabric.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_CLOSED);
+        String message = OpenAudioMc.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_CLOSED);
         user.sendMessage(Platform.translateColors(message));
     }
 
     public Task<ClientDataStore> getDataStore() {
-        return OpenAudioFabric.getService(ClientDataService.class).getClientData(user.getUniqueId(), true, true);
+        return OpenAudioMc.getService(ClientDataService.class).getClientData(user.getUniqueId(), true, true);
     }
 
     public ClientConnection addOnConnectHandler(Runnable runnable) {
@@ -180,15 +180,15 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
         }
         session.setVolume(volume);
         user.sendMessage(Platform.translateColors(StorageKey.MESSAGE_CLIENT_VOLUME_CHANGED.getString()).replaceAll("__amount__", volume + ""));
-        OpenAudioFabric.getService(NetworkingService.class).send(this, new PacketClientSetVolume(volume));
+        OpenAudioMc.getService(NetworkingService.class).send(this, new PacketClientSetVolume(volume));
     }
 
     /**
      * Close the clients web client
      */
     public void kick(Runnable callback) {
-        OpenAudioFabric.resolveDependency(TaskService.class).runAsync(() -> {
-            OpenAudioFabric.getService(NetworkingService.class).send(this, new PacketSocketKickClient());
+        OpenAudioMc.resolveDependency(TaskService.class).runAsync(() -> {
+            OpenAudioMc.getService(NetworkingService.class).send(this, new PacketSocketKickClient());
             callback.run();
         });
     }
@@ -202,7 +202,7 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
     public void setModerating(boolean state) {
         if (state) {
             session.setModerating(true);
-            session.setModerationTimeRemaining(OpenAudioFabric.getInstance().getConfiguration().getInt(StorageKey.SETTINGS_MODERATION_TIMER));
+            session.setModerationTimeRemaining(OpenAudioMc.getInstance().getConfiguration().getInt(StorageKey.SETTINGS_MODERATION_TIMER));
             session.setResetVc(true);
             sendPacket(new PacketClientModerationStatus(true));
         } else {
@@ -218,7 +218,7 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
             session.getOngoingMedia().add(media);
 
             // stop after x seconds
-            OpenAudioFabric.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> session.getOngoingMedia().remove(media), (20 * media.getKeepTimeout()));
+            OpenAudioMc.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> session.getOngoingMedia().remove(media), (20 * media.getKeepTimeout()));
         }
         if (isConnected()) {
             sendPacket(new PacketClientCreateMedia(media));
@@ -228,13 +228,13 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
     }
 
     public void sendPacket(AbstractPacket packet) {
-        OpenAudioFabric.getService(NetworkingService.class).send(this, packet);
+        OpenAudioMc.getService(NetworkingService.class).send(this, packet);
     }
 
     public void onDestroy() {
         this.getRtcSessionManager().makePeersDrop();
-        OpenAudioFabric.resolveDependency(TaskService.class).runAsync(() -> OpenAudioFabric.getService(ClientDataService.class).save(dataCache, user.getUniqueId()));
-        OpenAudioFabric.getService(ClientDataService.class).dropFromCache(user.getUniqueId());
+        OpenAudioMc.resolveDependency(TaskService.class).runAsync(() -> OpenAudioMc.getService(ClientDataService.class).save(dataCache, user.getUniqueId()));
+        OpenAudioMc.getService(ClientDataService.class).dropFromCache(user.getUniqueId());
     }
 
     @Override
@@ -250,7 +250,7 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
     @Override
     public void handleError(MediaError error, String source) {
         EventApi.getInstance().callEvent(new MediaErrorEvent(this, source, error));
-        if (this.getUser().isAdministrator() && OpenAudioFabric.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_STAFF_TIPS)) {
+        if (this.getUser().isAdministrator() && OpenAudioMc.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_STAFF_TIPS)) {
             String prefix = MagicValue.COMMAND_PREFIX.get(String.class);
             this.getUser().sendMessage(prefix + "Something went wrong while playing a sound for you, here's what we know:");
             this.getUser().sendMessage(prefix + "what happened: " + error.getExplanation());
@@ -331,7 +331,7 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
 
     @Override
     public void preloadMedia(String source) {
-        ClientPreFetchPayload payload = new ClientPreFetchPayload(OpenAudioFabric.getService(MediaService.class).process(source), "api", false, false);
+        ClientPreFetchPayload payload = new ClientPreFetchPayload(OpenAudioMc.getService(MediaService.class).process(source), "api", false, false);
         sendPacket(new PacketClientPreFetch(payload));
     }
 

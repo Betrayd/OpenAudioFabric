@@ -1,11 +1,11 @@
 package com.craftmend.openaudiomc.generic.networking.queue;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.networking.DefaultNetworkingService;
 import com.craftmend.openaudiomc.generic.networking.abstracts.AbstractPacket;
 import com.craftmend.openaudiomc.generic.state.StateService;
-import com.openaudiofabric.OpenAudioFabric;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -59,7 +59,7 @@ public class PacketQueue {
                 }
 
                 // check if the connection is still OK before we continue
-                if (!OpenAudioFabric.getService(StateService.class).getCurrentState().isConnected()) {
+                if (!OpenAudioMc.getService(StateService.class).getCurrentState().isConnected()) {
                     OpenAudioLogger.warn("Connection was lost, stopping packet flush");
                     cancelled = true;
                     break;

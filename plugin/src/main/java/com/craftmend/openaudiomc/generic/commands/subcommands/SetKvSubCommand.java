@@ -1,9 +1,9 @@
 package com.craftmend.openaudiomc.generic.commands.subcommands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
 
 public class SetKvSubCommand extends SubCommand {
 
@@ -48,11 +48,11 @@ public class SetKvSubCommand extends SubCommand {
                 found = true;
                 if (value.equals("true") || value.equals("false")) {
                     // set the value
-                    OpenAudioFabric.getInstance().getInvoker().getConfigurationProvider().setBoolean(storageKey, Boolean.parseBoolean(value));
+                    OpenAudioMc.getInstance().getInvoker().getConfigurationProvider().setBoolean(storageKey, Boolean.parseBoolean(value));
                     message(sender, "Set " + key + " to " + value);
                     message(sender, "Please restart your server to apply this change.");
                     // flush the change
-                    OpenAudioFabric.getInstance().getInvoker().getConfigurationProvider().saveAll(true);
+                    OpenAudioMc.getInstance().getInvoker().getConfigurationProvider().saveAll(true);
                 } else {
                     message(sender, "Invalid value. Usage: /openaudio setkv <key> <value>");
                 }

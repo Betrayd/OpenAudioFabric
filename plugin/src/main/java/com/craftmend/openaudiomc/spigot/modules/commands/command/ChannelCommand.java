@@ -9,6 +9,7 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.CommandService;
 import com.craftmend.openaudiomc.generic.commands.enums.CommandContext;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
@@ -16,14 +17,13 @@ import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class ChannelCommand implements CommandExecutor, TabCompleter {
 
-    private final CommandService commandService = OpenAudioFabric.getService(CommandService.class);
+    private final CommandService commandService = OpenAudioMc.getService(CommandService.class);
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
@@ -32,7 +32,7 @@ public class ChannelCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        commandService.invokeCommand(OpenAudioFabric.resolveDependency(UserHooks.class).fromCommandSender(sender), CommandContext.CHANNEL, args, (err) -> {
+        commandService.invokeCommand(OpenAudioMc.resolveDependency(UserHooks.class).fromCommandSender(sender), CommandContext.CHANNEL, args, (err) -> {
             sender.sendMessage(Platform.translateColors(StorageKey.MESSAGE_VOICE_COMMAND_ERROR_FORMAT.getString().replace("{message}", err)));
         });
         return true;
@@ -44,7 +44,7 @@ public class ChannelCommand implements CommandExecutor, TabCompleter {
         if (!StorageKey.SETTINGS_CHANNEL_COMMAND_ENABLED.getBoolean()) {
             return new ArrayList<>();
         }
-        User<?> sender = OpenAudioFabric.resolveDependency(UserHooks.class).fromCommandSender(commandSender);
+        User<?> sender = OpenAudioMc.resolveDependency(UserHooks.class).fromCommandSender(commandSender);
         return commandService.getTabCompletions(CommandContext.CHANNEL, args, sender);
     }
 }

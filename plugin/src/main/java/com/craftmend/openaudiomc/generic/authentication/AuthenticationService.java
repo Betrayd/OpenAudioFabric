@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.authentication;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.interfaces.ITokenProvider;
 import com.craftmend.openaudiomc.generic.authentication.driver.AuthenticationDriver;
 import com.craftmend.openaudiomc.generic.authentication.driver.PluginTokenProvider;
@@ -15,8 +16,6 @@ import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageLocation;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -63,7 +62,7 @@ public class AuthenticationService extends Service {
      * @return version
      */
     public int getAuthVersion() {
-        int version = OpenAudioFabric.getInstance().getConfiguration().getInt(StorageKey.AUTH_KEY_VERSION);
+        int version = OpenAudioMc.getInstance().getConfiguration().getInt(StorageKey.AUTH_KEY_VERSION);
         return version == -1 ? 1 : version;
     }
 

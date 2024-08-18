@@ -1,13 +1,12 @@
 package com.craftmend.openaudiomc.spigot.modules.speakers.objects;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.speakers.BasicSpeaker;
 import com.craftmend.openaudiomc.generic.database.internal.DataStore;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.api.speakers.ExtraSpeakerOptions;
 import com.craftmend.openaudiomc.api.speakers.SpeakerType;
 import com.craftmend.storm.api.markers.Column;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -64,7 +63,7 @@ public class Speaker extends DataStore implements BasicSpeaker {
     }
 
     public SpeakerMedia getMedia() {
-        return OpenAudioFabric.getService(SpeakerService.class).getMedia(source);
+        return OpenAudioMc.getService(SpeakerService.class).getMedia(source);
     }
 
 }

@@ -1,16 +1,15 @@
 package com.craftmend.openaudiomc.spigot.services.scheduling;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
-import com.openaudiofabric.OpenAudioFabric;
-
 import org.bukkit.Bukkit;
 
 public class SpigotTaskService implements TaskService {
 
     @Override
     public int scheduleAsyncRepeatingTask(Runnable runnable, int delayUntilFirst, int tickInterval) {
-        if (OpenAudioFabric.getInstance().isDisabled()) {
+        if (OpenAudioMc.getInstance().isDisabled()) {
             runnable.run();
             return -1;
         }
@@ -20,7 +19,7 @@ public class SpigotTaskService implements TaskService {
 
     @Override
     public int scheduleSyncRepeatingTask(Runnable runnable, int delayUntilFirst, int tickInterval) {
-        if (OpenAudioFabric.getInstance().isDisabled()) {
+        if (OpenAudioMc.getInstance().isDisabled()) {
             runnable.run();
             return -1;
         }
@@ -30,7 +29,7 @@ public class SpigotTaskService implements TaskService {
 
     @Override
     public int schduleSyncDelayedTask(Runnable runnable, int delay) {
-        if (OpenAudioFabric.getInstance().isDisabled()) {
+        if (OpenAudioMc.getInstance().isDisabled()) {
             runnable.run();
             return -1;
         }
@@ -45,7 +44,7 @@ public class SpigotTaskService implements TaskService {
 
     @Override
     public void runAsync(Runnable runnable) {
-        if (OpenAudioFabric.getInstance().isDisabled()) {
+        if (OpenAudioMc.getInstance().isDisabled()) {
             notifyRunner();
             runnable.run();
             return;
@@ -56,7 +55,7 @@ public class SpigotTaskService implements TaskService {
 
     @Override
     public void runSync(Runnable runnable) {
-        if (OpenAudioFabric.getInstance().isDisabled()) {
+        if (OpenAudioMc.getInstance().isDisabled()) {
             notifyRunner();
             runnable.run();
             return;

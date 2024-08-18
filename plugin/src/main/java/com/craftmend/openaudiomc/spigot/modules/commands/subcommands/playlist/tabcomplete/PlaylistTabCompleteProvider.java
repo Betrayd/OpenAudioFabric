@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.subcommands.playlist.tabcomplete;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.interfaces.TabCompleteProvider;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.media.MediaService;
@@ -7,7 +8,6 @@ import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.modules.playlists.PlaylistService;
 import com.craftmend.openaudiomc.spigot.modules.playlists.models.Playlist;
 import com.craftmend.openaudiomc.spigot.modules.shortner.AliasService;
-import com.openaudiofabric.OpenAudioFabric;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,7 +20,7 @@ public class PlaylistTabCompleteProvider implements TabCompleteProvider {
         List<String> options = new ArrayList<>();
 
         // this might be false if we're not running on spigot
-        PlaylistService playlistService = OpenAudioFabric.getService(PlaylistService.class);
+        PlaylistService playlistService = OpenAudioMc.getService(PlaylistService.class);
         for (Playlist s : playlistService.getAll()) {
             options.add(s.getName());
         }

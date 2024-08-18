@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.commands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.CommandService;
 import com.craftmend.openaudiomc.generic.commands.enums.CommandContext;
 import com.craftmend.openaudiomc.generic.service.Inject;
@@ -11,8 +12,6 @@ import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.commands.subcommands.playlist.PlaylistSubCommand;
 import com.craftmend.openaudiomc.spigot.services.server.ServerService;
 import com.craftmend.openaudiomc.spigot.services.server.enums.ServerVersion;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -52,7 +51,7 @@ public class SpigotCommandService extends Service {
         );
 
         // if it is a older version, register the middleware
-        if (OpenAudioFabric.getService(ServerService.class).getVersion().getRevision() > ServerVersion.LEGACY.getRevision()) {
+        if (OpenAudioMc.getService(ServerService.class).getVersion().getRevision() > ServerVersion.LEGACY.getRevision()) {
             openAudioMcSpigot.getServer().getPluginManager().registerEvents(
                     new CommandTranslationMiddleware(),
                     openAudioMcSpigot

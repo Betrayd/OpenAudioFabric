@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.speakers;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.media.MediaService;
@@ -16,7 +17,6 @@ import com.craftmend.openaudiomc.spigot.services.world.interfaces.IRayTracer;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.*;
 import com.craftmend.openaudiomc.spigot.modules.speakers.tasks.SpeakerGarbageCollection;
 import com.craftmend.openaudiomc.spigot.services.world.tracing.DummyTracer;
-import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.spigot.services.server.ServerService;
 import com.craftmend.openaudiomc.spigot.services.server.enums.ServerVersion;
 import com.craftmend.openaudiomc.spigot.modules.speakers.listeners.SpeakerCreateListener;
@@ -74,7 +74,7 @@ public class SpeakerService extends Service {
         new SpeakerGarbageCollection(server, this);
 
         // reset with new addon
-        OpenAudioFabric.getService(MediaService.class).getResetTriggers().add(() -> {
+        OpenAudioMc.getService(MediaService.class).getResetTriggers().add(() -> {
             speakerMediaMap.clear();
         });
 
@@ -110,7 +110,7 @@ public class SpeakerService extends Service {
                                 continue;
                             }
 
-                            SpigotConnection spigotConnection = OpenAudioFabric.getService(SpigotPlayerService.class).getClient(player);
+                            SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(player);
                             if (spigotConnection != null) {
                                 spigotConnection.getSpeakerHandler().tick();
                             }
@@ -129,10 +129,10 @@ public class SpeakerService extends Service {
     }
 
     private void initializeVersion() {
-        version = OpenAudioFabric.getService(ServerService.class).getVersion();
+        version = OpenAudioMc.getService(ServerService.class).getVersion();
 
         playerSkullItem = Items.PLAYER_HEAD;
-        playerSkullBlock = BlockStates;
+        playerSkullBlock = BlockState.PLAYER_HEAD;
     }
 
     public Speaker registerSpeaker(Speaker speaker) {

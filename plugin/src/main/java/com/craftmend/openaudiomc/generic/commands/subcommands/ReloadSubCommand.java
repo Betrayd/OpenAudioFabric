@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.commands.subcommands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.events.client.SystemReloadEvent;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
@@ -10,7 +11,6 @@ import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
 
 public class ReloadSubCommand extends SubCommand {
 
@@ -22,19 +22,19 @@ public class ReloadSubCommand extends SubCommand {
     @Override
     public void onExecute(User sender, String[] args) {
         message(sender, Platform.makeColor("RED") + "Reloading OpenAudioMc data (config and account details)...");
-        OpenAudioFabric.getInstance().getConfiguration().reloadConfig();
-        OpenAudioFabric.getService(OpenaudioAccountService.class).syncAccount();
+        OpenAudioMc.getInstance().getConfiguration().reloadConfig();
+        OpenAudioMc.getService(OpenaudioAccountService.class).syncAccount();
 
         message(sender, Platform.makeColor("RED") + "Shutting down network service and logging out...");
 
-        for (ClientConnection client : OpenAudioFabric.getService(NetworkingService.class).getClients()) {
+        for (ClientConnection client : OpenAudioMc.getService(NetworkingService.class).getClients()) {
             client.kick(() -> {});
         }
 
-        OpenAudioFabric.getService(NetworkingService.class).stop();
+        OpenAudioMc.getService(NetworkingService.class).stop();
 
         message(sender, Platform.makeColor("RED") + "Re-activating account...");
-        OpenAudioFabric.resolveDependency(TaskService.class).runAsync(() -> OpenAudioFabric.getService(NetworkingService.class).connectIfDown());
+        OpenAudioMc.resolveDependency(TaskService.class).runAsync(() -> OpenAudioMc.getService(NetworkingService.class).connectIfDown());
 
         EventApi.getInstance().callEvent(new SystemReloadEvent());
 

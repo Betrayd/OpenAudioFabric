@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.commands.subcommands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.helpers.PromptProxyError;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.commands.objects.Argument;
@@ -10,7 +11,6 @@ import com.craftmend.openaudiomc.generic.rest.RestRequest;
 import com.craftmend.openaudiomc.generic.rest.routes.Endpoint;
 import com.craftmend.openaudiomc.generic.rest.types.ClaimCodeResponse;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
 
 public class LinkSubCommand extends SubCommand {
 
@@ -23,13 +23,13 @@ public class LinkSubCommand extends SubCommand {
 
     @Override
     public void onExecute(User sender, String[] args) {
-        if (OpenAudioFabric.getInstance().getInvoker().isNodeServer()) {
+        if (OpenAudioMc.getInstance().getInvoker().isNodeServer()) {
             PromptProxyError.sendTo(sender);
             return;
         }
 
         // init connection so we receive the event
-        OpenAudioFabric.resolveDependency(TaskService.class).runAsync(() -> OpenAudioFabric.getService(NetworkingService.class).connectIfDown());
+        OpenAudioMc.resolveDependency(TaskService.class).runAsync(() -> OpenAudioMc.getService(NetworkingService.class).connectIfDown());
 
         message(sender, OaColor.GRAY + "Generating link...");
 

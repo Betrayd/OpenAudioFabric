@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.subcommands.speaker;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.media.MediaService;
@@ -14,8 +15,6 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
 import com.craftmend.openaudiomc.spigot.services.server.ServerService;
 import com.craftmend.openaudiomc.spigot.services.server.enums.ServerVersion;
-import com.openaudiofabric.OpenAudioFabric;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.SkullType;
@@ -44,30 +43,30 @@ public class SpeakerSetSubCommand extends SubCommand {
             return;
         }
 
-        String source = OpenAudioFabric.getService(MediaService.class).process(args[5]);
+        String source = OpenAudioMc.getService(MediaService.class).process(args[5]);
 
         // create
         UUID id = UUID.randomUUID();
-        Configuration config = OpenAudioFabric.getInstance().getConfiguration();
+        Configuration config = OpenAudioMc.getInstance().getConfiguration();
         int range = config.getInt(StorageKey.SETTINGS_SPEAKER_RANGE);
 
-        SpeakerService speakerService = OpenAudioFabric.getService(SpeakerService.class);
+        SpeakerService speakerService = OpenAudioMc.getService(SpeakerService.class);
 
         // register
         Speaker speaker = new Speaker(source, id, range, mappedLocation, SpeakerService.DEFAULT_SPEAKER_TYPE, EnumSet.noneOf(ExtraSpeakerOptions.class));
         speakerService.registerSpeaker(speaker);
         // save
-        OpenAudioFabric.getService(DatabaseService.class)
+        OpenAudioMc.getService(DatabaseService.class)
                 .getRepository(Speaker.class)
                 .save(speaker);
 
         // place block
         Location location = mappedLocation.toBukkit();
-        location.getBlock().setType(OpenAudioFabric.getService(SpeakerService.class).getPlayerSkullBlock());
+        location.getBlock().setType(OpenAudioMc.getService(SpeakerService.class).getPlayerSkullBlock());
 
         Skull s = (Skull) location.getBlock().getState();
 
-        if (OpenAudioFabric.getService(ServerService.class).getVersion() == ServerVersion.LEGACY) {
+        if (OpenAudioMc.getService(ServerService.class).getVersion() == ServerVersion.LEGACY) {
             s.setSkullType(SkullType.PLAYER);
             // reflection for the old map
             try {
@@ -79,7 +78,7 @@ public class SpeakerSetSubCommand extends SubCommand {
             }
 
         } else {
-            location.getBlock().setBlockData(OpenAudioFabric.getService(SpeakerService.class).getPlayerSkullBlock().createBlockData());
+            location.getBlock().setBlockData(OpenAudioMc.getService(SpeakerService.class).getPlayerSkullBlock().createBlockData());
         }
         s.setOwner(SpeakerUtils.speakerSkin);
         s.update();

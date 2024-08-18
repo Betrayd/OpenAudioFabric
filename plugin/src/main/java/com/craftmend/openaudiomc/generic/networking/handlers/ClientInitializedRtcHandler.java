@@ -1,10 +1,10 @@
 package com.craftmend.openaudiomc.generic.networking.handlers;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.events.client.VoicechatReadyEvent;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.generic.networking.abstracts.PayloadHandler;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.networking.interfaces.Authenticatable;
@@ -126,6 +126,6 @@ public class ClientInitializedRtcHandler extends PayloadHandler<ClientOpenedRtcP
         // am I a proxy thingy? then send it to my other thingy
         ClientUpdateStatePacket clientUpdateRtcStatePacket = new ClientUpdateStatePacket(player.getUniqueId(), streamKey, isConnected, isMicOn, isDeafened, cc.getAuth().getStaticToken(), cc.getVolume());
         // sends an update to the server, or nothing if its just spigot
-        OpenAudioFabric.resolveDependency(UserHooks.class).sendPacket(player, clientUpdateRtcStatePacket);
+        OpenAudioMc.resolveDependency(UserHooks.class).sendPacket(player, clientUpdateRtcStatePacket);
     }
 }

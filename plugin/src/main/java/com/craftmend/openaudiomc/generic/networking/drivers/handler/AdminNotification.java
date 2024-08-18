@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.networking.drivers.handler;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
@@ -8,7 +9,6 @@ import com.craftmend.openaudiomc.generic.networking.drivers.models.BackendNotifi
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
-import com.openaudiofabric.OpenAudioFabric;
 
 import java.util.UUID;
 
@@ -27,14 +27,14 @@ public class AdminNotification implements NotificationHandler {
 
         OpenAudioLogger.warn(coloredMessage);
 
-        for (ClientConnection client : OpenAudioFabric.getService(NetworkingService.class).getClients()) {
+        for (ClientConnection client : OpenAudioMc.getService(NetworkingService.class).getClients()) {
             if (client.getUser().isAdministrator()) {
                 client.getUser().sendMessage(messageWithPrefix);
             }
         }
 
-        TaskService ts = OpenAudioFabric.resolveDependency(TaskService.class);
-        NetworkingService ns = OpenAudioFabric.getService(NetworkingService.class);
+        TaskService ts = OpenAudioMc.resolveDependency(TaskService.class);
+        NetworkingService ns = OpenAudioMc.getService(NetworkingService.class);
 
         // schedule a temporary listener to handle notifications post join
         String finalMessage = messageWithPrefix;

@@ -2,10 +2,10 @@ package com.craftmend.openaudiomc.spigot.modules.voicechat.filters;
 
 import java.util.stream.Stream;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.voice.CustomPlayerFilter;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.utils.data.Filter;
-import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.NoArgsConstructor;
 import net.minecraft.entity.player.PlayerEntity;
@@ -66,7 +66,7 @@ public class PeerFilter extends Filter<ClientConnection, PlayerEntity> {
             if (otherPlayer.getPos().squaredDistanceTo(context.getPos()) > MAX_DISTANCE_SQUARED) return false;
 
             //Check custom filters for other plugins to hook into
-            FilterService filterService = OpenAudioFabric.getService(FilterService.class);
+            FilterService filterService = OpenAudioMc.getService(FilterService.class);
 
             boolean failedCheck = false;
 

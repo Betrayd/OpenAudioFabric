@@ -1,5 +1,7 @@
 package com.craftmend.openaudiomc.bungee.modules.commands.subcommand;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
+
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.generic.media.tabcomplete.MediaTabcompleteProvider;
@@ -8,8 +10,6 @@ import com.craftmend.openaudiomc.generic.node.packets.CommandProxyPacket;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.modules.proxy.objects.CommandProxyPayload;
-import com.openaudiofabric.OpenAudioFabric;
-
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class BungeeSpeakerCommand extends SubCommand {
@@ -50,7 +50,7 @@ public class BungeeSpeakerCommand extends SubCommand {
             payload.setArgs(args);
             payload.setProxiedCommand(ProxiedCommand.SPEAKER);
 
-            OpenAudioFabric.resolveDependency(UserHooks.class).sendPacket(sender,new CommandProxyPacket(payload));
+            OpenAudioMc.resolveDependency(UserHooks.class).sendPacket(sender,new CommandProxyPacket(payload));
         }
     }
 }

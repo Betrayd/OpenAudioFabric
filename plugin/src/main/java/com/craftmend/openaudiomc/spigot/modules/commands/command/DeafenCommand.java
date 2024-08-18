@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.command;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.helpers.CommandMiddewareExecutor;
 import com.craftmend.openaudiomc.generic.commands.interfaces.CommandMiddleware;
 import com.craftmend.openaudiomc.generic.commands.middleware.CatchCrashMiddleware;
@@ -14,8 +15,6 @@ import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.modules.players.SpigotPlayerService;
 import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotConnection;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.NoArgsConstructor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,12 +32,12 @@ public class DeafenCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        User sua = OpenAudioFabric.resolveDependency(UserHooks.class).fromCommandSender(sender);
+        User sua = OpenAudioMc.resolveDependency(UserHooks.class).fromCommandSender(sender);
 
         if (CommandMiddewareExecutor.shouldBeCanceled(sua, null, commandMiddleware)) return true;
 
         if (sender instanceof Player) {
-            SpigotConnection spigotConnection = OpenAudioFabric.getService(SpigotPlayerService.class).getClient(((Player) sender).getUniqueId());
+            SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(((Player) sender).getUniqueId());
 
             if (!spigotConnection.getClientConnection().getSession().isConnectedToRtc()) {
                 String message = Platform.translateColors(StorageKey.MESSAGE_VC_NOT_CONNECTED.getString());

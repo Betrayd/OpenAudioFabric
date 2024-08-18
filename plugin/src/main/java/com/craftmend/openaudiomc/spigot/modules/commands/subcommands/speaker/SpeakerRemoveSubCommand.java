@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.subcommands.speaker;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
@@ -8,8 +9,6 @@ import com.craftmend.openaudiomc.spigot.modules.commands.subcommands.SpeakersSub
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
-import com.openaudiofabric.OpenAudioFabric;
-
 import org.bukkit.Material;
 
 public class SpeakerRemoveSubCommand extends SubCommand {
@@ -31,13 +30,13 @@ public class SpeakerRemoveSubCommand extends SubCommand {
         }
 
         // remove from cache
-        Configuration config = OpenAudioFabric.getInstance().getConfiguration();
-        SpeakerService speakerService = OpenAudioFabric.getService(SpeakerService.class);
+        Configuration config = OpenAudioMc.getInstance().getConfiguration();
+        SpeakerService speakerService = OpenAudioMc.getService(SpeakerService.class);
         Speaker speaker = speakerService.getSpeaker(mappedLocation);
         speakerService.unlistSpeaker(mappedLocation);
 
         // save
-        OpenAudioFabric.getService(DatabaseService.class)
+        OpenAudioMc.getService(DatabaseService.class)
                 .getRepository(Speaker.class)
                 .delete(speaker);
 

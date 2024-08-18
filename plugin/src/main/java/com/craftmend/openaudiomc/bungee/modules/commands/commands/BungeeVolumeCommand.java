@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.bungee.modules.commands.commands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.helpers.CommandMiddewareExecutor;
 import com.craftmend.openaudiomc.generic.commands.interfaces.CommandMiddleware;
 import com.craftmend.openaudiomc.generic.commands.middleware.CatchCrashMiddleware;
@@ -7,7 +8,6 @@ import com.craftmend.openaudiomc.generic.commands.middleware.CatchLegalBindingMi
 import com.craftmend.openaudiomc.generic.commands.middleware.CleanStateCheckMiddleware;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.user.adapters.BungeeUserAdapter;
-import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.platform.Platform;
@@ -43,7 +43,7 @@ public class BungeeVolumeCommand extends Command {
             return;
         }
 
-        ClientConnection clientConnection = OpenAudioFabric.getService(NetworkingService.class).getClient(((ProxiedPlayer) sender).getUniqueId());
+        ClientConnection clientConnection = OpenAudioMc.getService(NetworkingService.class).getClient(((ProxiedPlayer) sender).getUniqueId());
 
         if (!clientConnection.isConnected()) {
             sender.sendMessage(Platform.translateColors(
@@ -53,7 +53,7 @@ public class BungeeVolumeCommand extends Command {
         }
 
         if (args.length == 0) {
-            String message = Platform.translateColors(OpenAudioFabric.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID));
+            String message = Platform.translateColors(OpenAudioMc.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID));
             sender.sendMessage(message);
             return;
         }
@@ -62,14 +62,14 @@ public class BungeeVolumeCommand extends Command {
             int volume = Integer.parseInt(args[0]);
             //check if in range
             if (volume < 0 || volume > 100) {
-                String message = Platform.translateColors(OpenAudioFabric.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID));
+                String message = Platform.translateColors(OpenAudioMc.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID));
                 sender.sendMessage(message);
                 return;
             } else {
                 clientConnection.setVolume(volume);
             }
         } catch (Exception e) {
-            String message = Platform.translateColors(OpenAudioFabric.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID));
+            String message = Platform.translateColors(OpenAudioMc.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID));
             sender.sendMessage(message);
             return;
         }

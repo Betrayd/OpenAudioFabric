@@ -1,13 +1,12 @@
 package com.craftmend.openaudiomc.generic.database.internal;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
 import com.craftmend.storm.Storm;
 import com.craftmend.storm.api.StormModel;
 import com.craftmend.storm.api.enums.Where;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.SneakyThrows;
 
 import java.util.Collection;
@@ -55,7 +54,7 @@ public class Repository<T extends DataStore> {
         } catch (Exception e) {
             OpenAudioLogger.warn("Failed to save a model. Trying again later (" + data.getClass().getSimpleName() + ")");
             // try again in a second, if it failed again, log it as an error
-            TaskService ts = OpenAudioFabric.resolveDependency(TaskService.class);
+            TaskService ts = OpenAudioMc.resolveDependency(TaskService.class);
             ts.schduleSyncDelayedTask(() -> {
                 ts.runAsync(() -> {
                     try {

@@ -1,13 +1,13 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.subcommands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
+
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.modules.shortner.AliasService;
 import com.craftmend.openaudiomc.spigot.modules.shortner.data.Alias;
-import com.openaudiofabric.OpenAudioFabric;
-
 import org.bukkit.*;
 
 public class AliasSubCommand extends SubCommand {
@@ -27,9 +27,9 @@ public class AliasSubCommand extends SubCommand {
             String aliasName = args[0].toLowerCase();
             String aliasSource = args[1];
             Alias alias = new Alias(aliasName, aliasSource);
-            OpenAudioFabric.getService(AliasService.class).getAliasMap().put(aliasName, alias);
+            OpenAudioMc.getService(AliasService.class).getAliasMap().put(aliasName, alias);
 
-            OpenAudioFabric.getService(DatabaseService.class).getRepository(Alias.class)
+            OpenAudioMc.getService(DatabaseService.class).getRepository(Alias.class)
                     .save(alias);
 
             message(sender, ChatColor.GREEN + "Success! the alias " + ChatColor.YELLOW + "a:" + aliasName.toLowerCase() + ChatColor.GRAY + " will be read as " + ChatColor.YELLOW + aliasSource);

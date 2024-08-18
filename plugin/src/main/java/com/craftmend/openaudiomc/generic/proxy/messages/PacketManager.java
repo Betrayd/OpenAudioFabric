@@ -1,11 +1,11 @@
 package com.craftmend.openaudiomc.generic.proxy.messages;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.proxy.ProxyHostService;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.proxy.messages.bungeecord.PacketForward;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -177,9 +177,9 @@ public abstract class PacketManager {
                 packet.sender = packetPlayer;
                 packet.handle(dataInputStream);
 
-                User user = OpenAudioFabric.resolveDependency(UserHooks.class).byUuid(packetPlayer.getUuid());
+                User user = OpenAudioMc.resolveDependency(UserHooks.class).byUuid(packetPlayer.getUuid());
 
-                OpenAudioFabric.getService(ProxyHostService.class).onPacketReceive(
+                OpenAudioMc.getService(ProxyHostService.class).onPacketReceive(
                         user,
                         packet
                 );

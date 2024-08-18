@@ -3,14 +3,13 @@ package com.craftmend.openaudiomc.spigot.modules.traincarts.listeners;
 import com.bergerkiller.bukkit.tc.controller.MinecartMember;
 import com.bergerkiller.bukkit.tc.controller.MinecartMemberStore;
 import com.bergerkiller.bukkit.tc.events.GroupRemoveEvent;
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.networking.packets.client.media.PacketClientDestroyMedia;
 import com.craftmend.openaudiomc.spigot.modules.players.SpigotPlayerService;
 import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotConnection;
 import com.craftmend.openaudiomc.spigot.modules.traincarts.TrainCartsModule;
 import com.craftmend.openaudiomc.spigot.modules.traincarts.models.TrainMedia;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,7 +41,7 @@ public class TrainListener implements Listener {
             TrainMedia media = trainCartsModule.getMediaFromTrain(trainName);
             if (media == null) return;
 
-            SpigotConnection spigotConnection = OpenAudioFabric.getService(SpigotPlayerService.class).getClient(player);
+            SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(player);
             spigotConnection.getClientConnection().sendMedia(media.toMedia());
         }
     }
@@ -60,8 +59,8 @@ public class TrainListener implements Listener {
             TrainMedia media = trainCartsModule.getMediaFromTrain(trainName);
             if (media == null) return;
 
-            SpigotConnection spigotConnection = OpenAudioFabric.getService(SpigotPlayerService.class).getClient(player);
-            OpenAudioFabric.getService(NetworkingService.class).send(spigotConnection.getClientConnection(), new PacketClientDestroyMedia(media.getMediaId().toString()));
+            SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(player);
+            OpenAudioMc.getService(NetworkingService.class).send(spigotConnection.getClientConnection(), new PacketClientDestroyMedia(media.getMediaId().toString()));
         }
     }
 

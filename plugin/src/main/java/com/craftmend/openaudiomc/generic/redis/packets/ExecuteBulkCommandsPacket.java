@@ -1,9 +1,8 @@
 package com.craftmend.openaudiomc.generic.redis.packets;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.redis.packets.interfaces.OARedisPacket;
 import com.craftmend.openaudiomc.spigot.modules.show.runnables.CommandRunnable;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +18,7 @@ public class ExecuteBulkCommandsPacket extends OARedisPacket {
 
     @Override
     public String serialize() {
-        return OpenAudioFabric.getGson().toJson(this);
+        return OpenAudioMc.getGson().toJson(this);
     }
 
     @Override

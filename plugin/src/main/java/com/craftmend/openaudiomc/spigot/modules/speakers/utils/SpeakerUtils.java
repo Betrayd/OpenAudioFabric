@@ -2,8 +2,8 @@ package com.craftmend.openaudiomc.spigot.modules.speakers.utils;
 
 import java.util.UUID;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
-import com.openaudiofabric.OpenAudioFabric;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SkullBlockEntity;
@@ -19,7 +19,7 @@ public class SpeakerUtils {
 
     public static final String speakerSkin = "OpenAudioMc";
     public static final UUID speakerUUID = UUID.fromString("c0db149e-d498-4a16-8e35-93d57577589f");
-    private static final SpeakerService SPEAKER_SERVICE = OpenAudioFabric.getService(SpeakerService.class);
+    private static final SpeakerService SPEAKER_SERVICE = OpenAudioMc.getService(SpeakerService.class);
 
     public static boolean isSpeakerSkull(BlockEntity block) {
         if (block instanceof SkullBlockEntity skull) {

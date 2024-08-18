@@ -1,8 +1,8 @@
 package com.craftmend.openaudiomc.bungee.modules.scheduling;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.bungee.OpenAudioMcBungee;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
-import com.openaudiofabric.OpenAudioFabric;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +13,7 @@ public class BungeeTaskService implements TaskService {
 
     @Override
     public int scheduleAsyncRepeatingTask(Runnable runnable, int delayUntilFirst, int tickInterval) {
-        if (OpenAudioFabric.getInstance().isDisabled()) {
+        if (OpenAudioMc.getInstance().isDisabled()) {
             runnable.run();
             return -1;
         }
@@ -23,7 +23,7 @@ public class BungeeTaskService implements TaskService {
 
     @Override
     public int scheduleSyncRepeatingTask(Runnable runnable, int delayUntilFirst, int tickInterval) {
-        if (OpenAudioFabric.getInstance().isDisabled()) {
+        if (OpenAudioMc.getInstance().isDisabled()) {
             runnable.run();
             return -1;
         }
@@ -33,7 +33,7 @@ public class BungeeTaskService implements TaskService {
 
     @Override
     public int schduleSyncDelayedTask(Runnable runnable, int delay) {
-        if (OpenAudioFabric.getInstance().isDisabled()) {
+        if (OpenAudioMc.getInstance().isDisabled()) {
             runnable.run();
             return -1;
         }
@@ -48,7 +48,7 @@ public class BungeeTaskService implements TaskService {
 
     @Override
     public void runAsync(Runnable runnable) {
-        if (OpenAudioFabric.getInstance().isDisabled()) {
+        if (OpenAudioMc.getInstance().isDisabled()) {
             notifyRunner();
             runnable.run();
             return;

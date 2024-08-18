@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.show;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.service.Inject;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
@@ -8,8 +9,6 @@ import com.craftmend.openaudiomc.spigot.modules.show.objects.Show;
 import com.craftmend.openaudiomc.spigot.modules.show.runnables.ActionBarRunnable;
 import com.craftmend.openaudiomc.spigot.modules.show.runnables.ChatRunnable;
 import com.craftmend.openaudiomc.spigot.modules.show.runnables.CommandRunnable;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.NoArgsConstructor;
 import org.bukkit.World;
 
@@ -65,7 +64,7 @@ public class ShowService extends Service {
     }
 
     public Show fromJson(String json) {
-        return OpenAudioFabric.getGson().fromJson(json, Show.class);
+        return OpenAudioMc.getGson().fromJson(json, Show.class);
     }
 
     public Show fromFile(String name) {

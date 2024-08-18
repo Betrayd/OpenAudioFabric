@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.subcommands.region;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
@@ -13,8 +14,6 @@ import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties
 import com.craftmend.openaudiomc.spigot.modules.regions.objects.TimedRegionProperties;
 import com.craftmend.openaudiomc.spigot.modules.regions.registry.WorldRegionManager;
 import com.google.gson.Gson;
-import com.openaudiofabric.OpenAudioFabric;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -137,7 +136,7 @@ public class RegionEditSubCommand extends SubCommand {
         if (rp instanceof TimedRegionProperties) return;
 
         Bukkit.getScheduler().runTaskAsynchronously(OpenAudioMcSpigot.getInstance(), () -> {
-            OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class).save(rp);
+            OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class).save(rp);
         });
     }
 }

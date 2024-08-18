@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.networking;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.VoiceApi;
 import com.craftmend.openaudiomc.api.events.client.ClientAuthenticationEvent;
@@ -27,8 +28,6 @@ import com.craftmend.openaudiomc.generic.state.states.ReconnectingState;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,7 +91,7 @@ public class DefaultNetworkingService extends NetworkingService {
             }
         });
 
-        OpenAudioFabric.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(() -> {
+        OpenAudioMc.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(() -> {
             packetThroughput = 0;
         }, 20, 20);
     }
@@ -101,7 +100,7 @@ public class DefaultNetworkingService extends NetworkingService {
         OpenAudioLogger.info("Initializing connection service...");
 
         // set tick tack
-        OpenAudioFabric.resolveDependency(TaskService.class)
+        OpenAudioMc.resolveDependency(TaskService.class)
                 .scheduleSyncRepeatingTask(() -> clientMap
                                 .values()
                                 .forEach(clientConnection -> clientConnection.getSession().tick()),
@@ -123,13 +122,13 @@ public class DefaultNetworkingService extends NetworkingService {
             if (!connectLock.tryLock(30, TimeUnit.SECONDS))
                 return;
 
-            if (!OpenAudioFabric.getService(StateService.class).getCurrentState().canConnect()) {
+            if (!OpenAudioMc.getService(StateService.class).getCurrentState().canConnect()) {
                 // health check for voice
-                OpenAudioFabric.getService(OpenaudioAccountService.class).startVoiceHandshake();
+                OpenAudioMc.getService(OpenaudioAccountService.class).startVoiceHandshake();
                 return;
             }
             // update state
-            OpenAudioFabric.getService(OpenaudioAccountService.class).startVoiceHandshake();
+            OpenAudioMc.getService(OpenaudioAccountService.class).startVoiceHandshake();
             socketConnection.setupConnection();
         } catch (InterruptedException e) {
             // ignore - its okay
@@ -234,7 +233,7 @@ public class DefaultNetworkingService extends NetworkingService {
      */
     @Override
     public void remove(UUID playerId) {
-        OpenAudioFabric.getService(AuthenticationService.class).getDriver().removePlayerFromCache(playerId);
+        OpenAudioMc.getService(AuthenticationService.class).getDriver().removePlayerFromCache(playerId);
         ClientConnection client = clientMap.get(playerId);
         if (client != null) {
             removedConnectionSubscribers.forEach((id, handler) -> {
@@ -250,7 +249,7 @@ public class DefaultNetworkingService extends NetworkingService {
             };
 
             // are we in stand alone mode? then kick this client
-            if (OpenAudioFabric.getInstance().getPlatform() == Platform.SPIGOT) {
+            if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
                 if (OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.STAND_ALONE)
                     client.kick(removeCallback);
             } else {

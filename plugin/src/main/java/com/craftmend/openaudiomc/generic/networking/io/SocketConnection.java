@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.networking.io;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.authentication.objects.ServerKeySet;
@@ -24,8 +25,6 @@ import com.craftmend.openaudiomc.generic.networking.interfaces.SocketDriver;
 
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.uploads.UploadIndexService;
-import com.openaudiofabric.OpenAudioFabric;
-
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
@@ -66,23 +65,23 @@ public class SocketConnection {
     }
 
     public void setupConnection() {
-        boolean isReconnect = OpenAudioFabric.getService(StateService.class).getCurrentState() instanceof ReconnectingState;
-        int attempt = isReconnect ? ((ReconnectingState) OpenAudioFabric.getService(StateService.class).getCurrentState()).getAttempts() : 0;
-        UUID stateId = isReconnect ? ((ReconnectingState) OpenAudioFabric.getService(StateService.class).getCurrentState()).getStateId() : null;
+        boolean isReconnect = OpenAudioMc.getService(StateService.class).getCurrentState() instanceof ReconnectingState;
+        int attempt = isReconnect ? ((ReconnectingState) OpenAudioMc.getService(StateService.class).getCurrentState()).getAttempts() : 0;
+        UUID stateId = isReconnect ? ((ReconnectingState) OpenAudioMc.getService(StateService.class).getCurrentState()).getStateId() : null;
 
-        if (!isReconnect && !OpenAudioFabric.getService(StateService.class).getCurrentState().canConnect()) return;
+        if (!isReconnect && !OpenAudioMc.getService(StateService.class).getCurrentState().canConnect()) return;
 
         // update state
         if (!isReconnect) {
             // only override the state if we are not reconnecting
-            OpenAudioFabric.getService(StateService.class).setState(new AssigningRelayState());
+            OpenAudioMc.getService(StateService.class).setState(new AssigningRelayState());
         } else {
             OpenAudioLogger.info("Attempting to restore connection to OpenAudioMc, attempt " + attempt);
         }
 
         if (!registeredLogout) {
             relayLoginRequest = new RestRequest(RelayLoginResponse.class, Endpoint.RELAY_LOGIN);
-            relayLoginRequest.setQuery("oa-version", OpenAudioFabric.BUILD.getBuildNumber() + "");
+            relayLoginRequest.setQuery("oa-version", OpenAudioMc.BUILD.getBuildNumber() + "");
             relayLogoutRequest = new RestRequest(NoResponse.class, Endpoint.RELAY_LOGOUT);
 
             EventApi.getInstance().registerHandler(StateChangeEvent.class, event -> {
@@ -121,17 +120,17 @@ public class SocketConnection {
 
         // only do login handling if we're not reconnecting, because then we'd be re-using the same config
         if (!isReconnect) {
-            OpenAudioFabric.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
-                if (OpenAudioFabric.getService(StateService.class).getCurrentState() instanceof AssigningRelayState) {
+            OpenAudioMc.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
+                if (OpenAudioMc.getService(StateService.class).getCurrentState() instanceof AssigningRelayState) {
                     OpenAudioLogger.info("Connecting timed out.");
-                    OpenAudioFabric.getService(StateService.class).setState(new IdleState("Connecting to OpenAudioMc timed out"));
+                    OpenAudioMc.getService(StateService.class).setState(new IdleState("Connecting to OpenAudioMc timed out"));
                 }
             }, 20 * 35);
 
             relayLoginRequest.run();
 
             if (relayLoginRequest.hasError()) {
-                OpenAudioFabric.getService(StateService.class).setState(new IdleState("Failed to do the initial handshake. Error: " + relayLoginRequest.getError()));
+                OpenAudioMc.getService(StateService.class).setState(new IdleState("Failed to do the initial handshake. Error: " + relayLoginRequest.getError()));
                 OpenAudioLogger.info("Failed to get instance: " + relayLoginRequest.getError().getMessage());
                 try {
                     throw new IOException("Failed to get instance! see console for error information");
@@ -143,11 +142,11 @@ public class SocketConnection {
 
             RelayLoginResponse loginResponse = relayLoginRequest.getResponse();
             previousLogin = loginResponse;
-            OpenAudioFabric.getService(UploadIndexService.class).setContent(loginResponse.getFiles());
+            OpenAudioMc.getService(UploadIndexService.class).setContent(loginResponse.getFiles());
         }
 
         if (previousLogin == null) {
-            OpenAudioFabric.getService(StateService.class).setState(new IdleState("Failed to get a relay instance"));
+            OpenAudioMc.getService(StateService.class).setState(new IdleState("Failed to get a relay instance"));
             OpenAudioLogger.warn("Entered a track which should only be entered during recovery, but there was no previous login. reconnect: " + isReconnect + " attempt: " + attempt);
             return;
         }
@@ -163,23 +162,23 @@ public class SocketConnection {
         // this should again, only be done if we're not reconnecting
         if (!isReconnect) {
             // register state to be connecting
-            OpenAudioFabric.getService(StateService.class).setState(new ConnectingState());
+            OpenAudioMc.getService(StateService.class).setState(new ConnectingState());
 
             // clear session cache
-            OpenAudioFabric.getService(AuthenticationService.class).getDriver().initCache();
+            OpenAudioMc.getService(AuthenticationService.class).getDriver().initCache();
         }
 
         // schedule timeout check
-        OpenAudioFabric.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
+        OpenAudioMc.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
             // was it a normal connection?
-            if (OpenAudioFabric.getService(StateService.class).getCurrentState() instanceof ConnectingState) {
+            if (OpenAudioMc.getService(StateService.class).getCurrentState() instanceof ConnectingState) {
                 OpenAudioLogger.warn("Connect timed out.");
-                OpenAudioFabric.getService(StateService.class).setState(new IdleState("Connecting to the assigned instance timed out (socket)"));
+                OpenAudioMc.getService(StateService.class).setState(new IdleState("Connecting to the assigned instance timed out (socket)"));
             }
 
             // alternatively, check if we're still in the same reconnect cycle
-            if (OpenAudioFabric.getService(StateService.class).getCurrentState() instanceof ReconnectingState) {
-                ReconnectingState state = (ReconnectingState) OpenAudioFabric.getService(StateService.class).getCurrentState();
+            if (OpenAudioMc.getService(StateService.class).getCurrentState() instanceof ReconnectingState) {
+                ReconnectingState state = (ReconnectingState) OpenAudioMc.getService(StateService.class).getCurrentState();
                 if (state.getStateId().equals(stateId) && state.getAttempts() == attempt) {
                     socket.emit(Socket.EVENT_CONNECT_TIMEOUT);
                 }
@@ -203,15 +202,15 @@ public class SocketConnection {
             this.socket.emit("announce-shutdown", "goodbye");
             this.socket.disconnect();
         }
-        OpenAudioFabric.getService(StateService.class).setState(new IdleState());
-        OpenAudioFabric.getService(OpenaudioAccountService.class).getVoiceApiConnection().stop();
+        OpenAudioMc.getService(StateService.class).setState(new IdleState());
+        OpenAudioMc.getService(OpenaudioAccountService.class).getVoiceApiConnection().stop();
     }
 
     public void send(Authenticatable client, AbstractPacket packet) {
         // only send the packet if the client is online, valid and the plugin is connected
-        if (client.isConnected() && OpenAudioFabric.getService(StateService.class).getCurrentState().isConnected()) {
+        if (client.isConnected() && OpenAudioMc.getService(StateService.class).getCurrentState().isConnected()) {
             packet.setClient(client.getOwner().getUniqueId());
-            socket.emit("data", OpenAudioFabric.getGson().toJson(packet));
+            socket.emit("data", OpenAudioMc.getGson().toJson(packet));
         }
     }
 

@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.oac;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.events.events.AccountAddTagEvent;
@@ -23,8 +24,6 @@ import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.voicechat.bus.VoiceApiConnection;
 import com.craftmend.openaudiomc.generic.voicechat.enums.VoiceApiStatus;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,7 +36,7 @@ import static com.craftmend.openaudiomc.generic.authentication.AuthenticationSer
 public class OpenaudioAccountService extends Service {
 
     @Inject
-    private OpenAudioFabric openAudioMc;
+    private OpenAudioMc openAudioMc;
     @Getter
     private final VoiceApiConnection voiceApiConnection = new VoiceApiConnection();
 
@@ -62,10 +61,10 @@ public class OpenaudioAccountService extends Service {
     @Override
     public void onEnable() {
         // wait after buut if its a new account
-        if (OpenAudioFabric.getService(AuthenticationService.class).isNewAccount()) {
+        if (OpenAudioMc.getService(AuthenticationService.class).isNewAccount()) {
             delayedInit = true;
             OpenAudioLogger.info("Delaying account init because we're a fresh installation");
-            OpenAudioFabric.resolveDependency(TaskService.class).schduleSyncDelayedTask(this::initialize, 20 * 3);
+            OpenAudioMc.resolveDependency(TaskService.class).schduleSyncDelayedTask(this::initialize, 20 * 3);
         } else {
             delayedInit = false;
             initialize();
@@ -90,7 +89,7 @@ public class OpenaudioAccountService extends Service {
     }
 
     public void syncAccount() {
-        if (OpenAudioFabric.getInstance().getInvoker().isNodeServer()) return;
+        if (OpenAudioMc.getInstance().getInvoker().isNodeServer()) return;
         // stop the voice service
         if (this.voiceApiConnection != null) {
             this.voiceApiConnection.stop();
@@ -102,14 +101,14 @@ public class OpenaudioAccountService extends Service {
         if (settingsRequest.hasError()) {
             OpenAudioLogger.warn("Failed to sync account details. Error: " + settingsRequest.getError().getMessage());
             OpenAudioLogger.warn("This is probably because the account got deleted, or the server key is invalid.");
-            if (!OpenAudioFabric.getService(AuthenticationService.class).isNewAccount()) {
+            if (!OpenAudioMc.getService(AuthenticationService.class).isNewAccount()) {
                 // drop old
-                Configuration config = OpenAudioFabric.getInstance().getConfiguration();
+                Configuration config = OpenAudioMc.getInstance().getConfiguration();
                 config.setString(StorageKey.AUTH_PRIVATE_KEY, "not-set");
                 config.setString(StorageKey.AUTH_PUBLIC_KEY, "not-set");
 
                 OpenAudioLogger.warn("This is not a new account, so I'm going to invalidate the server key and try again.");
-                TOKEN_PROVIDER.inject(taskService, OpenAudioFabric.getService(AuthenticationService.class));
+                TOKEN_PROVIDER.inject(taskService, OpenAudioMc.getService(AuthenticationService.class));
                 OpenAudioLogger.warn("Retrying...");
                 try {
                     Thread.sleep(1000);
@@ -141,7 +140,7 @@ public class OpenaudioAccountService extends Service {
     }
 
     public void shutdown() {
-        if (OpenAudioFabric.getInstance().getInvoker().isNodeServer()) return;
+        if (OpenAudioMc.getInstance().getInvoker().isNodeServer()) return;
         this.voiceApiConnection.stop();
     }
 
@@ -174,10 +173,10 @@ public class OpenaudioAccountService extends Service {
 
         if (!ignoreLocal) {
             // check anyway
-            if (OpenAudioFabric.getService(NetworkingService.class).getClients().isEmpty()) return;
+            if (OpenAudioMc.getService(NetworkingService.class).getClients().isEmpty()) return;
         }
 
-        if (OpenAudioFabric.resolveDependency(UserHooks.class).getOnlineUsers().isEmpty()) {
+        if (OpenAudioMc.resolveDependency(UserHooks.class).getOnlineUsers().isEmpty()) {
             OpenAudioLogger.info("The server is empty! ignoring voice chat.");
             return;
         }
@@ -205,7 +204,7 @@ public class OpenaudioAccountService extends Service {
                         if (errorCode == SectionError.VOICECHAT_ALREADY_CONNECTED) {
                             new RestRequest(NoResponse.class, Endpoint.VOICE_INVALIDATE_PASSWORD).run();
                             OpenAudioLogger.warn("This server still has a session running with voice chat, terminating and trying again in 20 seconds.");
-                            OpenAudioFabric.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
+                            OpenAudioMc.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
                                 startVoiceHandshake(true);
                             }, 20 * 20);
                             isVcLocked = false;
@@ -215,7 +214,7 @@ public class OpenaudioAccountService extends Service {
                         if (errorCode == SectionError.SERVER_ERROR) {
                             new RestRequest(NoResponse.class, Endpoint.VOICE_INVALIDATE_PASSWORD).run();
                             OpenAudioLogger.warn("Failed to claim a voicechat session, terminating and trying again in 20 seconds.");
-                            OpenAudioFabric.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
+                            OpenAudioMc.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
                                 startVoiceHandshake(true);
                             }, 20 * 20);
                             isVcLocked = false;

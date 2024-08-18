@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.rd.routes;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.client.helpers.TokenFactory;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
@@ -9,8 +10,6 @@ import com.craftmend.openaudiomc.generic.rd.RestDirectService;
 import com.craftmend.openaudiomc.generic.rd.http.HttpResponse;
 import com.craftmend.openaudiomc.generic.rd.http.Route;
 import com.craftmend.openaudiomc.generic.utils.data.UuidUtils;
-import com.openaudiofabric.OpenAudioFabric;
-
 import fi.iki.elonen.NanoHTTPD;
 import lombok.AllArgsConstructor;
 
@@ -34,17 +33,17 @@ public class TokenInvalidateRoute extends Route {
         if (clientUuid == null) {
             return HttpResponse.text("Bad request", NanoHTTPD.Response.Status.BAD_REQUEST);
         }
-        ClientConnection cc = OpenAudioFabric.getService(NetworkingService.class).getClient(clientUuid);
+        ClientConnection cc = OpenAudioMc.getService(NetworkingService.class).getClient(clientUuid);
         if (cc == null) {
             return HttpResponse.text("Bad request", NanoHTTPD.Response.Status.BAD_REQUEST);
         }
 
         // ready save to do the thing
         OpenAudioLogger.info(cc.getUser().getName() + " activated a streamer mode reset");
-        OpenAudioFabric.getService(AuthenticationService.class).getDriver().removePlayerFromCache(clientUuid);
+        OpenAudioMc.getService(AuthenticationService.class).getDriver().removePlayerFromCache(clientUuid);
         cc.setAuth(new TokenFactory().build(cc));
 
-        return HttpResponse.json(OpenAudioFabric.getGson().toJson(cc.getAuth()));
+        return HttpResponse.json(OpenAudioMc.getGson().toJson(cc.getAuth()));
     }
 
 }

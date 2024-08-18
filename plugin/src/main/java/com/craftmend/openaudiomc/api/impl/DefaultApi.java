@@ -1,10 +1,9 @@
 package com.craftmend.openaudiomc.api.impl;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.impl.event.ApiEventDriver;
 import com.craftmend.openaudiomc.api.interfaces.*;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class DefaultApi implements AudioApi {
     @Override
     @Deprecated
     public Client getClient(UUID uuid) {
-        return OpenAudioFabric.getService(NetworkingService.class).getClient(uuid);
+        return OpenAudioMc.getService(NetworkingService.class).getClient(uuid);
     }
 
     @Override
@@ -42,13 +41,13 @@ public class DefaultApi implements AudioApi {
     @Override
     @Deprecated
     public ApiEventDriver getEventDriver() {
-        return OpenAudioFabric.getInstance().getApiEventDriver();
+        return OpenAudioMc.getInstance().getApiEventDriver();
     }
 
     @Override
     @Deprecated
     public Collection<Client> getAllClients() {
-        return new ArrayList<>(OpenAudioFabric.getService(NetworkingService.class).getClients());
+        return new ArrayList<>(OpenAudioMc.getService(NetworkingService.class).getClients());
     }
 
     @Override

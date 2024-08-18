@@ -8,6 +8,7 @@ import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.WorldApi;
 import com.craftmend.openaudiomc.api.exceptions.InvalidRegionException;
 import com.craftmend.openaudiomc.api.exceptions.InvalidThreadException;
@@ -28,7 +29,6 @@ import com.craftmend.openaudiomc.spigot.modules.regions.objects.TimedRegionPrope
 import com.craftmend.openaudiomc.spigot.modules.regions.registry.WorldRegionManager;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
-import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.AllArgsConstructor;
 import net.minecraft.server.MinecraftServer;
@@ -44,7 +44,7 @@ public class WorldApiImpl implements WorldApi {
     @NotNull
     @Override
     public Collection<AudioRegion> getRegionsAt(int x, int y, int z, @NotNull String world) {
-        if (OpenAudioFabric.getInstance().getPlatform() != Platform.SPIGOT) {
+        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
             throw new IllegalStateException("This method is only available on the spigot platform");
         }
 
@@ -65,11 +65,11 @@ public class WorldApiImpl implements WorldApi {
     @Nullable
     @Override
     public BasicSpeaker getSpeakerAt(int x, int y, int z, @NotNull String world) {
-        if (OpenAudioFabric.getInstance().getPlatform() != Platform.SPIGOT) {
+        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
             throw new IllegalStateException("This method is only available on the spigot platform");
         }
 
-        return OpenAudioFabric.getService(SpeakerService.class).getSpeaker(new MappedLocation(x, y, z, world));
+        return OpenAudioMc.getService(SpeakerService.class).getSpeaker(new MappedLocation(x, y, z, world));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class WorldApiImpl implements WorldApi {
                 worldName
         );
 
-        OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class)
+        OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class)
                 .save(rp);
 
         worldRegionManager.registerRegion(rp);
@@ -176,7 +176,7 @@ public class WorldApiImpl implements WorldApi {
         RegionProperties rp = worldRegionManager.getRegionProperties(regionId);
         if (rp != null) {
             if (rp.getId() != null && !(rp instanceof TimedRegionProperties)) {
-                OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class)
+                OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class)
                         .delete(rp);
             }
 

@@ -1,5 +1,7 @@
 package com.craftmend.openaudiomc.generic.commands.subcommands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
+
 import com.craftmend.openaudiomc.api.clients.Client;
 import com.craftmend.openaudiomc.api.media.Media;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
@@ -9,7 +11,6 @@ import com.craftmend.openaudiomc.generic.media.tabcomplete.MediaTabcompleteProvi
 import com.craftmend.openaudiomc.generic.media.utils.Validation;
 import com.craftmend.openaudiomc.generic.platform.OaColor;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.api.media.MediaOptions;
@@ -62,7 +63,7 @@ public class PlaySubCommand extends SubCommand {
 
         if (args.length == 3) {
             try {
-                MediaOptions mediaOptions = OpenAudioFabric.getGson().fromJson(args[2], MediaOptions.class);
+                MediaOptions mediaOptions = OpenAudioMc.getGson().fromJson(args[2], MediaOptions.class);
 
                 OptionalError parsingError = mediaOptions.validate();
                 if (parsingError.isError()) {

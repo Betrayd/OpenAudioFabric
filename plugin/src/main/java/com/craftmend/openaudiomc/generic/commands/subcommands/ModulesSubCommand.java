@@ -1,10 +1,10 @@
 package com.craftmend.openaudiomc.generic.commands.subcommands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.generic.modules.ModuleLoaderService;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class ModulesSubCommand extends SubCommand {
     public void onExecute(User sender, String[] args) {
         // get all entries in the module folder
         message(sender, "Modules:");
-        for (File loadedModuleFile : OpenAudioFabric.getService(ModuleLoaderService.class).getLoadedModuleFiles()) {
+        for (File loadedModuleFile : OpenAudioMc.getService(ModuleLoaderService.class).getLoadedModuleFiles()) {
             // get shasum of the file
             try (InputStream is = Files.newInputStream(loadedModuleFile.toPath())) {
                 String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(is);

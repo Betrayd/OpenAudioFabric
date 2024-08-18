@@ -1,11 +1,10 @@
 package com.craftmend.openaudiomc.generic.migrations;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.backups.BackupService;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.migrations.interfaces.SimpleMigration;
 import com.craftmend.openaudiomc.generic.migrations.migrations.*;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -68,7 +67,7 @@ public class MigrationWorker {
 
         for (SimpleMigration migration : migrations) {
             if (migration.shouldBeRun(this)) {
-                OpenAudioFabric.getService(BackupService.class).makeBackup(false);
+                OpenAudioMc.getService(BackupService.class).makeBackup(false);
                 OpenAudioLogger.info("Migration Service: Running migration " + migration.getClass().getSimpleName());
                 try {
                     migration.execute(this);

@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.bungee.modules.commands;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.clients.Client;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
@@ -12,7 +13,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.openaudiofabric.OpenAudioFabric;
 
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -48,9 +48,9 @@ public class AudioCommand {
         if (context.getSource().getPlayer() != null) {
             ServerPlayerEntity player = context.getSource().getPlayer();
 
-            User user = OpenAudioFabric.resolveDependency(UserHooks.class).byUuid(player.getUuid());
+            User user = OpenAudioMc.resolveDependency(UserHooks.class).byUuid(player.getUuid());
 
-            OpenAudioFabric.getService(NetworkingService.class).getClient(player.getUuid()).getAuth().publishSessionUrl();
+            OpenAudioMc.getService(NetworkingService.class).getClient(player.getUuid()).getAuth().publishSessionUrl();
             return 1;
         } else {
             return sendNoInputError(context);
@@ -61,9 +61,9 @@ public class AudioCommand {
         if (context.getSource().getPlayer() != null) {
             ServerPlayerEntity player = context.getSource().getPlayer();
 
-            User user = OpenAudioFabric.resolveDependency(UserHooks.class).byUuid(player.getUuid());
+            User user = OpenAudioMc.resolveDependency(UserHooks.class).byUuid(player.getUuid());
 
-            OpenAudioFabric.getService(NetworkingService.class).getClient(user.getUniqueId()).getAuth().activateToken(
+            OpenAudioMc.getService(NetworkingService.class).getClient(user.getUniqueId()).getAuth().activateToken(
                     user,
                     StringArgumentType.getString(context, "bedrock_token"));
             return 1;

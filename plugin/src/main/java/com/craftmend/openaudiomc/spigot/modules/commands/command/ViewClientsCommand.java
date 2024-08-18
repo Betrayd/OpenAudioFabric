@@ -2,6 +2,7 @@ package com.craftmend.openaudiomc.spigot.modules.commands.command;
 
 import static net.minecraft.server.command.CommandManager.literal;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
@@ -29,7 +30,7 @@ public class ViewClientsCommand {
 
         context.getSource().sendFeedback(() -> {return Text.literal("Connected clients:");}, false);
         int count = 0;
-        for (ClientConnection client :  NetworkingService.class.cast(OpenAudioFabric.getInstance().getServiceManager().loadService(NetworkingService.class)).getClients()) {
+        for (ClientConnection client :  NetworkingService.class.cast(OpenAudioMc.getInstance().getServiceManager().loadService(NetworkingService.class)).getClients()) {
             if (client.isConnected()) {
                 count++;
                 String line = OaColor.AQUA + " - " + client.getUser().getName();

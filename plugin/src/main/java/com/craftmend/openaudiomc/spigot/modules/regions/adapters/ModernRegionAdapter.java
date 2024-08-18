@@ -1,10 +1,10 @@
 package com.craftmend.openaudiomc.spigot.modules.regions.adapters;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.spigot.modules.regions.RegionModule;
 import com.craftmend.openaudiomc.spigot.modules.regions.interfaces.AbstractRegionAdapter;
 import com.craftmend.openaudiomc.spigot.modules.regions.interfaces.ApiRegion;
-import com.openaudiofabric.OpenAudioFabric;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class ModernRegionAdapter extends AbstractRegionAdapter {
 
     private boolean booted = false;
-    private final boolean usePriority = OpenAudioFabric.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_USE_WG_PRIORITY);
+    private final boolean usePriority = OpenAudioMc.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_USE_WG_PRIORITY);
 
     public ModernRegionAdapter(RegionModule regionModule) {
         super(regionModule);

@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.rd;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.rd.http.RestDirectServer;
 import com.craftmend.openaudiomc.generic.rd.ports.PortCheckResponse;
@@ -15,8 +16,6 @@ import com.craftmend.openaudiomc.generic.service.Inject;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.utils.data.RandomString;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -71,7 +70,7 @@ public class RestDirectService extends Service {
 
     public RestDirectServer attemptServerBoot() {
         String ip = guessIp();
-        if (OpenAudioFabric.SERVER_ENVIRONMENT == ServerEnvironment.DEVELOPMENT) {
+        if (OpenAudioMc.SERVER_ENVIRONMENT == ServerEnvironment.DEVELOPMENT) {
             ip = "localhost";
         }
 

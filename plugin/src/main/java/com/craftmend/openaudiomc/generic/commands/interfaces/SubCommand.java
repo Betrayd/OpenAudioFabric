@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.generic.commands.interfaces;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.CommandService;
 import com.craftmend.openaudiomc.generic.commands.objects.CommandError;
 import com.craftmend.openaudiomc.generic.commands.selectors.SelectorTranslator;
@@ -8,8 +9,6 @@ import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +33,7 @@ public abstract class SubCommand {
      */
     public SubCommand(String argument) {
         this.command = argument;
-        if (OpenAudioFabric.getInstance().getPlatform() == Platform.SPIGOT) {
+        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
             // try, could already be registered
             try {
                 Permission permission = new Permission(permissionScope + command);
@@ -148,11 +147,11 @@ public abstract class SubCommand {
     }
 
     public <T> T resolveDependency(Class<T> d) {
-        return d.cast(OpenAudioFabric.getInstance().getServiceManager().resolve(d));
+        return d.cast(OpenAudioMc.getInstance().getServiceManager().resolve(d));
     }
 
     protected <T extends Service> T getService(Class<T> service) {
-        return service.cast(OpenAudioFabric.getInstance().getServiceManager().loadService(service));
+        return service.cast(OpenAudioMc.getInstance().getServiceManager().loadService(service));
     }
 
     protected List<User<?>> resolveSelector(User<?> sender, String selector) {

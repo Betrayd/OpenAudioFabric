@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot.modules.regions.gui;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.media.Media;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
@@ -12,8 +13,6 @@ import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.services.clicklib.Item;
 import com.craftmend.openaudiomc.spigot.services.clicklib.menu.Menu;
-import com.openaudiofabric.OpenAudioFabric;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
@@ -75,7 +74,7 @@ public class RegionEditGui extends Menu {
                         player.sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + ChatColor.RED + "Music will now always play from the beginning when someone enters or connects.");
                     }
 
-                    OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class)
+                    OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class)
                             .save(region.getProperties());
 
                     // reset the media cache for this region
@@ -106,7 +105,7 @@ public class RegionEditGui extends Menu {
                 })
                 .onClick((player, item) -> {
                     region.getProperties().setLoop(!region.getProperties().getLoop());
-                    OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class)
+                    OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class)
                             .save(region.getProperties());
 
                     if (region.getProperties().getLoop()) {
@@ -132,7 +131,7 @@ public class RegionEditGui extends Menu {
     }
 
     private Item getVoicechatToggleItem(IRegion region) {
-        Material head = OpenAudioFabric.getService(SpeakerService.class).getPlayerSkullItem();
+        Material head = OpenAudioMc.getService(SpeakerService.class).getPlayerSkullItem();
 
         Item item = new Item(head)
                 .setName(ChatColor.YELLOW + "Allow voice chat: " + (
@@ -144,7 +143,7 @@ public class RegionEditGui extends Menu {
                     region.getProperties().setAllowsVoiceChat(!region.getProperties().getAllowsVoiceChat());
                     // save the new setting
 
-                    OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class)
+                    OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class)
                             .save(region.getProperties());
 
                     if (region.getProperties().getAllowsVoiceChat()) {
@@ -173,12 +172,12 @@ public class RegionEditGui extends Menu {
                     if (fadeTime == region.getProperties().getFadeTimeMs()) return;
                     region.getProperties().setFadeTimeMs(fadeTime);
 
-                    OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class)
+                    OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class)
                             .save(region.getProperties());
 
                     player.sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + ChatColor.GREEN + "Updated region fadetime to " + fadeTime);
 
-                    SpigotConnection spigotClient = OpenAudioFabric.getService(SpigotPlayerService.class).getClient(player.getUniqueId());
+                    SpigotConnection spigotClient = OpenAudioMc.getService(SpigotPlayerService.class).getClient(player.getUniqueId());
                     spigotClient.getRegionHandler().reset();
 
                     spigotClient.getRegionHandler().tick();
@@ -207,10 +206,10 @@ public class RegionEditGui extends Menu {
 
                     player.sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + ChatColor.GREEN + "Updated region volume to " + volume);
 
-                    OpenAudioFabric.getService(DatabaseService.class).getRepository(RegionProperties.class)
+                    OpenAudioMc.getService(DatabaseService.class).getRepository(RegionProperties.class)
                             .save(region.getProperties());
 
-                    SpigotConnection spigotClient = OpenAudioFabric.getService(SpigotPlayerService.class).getClient(player.getUniqueId());
+                    SpigotConnection spigotClient = OpenAudioMc.getService(SpigotPlayerService.class).getClient(player.getUniqueId());
                     spigotClient.getRegionHandler().reset();
                     spigotClient.getRegionHandler().tick();
 

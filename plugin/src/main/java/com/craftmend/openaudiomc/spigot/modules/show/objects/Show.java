@@ -1,10 +1,9 @@
 package com.craftmend.openaudiomc.spigot.modules.show.objects;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.show.interfaces.ShowRunnable;
-import com.openaudiofabric.OpenAudioFabric;
-
 import lombok.Getter;
 
 import java.io.BufferedWriter;
@@ -42,11 +41,11 @@ public class Show {
 
     @Override
     public String toString() {
-        return OpenAudioFabric.getGson().toJson(this);
+        return OpenAudioMc.getGson().toJson(this);
     }
 
     public static Show fromJson(String json) {
-        return OpenAudioFabric.getGson().fromJson(json, Show.class);
+        return OpenAudioMc.getGson().fromJson(json, Show.class);
     }
 
     public ShowCue getCueById(UUID id) {

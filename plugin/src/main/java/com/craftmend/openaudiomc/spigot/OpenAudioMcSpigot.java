@@ -1,5 +1,6 @@
 package com.craftmend.openaudiomc.spigot;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.impl.RegistryApiImpl;
 import com.craftmend.openaudiomc.api.interfaces.AudioApi;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
@@ -42,7 +43,6 @@ import com.craftmend.openaudiomc.spigot.modules.players.SpigotPlayerService;
 import com.craftmend.openaudiomc.spigot.modules.regions.RegionModule;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.services.threading.ExecutorService;
-import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -59,7 +59,7 @@ public final class OpenAudioMcSpigot extends JavaPlugin implements OpenAudioInvo
 
     @Setter private TrainCartsModule trainCartsModule;
     @Setter private RegionModule regionModule;
-    private OpenAudioFabric openAudioMc;
+    private OpenAudioMc openAudioMc;
     private ProxyModule proxyModule;
     private boolean bound = false;
 
@@ -92,7 +92,7 @@ public final class OpenAudioMcSpigot extends JavaPlugin implements OpenAudioInvo
         // setup core
         try {
             proxyModule = new ProxyModule();
-            openAudioMc = new OpenAudioFabric(this);
+            openAudioMc = new OpenAudioMc(this);
             openAudioMc.getServiceManager().registerDependency(ProxyModule.class, proxyModule);
             openAudioMc.getServiceManager().registerDependency(OpenAudioMcSpigot.class, this);
 
@@ -119,7 +119,7 @@ public final class OpenAudioMcSpigot extends JavaPlugin implements OpenAudioInvo
                     PlaylistService.class
             );
 
-            OpenAudioFabric.getService(SpigotDependencyService.class)
+            OpenAudioMc.getService(SpigotDependencyService.class)
                     .ifPluginEnabled("LiteBans", new LitebansIntegration())
                     .ifPluginEnabled("Essentials", new EssentialsIntegration())
                     .ifPluginEnabled("WorldGuard", new RegionService(this))
@@ -127,18 +127,18 @@ public final class OpenAudioMcSpigot extends JavaPlugin implements OpenAudioInvo
                     .ifPluginEnabled("PlaceholderAPI", new PlaceholderService(this));
 
             // set state to idle, to allow connections and such, but only if not a node
-            if (OpenAudioFabric.getService(ProxyModule.class).getMode() == OAClientMode.NODE) {
-                OpenAudioFabric.getService(StateService.class).setState(new WorkerState());
+            if (OpenAudioMc.getService(ProxyModule.class).getMode() == OAClientMode.NODE) {
+                OpenAudioMc.getService(StateService.class).setState(new WorkerState());
             } else {
-                OpenAudioFabric.getService(RestDirectService.class).boot();
-                OpenAudioFabric.getService(StateService.class).setState(new IdleState("OpenAudioMc started and awaiting command"));
+                OpenAudioMc.getService(RestDirectService.class).boot();
+                OpenAudioMc.getService(StateService.class).setState(new IdleState("OpenAudioMc started and awaiting command"));
             }
 
             // timing end and calc
             Instant finish = Instant.now();
             OpenAudioLogger.info("Starting and loading took " + Duration.between(boot, finish).toMillis() + "MS");
 
-            OpenAudioFabric.getInstance().postBoot();
+            OpenAudioMc.getInstance().postBoot();
         } catch (Exception e) {
             OpenAudioLogger.error(e, "A fatal error occurred while enabling OpenAudioMc. The plugin will now disable itself.");
             Bukkit.getServer().getPluginManager().disablePlugin(this);
@@ -151,8 +151,8 @@ public final class OpenAudioMcSpigot extends JavaPlugin implements OpenAudioInvo
     @Override
     public void onDisable() {
         OpenAudioLogger.info("Shutting down");
-        OpenAudioFabric.getService(SpigotPlayerService.class).onDisable();
-        OpenAudioFabric.getService(PredictiveMediaService.class).onDisable();
+        OpenAudioMc.getService(SpigotPlayerService.class).onDisable();
+        OpenAudioMc.getService(PredictiveMediaService.class).onDisable();
         openAudioMc.disable();
         HandlerList.unregisterAll(this);
         OpenAudioLogger.info("Stopped OpenAudioMc. Goodbye.");

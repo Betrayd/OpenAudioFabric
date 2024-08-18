@@ -1,10 +1,10 @@
 package com.craftmend.openaudiomc.generic.platform;
 
+import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.commands.selectors.SelectorTranslator;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.openaudiofabric.OpenAudioFabric;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class FallbackPlayerSelector implements SelectorTranslator {
     @Override
     public List<User<?>> getResults() {
         // attempt to find all players
-        List<User<?>> clients = OpenAudioFabric.getService(NetworkingService.class).getClients()
+        List<User<?>> clients = OpenAudioMc.getService(NetworkingService.class).getClients()
                 .stream()
                 .map(ClientConnection::getUser)
                 .collect(Collectors.toList());
