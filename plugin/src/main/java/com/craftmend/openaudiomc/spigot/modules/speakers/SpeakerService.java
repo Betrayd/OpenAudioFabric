@@ -25,6 +25,7 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.listeners.SpeakerDestro
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -47,7 +48,7 @@ public class SpeakerService extends Service {
     @Getter private final Map<MappedLocation, Speaker> speakerMap = new ConcurrentHashMap<>();
     private final Map<String, SpeakerMedia> speakerMediaMap = new ConcurrentHashMap<>();
     @Getter private Item playerSkullItem;
-    @Getter private Block playerSkullBlock;
+    @Getter private BlockState playerSkullBlock;
     @Getter private ServerVersion version;
     private final IRayTracer estimatedRayTracer = new DummyTracer();
 
@@ -131,7 +132,7 @@ public class SpeakerService extends Service {
         version = OpenAudioMc.getService(ServerService.class).getVersion();
 
         playerSkullItem = Items.PLAYER_HEAD;
-        playerSkullBlock = Blocks.PLAYER_HEAD;
+        playerSkullBlock = BlockState.PLAYER_HEAD;
     }
 
     public Speaker registerSpeaker(Speaker speaker) {

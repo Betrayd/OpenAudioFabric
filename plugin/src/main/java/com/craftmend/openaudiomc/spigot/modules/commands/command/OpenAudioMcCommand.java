@@ -7,12 +7,22 @@ import java.util.Collection;
 import java.util.Locale;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
+import com.craftmend.openaudiomc.api.EventApi;
+import com.craftmend.openaudiomc.api.events.client.SystemReloadEvent;
+import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
+import com.craftmend.openaudiomc.generic.commands.helpers.PromptProxyError;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.media.MediaService;
 import com.craftmend.openaudiomc.generic.media.utils.Validation;
+import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
+import com.craftmend.openaudiomc.generic.oac.OpenaudioAccountService;
 import com.craftmend.openaudiomc.generic.platform.OaColor;
+import com.craftmend.openaudiomc.generic.platform.Platform;
+import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
+import com.craftmend.openaudiomc.generic.rest.RestRequest;
+import com.craftmend.openaudiomc.generic.rest.routes.Endpoint;
+import com.craftmend.openaudiomc.generic.rest.types.ClaimCodeResponse;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
-import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.spigot.modules.playlists.PlaylistService;
 import com.craftmend.openaudiomc.spigot.modules.playlists.models.Playlist;
 import com.craftmend.openaudiomc.spigot.modules.playlists.models.PlaylistEntry;
@@ -29,15 +39,11 @@ import com.openaudiofabric.OpenAudioFabric;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 import net.minecraft.server.command.ServerCommandSource;
 
 public class OpenAudioMcCommand {
@@ -82,7 +88,20 @@ public class OpenAudioMcCommand {
                                 .then(literal("gc")
                                         .then(argument("confirm", StringArgumentType.string())
                                                 .executes(OpenAudioMcCommand::speakerGarbageCollection))
-                                        .executes(OpenAudioMcCommand::speakerGarbageCollectionWarn)))
+                                        .executes(OpenAudioMcCommand::speakerGarbageCollectionWarn))
+                                //the speaker commands I did not want to work on
+                                /* .then(literal("set")
+                                        .then(argument("x", IntegerArgumentType.integer())
+                                                .then(argument("y", IntegerArgumentType.integer())
+                                                        .then(argument("z", IntegerArgumentType.integer())
+                                                                .then(argument("source_url", StringArgumentType.string())
+                                                                        .then(argument("world", StringArgumentType.string())
+                                                                                .executes(OpenAudioMcCommand::speakerSetCommandWorld))
+                                                                        .executes(OpenAudioMcCommand::speakerSetCommandPlayer)))))) */)
+                        .then(literal("link")
+                                .executes(OpenAudioMcCommand::link))
+                        .then(literal("reload").requires(source -> source.hasPermissionLevel(4))
+                                .executes(OpenAudioMcCommand::reload))
                         .executes(OpenAudioMcCommand::sendVersion));
         dispatcher.register(literal("oa").redirect(oaCommandNode));
         dispatcher.register(literal("oam").redirect(oaCommandNode));
@@ -248,7 +267,7 @@ public class OpenAudioMcCommand {
     private static int speakerGive(ServerCommandSource sender, String source, int radius) {
 
         ServerPlayerEntity player = sender.getPlayer();
-        if (player != null) {
+        if (player == null) {
             sender.sendError(Text.literal("Only players can receive a speaker item."));
             return 0;
         }
@@ -291,13 +310,150 @@ public class OpenAudioMcCommand {
 
         context.getSource().sendFeedback(() -> {
             return Text.literal("Starting garbage collector...");
-        }, false);
+        }, true);
         SpeakerGarbageCollection sgc = new SpeakerGarbageCollection(context.getSource().getServer());
         // run the wrapper twice to force a cache refresh at the end
         sgc.run();
         context.getSource().sendFeedback(() -> {
             return Text.literal("Full garbage collection sweep finished");
-        }, false);
+        }, true);
         return 1;
     }
+
+    //this is all speaker stuff I don't want to work on
+
+    /*private static int speakerSetCommandWorld(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        String stringWorld = StringArgumentType.getString(context, "world");
+        World world = context.getSource().getServer().getRegistryManager().get(RegistryKeys.WORLD).get(Identifier.tryParse(stringWorld));
+        if(world != null && world instanceof ServerWorld sw)
+        {
+            return speakerSetCommand(context, sw);
+        }
+        context.getSource().sendError(Text.literal("could not parse world as Serverworld"));
+        return 1;
+    }
+
+    private static int speakerSetCommandPlayer(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        if(context.getSource().getPlayer() != null)
+        {
+            return speakerSetCommand(context, context.getSource().getPlayer().getServerWorld());
+        }
+        context.getSource().sendError(Text.literal("This command must be executed by a player or contain a final <world> argument agter the source"));
+        return 0;
+    }
+
+    private static int speakerSetCommand(CommandContext<ServerCommandSource> context, ServerWorld world) throws CommandSyntaxException {
+        Integer x = IntegerArgumentType.getInteger(context, "x");
+        Integer y = IntegerArgumentType.getInteger(context, "y");
+        Integer z = IntegerArgumentType.getInteger(context, "z");
+        String sourceURL = StringArgumentType.getString(context, "source_url");
+        
+        Location location = new Location(world, x, y, z);
+        MappedLocation mappedLocation = new MappedLocation(location);
+
+        String source = OpenAudioMc.getService(MediaService.class).process(sourceURL);
+
+        // create
+        UUID id = UUID.randomUUID();
+        Configuration config = OpenAudioMc.getInstance().getConfiguration();
+        int range = config.getInt(StorageKey.SETTINGS_SPEAKER_RANGE);
+
+        SpeakerService speakerService = OpenAudioMc.getService(SpeakerService.class);
+
+        // register
+        Speaker speaker = new Speaker(source, id, range, mappedLocation, SpeakerService.DEFAULT_SPEAKER_TYPE, EnumSet.noneOf(ExtraSpeakerOptions.class));
+        speakerService.registerSpeaker(speaker);
+        // save
+        OpenAudioMc.getService(DatabaseService.class)
+                .getRepository(Speaker.class)
+                .save(speaker);
+
+        // place block
+        world.breakBlock(location.getBlockPos(), false);
+
+
+        Skull s = (Skull) location.getBlock().getState();
+
+        if (OpenAudioMc.getService(ServerService.class).getVersion() == ServerVersion.LEGACY) {
+            s.setSkullType(SkullType.PLAYER);
+            // reflection for the old map
+            try {
+                Block.class.getMethod("setData", byte.class).invoke(location.getBlock(), (byte) 1);
+            } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                message(sender, "Something went wrong with reflection");
+                e.printStackTrace();
+                return;
+            }
+
+        } else {
+            location.getBlock().setBlockData(OpenAudioMc.getService(SpeakerService.class).getPlayerSkullBlock().createBlockData());
+        }
+        s.setOwner(SpeakerUtils.speakerSkin);
+        s.update();
+
+        message(Text.literal("\u00A7a" + "Speaker placed"));
+        return;
+    }
+        return 1;
+    }*/
+
+    private static int link(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        if (OpenAudioMc.getInstance().getInvoker().isNodeServer()) {
+            PromptProxyError.sendTo(context.getSource());
+            return 0;
+        }
+
+        // init connection so we receive the event
+        OpenAudioMc.resolveDependency(TaskService.class)
+                .runAsync(() -> OpenAudioMc.getService(NetworkingService.class).connectIfDown());
+
+        context.getSource().sendFeedback(() -> {return Text.literal(OaColor.GRAY + "Generating link...");}, false);
+
+        RestRequest<ClaimCodeResponse> request = new RestRequest<>(ClaimCodeResponse.class, Endpoint.CLAIM_CODE);
+
+        request.runAsync()
+                .thenAccept(state -> {
+                    if (state.hasError()) {
+                        context.getSource().sendFeedback(() -> {return Text.literal(OaColor.RED + state.getError().getMessage());}, false);
+                        return;
+                    }
+
+                    ClaimCodeResponse response = state.getResponse();
+                    String url = response.getClaimUrl();
+
+                    context.getSource().sendFeedback(() -> {return Text.literal("Successfully generated a link for you to claim your account!");}, false);
+                    final Text clickableMessage = Text.literal(OaColor.GOLD + " >> Click here to claim your account << ").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url)));
+                    context.getSource().sendFeedback(() -> {return clickableMessage;}, false);
+                    context.getSource().sendFeedback(() -> {return Text.literal(OaColor.GRAY + " >> or visit " + url);}, false);
+                });
+        return 1;
+    }
+
+    private static int reload(CommandContext<ServerCommandSource> context) throws CommandSyntaxException 
+    {
+        context.getSource().sendFeedback(() -> {return Text.literal(Platform.makeColor("RED") + "Reloading OpenAudioMc data (config and account details)...");}, false);
+        OpenAudioMc.getInstance().getConfiguration().reloadConfig();
+        OpenAudioMc.getService(OpenaudioAccountService.class).syncAccount();
+
+        context.getSource().sendFeedback(() -> {return Text.literal(Platform.makeColor("RED") + "Shutting down network service and logging out...");}, false);
+
+        for (ClientConnection client : OpenAudioMc.getService(NetworkingService.class).getClients()) {
+            client.kick(() -> {
+            });
+        }
+
+        OpenAudioMc.getService(NetworkingService.class).stop();
+
+        context.getSource().sendFeedback(() -> {return Text.literal(Platform.makeColor("RED") + "Re-activating account...");}, false);
+        OpenAudioMc.resolveDependency(TaskService.class)
+                .runAsync(() -> OpenAudioMc.getService(NetworkingService.class).connectIfDown());
+
+        EventApi.getInstance().callEvent(new SystemReloadEvent());
+
+        context.getSource().sendFeedback(() -> {return Text.literal(Platform.makeColor("GREEN") + "Reloaded system! Welcome back.");}, false);
+        return 1;
+    }
+
+    //reload
+
 }
