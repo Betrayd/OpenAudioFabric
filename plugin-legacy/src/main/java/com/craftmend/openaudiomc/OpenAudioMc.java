@@ -1,5 +1,7 @@
 package com.craftmend.openaudiomc;
 
+import net.minecraft.server.MinecraftServer;
+
 import com.craftmend.openaudiomc.api.enums.ModuleEvent;
 import com.craftmend.openaudiomc.api.impl.event.ApiEventDriver;
 import com.craftmend.openaudiomc.generic.api.ApiService;
@@ -47,6 +49,7 @@ public class OpenAudioMc {
 
     private final ServiceManager serviceManager = new ServiceManager();
 
+    private final MinecraftServer mc;
     /**
      * Alright, so.
      * The main class is pretty empty, it doesn't do too much, actually.
