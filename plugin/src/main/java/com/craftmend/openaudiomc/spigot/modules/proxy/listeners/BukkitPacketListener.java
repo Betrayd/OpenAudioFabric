@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.proxy.listeners;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.authentication.objects.Key;
@@ -23,22 +22,24 @@ import com.craftmend.openaudiomc.generic.proxy.messages.ProxyPacketHandler;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.generic.proxy.messages.PacketListener;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
+import com.openaudiofabric.OpenAudioFabric;
+
 import org.bukkit.Bukkit;
 
 public class BukkitPacketListener implements PacketListener {
 
     @ProxyPacketHandler
     public void onParentUpdate(User user, AnnouncePlatformPacket packet) {
-        OpenAudioMc.getService(AuthenticationService.class).setExplicitParentPublicKey(new Key(packet.getParentPublicKey()));
+        OpenAudioFabric.getService(AuthenticationService.class).setExplicitParentPublicKey(new Key(packet.getParentPublicKey()));
         MagicValue.overWrite(MagicValue.PARENT_PLATFORM, packet.getPlatform());
     }
 
     @ProxyPacketHandler
     public void onConnect(User user, ClientConnectedPacket packet) {
-        ClientConnection connection = OpenAudioMc.getService(NetworkingService.class).getClient(packet.getClientUuid());
+        ClientConnection connection = OpenAudioFabric.getService(NetworkingService.class).getClient(packet.getClientUuid());
         if (connection != null) {
             connection.onConnect();
-            for (INetworkingEvents event : OpenAudioMc.getService(NetworkingService.class).getEvents()) {
+            for (INetworkingEvents event : OpenAudioFabric.getService(NetworkingService.class).getEvents()) {
                 event.onClientOpen(connection);
             }
         }
@@ -46,19 +47,19 @@ public class BukkitPacketListener implements PacketListener {
 
     @ProxyPacketHandler
     public void onDisconnect(User user, ClientDisconnectedPacket packet) {
-        ClientConnection connection = OpenAudioMc.getService(NetworkingService.class).getClient(packet.getClientUuid());
+        ClientConnection connection = OpenAudioFabric.getService(NetworkingService.class).getClient(packet.getClientUuid());
         if (connection != null) connection.onDisconnect();
     }
 
     @ProxyPacketHandler
     public void onTimeUpdate(User user, ServerUpdateTimePacket packet) {
-        OpenAudioMc.getInstance().getServiceManager().replaceService(TimeService.class, packet.getTimeService());
+        OpenAudioFabric.getInstance().getServiceManager().replaceService(TimeService.class, packet.getTimeService());
         EventApi.getInstance().callEvent(new TimeServiceUpdateEvent(packet.getTimeService()));
     }
 
     @ProxyPacketHandler
     public void onStateSync(User user, ClientUpdateStatePacket packet) {
-        ClientConnection connection = OpenAudioMc.getService(NetworkingService.class).getClient(packet.getClientUuid());
+        ClientConnection connection = OpenAudioFabric.getService(NetworkingService.class).getClient(packet.getClientUuid());
         if (connection == null) {
             return;
         }
@@ -72,18 +73,18 @@ public class BukkitPacketListener implements PacketListener {
         connection.setAuth(new ClientAuth(connection, packet.getExplodedToken(), packet.getExplodedToken()));
 
         // enable the module if it isn't already
-        if (!OpenAudioMc.getService(OpenaudioAccountService.class).is(CraftmendTag.VOICECHAT)) {
-            OpenAudioMc.getService(OpenaudioAccountService.class).addTag(CraftmendTag.VOICECHAT);
+        if (!OpenAudioFabric.getService(OpenaudioAccountService.class).is(CraftmendTag.VOICECHAT)) {
+            OpenAudioFabric.getService(OpenaudioAccountService.class).addTag(CraftmendTag.VOICECHAT);
         }
     }
 
     @ProxyPacketHandler
     public void onCommand(User user, CommandProxyPacket packet) {
-        User<?> player = OpenAudioMc.resolveDependency(UserHooks.class).byUuid(packet.getCommandProxy().getExecutor());
+        User<?> player = OpenAudioFabric.resolveDependency(UserHooks.class).byUuid(packet.getCommandProxy().getExecutor());
         if (player == null) return;
         Bukkit.getScheduler().runTask(OpenAudioMcSpigot.getInstance(), () -> {
             try {
-                OpenAudioMc.getService(CommandService.class)
+                OpenAudioFabric.getService(CommandService.class)
                         .getSubCommand(CommandContext.OPENAUDIOMC, packet.getCommandProxy().getProxiedCommand().toString().toLowerCase())
                         .onExecute(player, packet.getCommandProxy().getArgs());
             } catch (Exception e) {

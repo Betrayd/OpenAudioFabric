@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.database;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.OpenAudioMcBuild;
 import com.craftmend.openaudiomc.generic.client.store.ClientDataStore;
 import com.craftmend.openaudiomc.generic.database.internal.DataStore;
@@ -25,6 +24,8 @@ import com.craftmend.storm.Storm;
 import com.craftmend.storm.StormOptions;
 import com.craftmend.storm.connection.sqlite.SqliteFileDriver;
 import com.craftmend.storm.logger.StormLogger;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -62,7 +63,7 @@ public class DatabaseService extends Service implements StormLogger {
         tables.add(Speaker.class);
         tables.add(StoredWorldChunk.class);
 
-        if (OpenAudioMcBuild.IS_TESTING || OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
+        if (OpenAudioMcBuild.IS_TESTING || OpenAudioFabric.getInstance().getPlatform() == Platform.SPIGOT) {
             log("Adding spigot tables");
             tables.add(TimedRegionProperties.class);
             tables.add(MediaRule.class);

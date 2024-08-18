@@ -3,7 +3,6 @@ package com.craftmend.openaudiomc.bungee.modules.commands;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.platform.Platform;
@@ -13,6 +12,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.openaudiofabric.OpenAudioFabric;
 
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
@@ -35,7 +35,7 @@ public class VolumeCommand {
             return 0;
         }
 
-        ClientConnection clientConnection = OpenAudioMc.getService(NetworkingService.class)
+        ClientConnection clientConnection = OpenAudioFabric.getService(NetworkingService.class)
                 .getClient(context.getSource().getPlayer().getUuid());
 
         if (!clientConnection.isConnected()) {
@@ -52,7 +52,7 @@ public class VolumeCommand {
             }
         } catch (Exception e) {
             String message = Platform.translateColors(
-                    OpenAudioMc.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID));
+                    OpenAudioFabric.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_VOLUME_INVALID));
             context.getSource().sendFeedback(() -> {return Text.literal(message);}, false);
         }
         return 0;

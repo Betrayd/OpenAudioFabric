@@ -1,9 +1,9 @@
 package com.craftmend.openaudiomc.generic.networking.abstracts;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.networking.interfaces.Authenticatable;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
+import com.openaudiofabric.OpenAudioFabric;
 
 import java.util.UUID;
 
@@ -22,7 +22,7 @@ public abstract class PayloadHandler<E> {
     public abstract void onReceive(E payload);
 
     protected Authenticatable findSession(UUID id) {
-        ClientConnection clientConnection = OpenAudioMc.getService(NetworkingService.class).getClient(id);
+        ClientConnection clientConnection = OpenAudioFabric.getService(NetworkingService.class).getClient(id);
         return clientConnection;
     }
 

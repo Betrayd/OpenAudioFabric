@@ -1,6 +1,7 @@
 package com.craftmend.openaudiomc.generic.logging.platform;
 
 import com.craftmend.openaudiomc.generic.logging.LogAdapter;
+import com.openaudiofabric.OpenAudioFabric;
 
 /**
  * The default logging interface targeting standard output, with some predefined colors for different log levels
@@ -15,24 +16,24 @@ public class StdOutLog implements LogAdapter {
 
     @Override
     public void info(String message) {
-        System.out.println("[OpenAudioMc-Info] " + formatMessage(message, ANSI_RESET));
+        OpenAudioFabric.LOGGER.info("[OpenAudioMc-Info] " + formatMessage(message, ANSI_RESET));
     }
 
     @Override
     public void debug(String message) {
         if (!enableDebug) return;
-        System.out.println("[OpenAudioMc-Debug] " + formatMessage(message, ANSI_CYAN));
+        OpenAudioFabric.LOGGER.debug("[OpenAudioMc-Debug] " + formatMessage(message, ANSI_CYAN));
     }
 
     @Override
     public void error(Throwable e, String message) {
-        System.err.println(ANSI_RED + "[OpenAudioMc-Err]: " + message + "\n" + e.toString() + ANSI_RESET);
+        OpenAudioFabric.LOGGER.error(ANSI_RED + "[OpenAudioMc-Err]: " + message + "\n" + e.toString() + ANSI_RESET);
         e.printStackTrace();
     }
 
     @Override
     public void warn(String message) {
-        System.out.println("[OpenAudioMc-Warn] " + ANSI_YELLOW + message + ANSI_RESET);
+        OpenAudioFabric.LOGGER.warn("[OpenAudioMc-Warn] " + ANSI_YELLOW + message + ANSI_RESET);
     }
 
     @Override

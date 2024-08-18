@@ -1,10 +1,11 @@
 package com.craftmend.openaudiomc.generic.redis.packets;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.redis.RedisService;
 import com.craftmend.openaudiomc.generic.redis.packets.channels.ChannelKey;
 import com.craftmend.openaudiomc.generic.redis.packets.interfaces.OARedisPacket;
 import com.craftmend.openaudiomc.spigot.modules.show.runnables.CommandRunnable;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class ExecuteCommandPacket extends OARedisPacket {
 
     @Override
     public String serialize() {
-        return OpenAudioMc.getGson().toJson(this);
+        return OpenAudioFabric.getGson().toJson(this);
     }
 
     @Override
@@ -31,6 +32,6 @@ public class ExecuteCommandPacket extends OARedisPacket {
     }
 
     public void send() {
-        OpenAudioMc.getService(RedisService.class).sendMessage(ChannelKey.TRIGGER_COMMAND, this);
+        OpenAudioFabric.getService(RedisService.class).sendMessage(ChannelKey.TRIGGER_COMMAND, this);
     }
 }

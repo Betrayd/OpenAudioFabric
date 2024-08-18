@@ -1,7 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.subcommands;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
-
 import com.craftmend.openaudiomc.generic.media.MediaService;
 import com.craftmend.openaudiomc.generic.media.tabcomplete.MediaTabcompleteProvider;
 import com.craftmend.openaudiomc.generic.user.User;
@@ -19,6 +17,8 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.SpeakerSettings;
 import com.craftmend.openaudiomc.spigot.modules.speakers.tasks.SpeakerGarbageCollection;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
+import com.openaudiofabric.OpenAudioFabric;
+
 import org.bukkit.entity.Player;
 
 public class SpeakersSubCommand extends SubCommand {

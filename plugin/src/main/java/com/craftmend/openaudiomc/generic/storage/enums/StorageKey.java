@@ -1,10 +1,11 @@
 package com.craftmend.openaudiomc.generic.storage.enums;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import lombok.Getter;
 
 import java.util.List;
 import java.util.Map;
+
+import com.openaudiofabric.OpenAudioFabric;
 
 public enum StorageKey {
 
@@ -170,18 +171,18 @@ public enum StorageKey {
     }
 
     public boolean getBoolean() {
-        return OpenAudioMc.getInstance().getConfiguration().getBoolean(this);
+        return OpenAudioFabric.getInstance().getConfiguration().getBoolean(this);
     }
 
     public int getInt() {
-        return OpenAudioMc.getInstance().getConfiguration().getInt(this);
+        return OpenAudioFabric.getInstance().getConfiguration().getInt(this);
     }
 
     public String getString() {
-        return OpenAudioMc.getInstance().getConfiguration().getString(this);
+        return OpenAudioFabric.getInstance().getConfiguration().getString(this);
     }
 
     public List<Map<String, Object>> getObjectList() {
-        return OpenAudioMc.getInstance().getConfiguration().getObjectList(this.getPath(), this.getStorageLocation());
+        return OpenAudioFabric.getInstance().getConfiguration().getObjectList(this.getPath(), this.getStorageLocation());
     }
 }

@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.bungee.modules.commands.commands;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.clients.Client;
 import com.craftmend.openaudiomc.bungee.modules.player.objects.BungeePlayerSelector;
 
@@ -15,6 +14,8 @@ import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.generic.user.adapters.BungeeUserAdapter;
+import com.openaudiofabric.OpenAudioFabric;
+
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -44,18 +45,18 @@ public class BungeeAudioCommand extends Command {
             ProxiedPlayer player = (ProxiedPlayer) sender;
 
 
-            User user = OpenAudioMc.resolveDependency(UserHooks.class).byUuid(player.getUniqueId());
+            User user = OpenAudioFabric.resolveDependency(UserHooks.class).byUuid(player.getUniqueId());
 
             // do we have an argument called "token",  "bedrock" or "key"?
             if (args.length == 1) {
-                OpenAudioMc.getService(NetworkingService.class).getClient(user.getUniqueId()).getAuth().activateToken(
+                OpenAudioFabric.getService(NetworkingService.class).getClient(user.getUniqueId()).getAuth().activateToken(
                         user,
                         args[0]
                 );
                 return;
             }
 
-            OpenAudioMc.getService(NetworkingService.class).getClient(player.getUniqueId()).getAuth().publishSessionUrl();
+            OpenAudioFabric.getService(NetworkingService.class).getClient(player.getUniqueId()).getAuth().publishSessionUrl();
         } else {
             if (args.length == 0) {
                 sender.sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + "You must provide a player name OR selector to send trigger the URL");

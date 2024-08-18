@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.subcommands.voice;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.client.ClientDataService;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.client.store.ClientDataStore;
@@ -9,6 +8,8 @@ import com.craftmend.openaudiomc.generic.platform.OaColor;
 import com.craftmend.openaudiomc.generic.utils.data.DurationFormatter;
 import com.craftmend.openaudiomc.spigot.services.clicklib.Item;
 import com.craftmend.openaudiomc.spigot.services.clicklib.menu.Menu;
+import com.openaudiofabric.OpenAudioFabric;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -82,12 +83,12 @@ public class VoiceInspectGui extends Menu {
     private void toggleBan(Player moderator, ClientDataStore targetData, UUID targetId, String targetName) {
         targetData.setIsVoiceBlocked(!targetData.getIsVoiceBlocked());
         if (targetData.getIsVoiceBlocked()) {
-            ClientConnection cc = OpenAudioMc.getService(NetworkingService.class).getClient(targetId);
+            ClientConnection cc = OpenAudioFabric.getService(NetworkingService.class).getClient(targetId);
             if (cc != null) {
                 cc.kick(() -> {});
             }
         }
-        OpenAudioMc.getService(ClientDataService.class).save(targetData, targetId);
+        OpenAudioFabric.getService(ClientDataService.class).save(targetData, targetId);
         new VoiceInspectGui(moderator, targetData, targetId, targetName);
     }
 

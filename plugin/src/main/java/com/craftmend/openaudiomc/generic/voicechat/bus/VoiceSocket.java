@@ -1,12 +1,13 @@
 package com.craftmend.openaudiomc.generic.voicechat.bus;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.rest.RestRequest;
 import com.craftmend.openaudiomc.generic.rest.response.NoResponse;
 import com.craftmend.openaudiomc.generic.rest.routes.Endpoint;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -45,7 +46,7 @@ public class VoiceSocket extends WebSocketListener {
     public boolean start() {
         // check if connections are allowed
         RestRequest<NoResponse> preAuthCheck = new RestRequest<>(NoResponse.class, Endpoint.VOICE_PREFLIGHT_CHECK);
-        AuthenticationService authenticationService = OpenAudioMc.getService(AuthenticationService.class);
+        AuthenticationService authenticationService = OpenAudioFabric.getService(AuthenticationService.class);
         preAuthCheck.setQuery("publicKey", authenticationService.getServerKeySet().getPublicKey().getValue());
         preAuthCheck.setQuery("privateKey", authenticationService.getServerKeySet().getPrivateKey().getValue());
         preAuthCheck.setQuery("password", this.password);

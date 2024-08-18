@@ -1,12 +1,13 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.subcommands.show;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.modules.show.ShowService;
 import com.craftmend.openaudiomc.spigot.modules.show.interfaces.ShowRunnable;
 import com.craftmend.openaudiomc.spigot.modules.show.objects.Show;
 import com.craftmend.openaudiomc.spigot.modules.show.util.TimeParser;
+import com.openaudiofabric.OpenAudioFabric;
+
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
@@ -20,7 +21,7 @@ public class ShowAddSubCommand extends SubCommand {
 
     @Override
     public void onExecute(User sender, String[] args) {
-        Show show = OpenAudioMc.getService(ShowService.class).getShow(args[1]);
+        Show show = OpenAudioFabric.getService(ShowService.class).getShow(args[1]);
         if (show == null) {
             sender.sendMessage(ChatColor.RED + "There is no show called " + args[1]);
             return;
@@ -58,11 +59,11 @@ public class ShowAddSubCommand extends SubCommand {
             return;
         }
 
-        ShowRunnable task = OpenAudioMc.getService(ShowService.class).createRunnable(args[3], data.toString(), world);
+        ShowRunnable task = OpenAudioFabric.getService(ShowService.class).createRunnable(args[3], data.toString(), world);
 
         if (task == null) {
             sender.sendMessage(ChatColor.RED + "Could not create task. Available types are:");
-            for (String taskType : OpenAudioMc.getService(ShowService.class).getTaskTypes()) {
+            for (String taskType : OpenAudioFabric.getService(ShowService.class).getTaskTypes()) {
                 sender.sendMessage(ChatColor.RED + " - " + ChatColor.BOLD + taskType);
             }
             sender.sendMessage(ChatColor.RED + "You can download extra types via addons or create your own using the API.");

@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.media;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.media.middleware.CdnMiddleware;
 import com.craftmend.openaudiomc.generic.media.interfaces.ForcedUrlMutation;
@@ -8,6 +7,8 @@ import com.craftmend.openaudiomc.api.media.UrlMutation;
 import com.craftmend.openaudiomc.generic.media.middleware.DropBoxMiddleware;
 import com.craftmend.openaudiomc.generic.service.Inject;
 import com.craftmend.openaudiomc.generic.service.Service;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,7 +30,7 @@ public class MediaService extends Service {
     public void onEnable() {
         // register default mutations
         registerMutation("https://www.dropbox.com", new DropBoxMiddleware());
-        OpenAudioMc.getService(MediaService.class).registerMutation("local:", new CdnMiddleware(authenticationService));
+        OpenAudioFabric.getService(MediaService.class).registerMutation("local:", new CdnMiddleware(authenticationService));
         // note that google drive, soundcloud, ssl-proxy and youtube are handled client side
     }
 

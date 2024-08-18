@@ -1,11 +1,11 @@
 package com.craftmend.openaudiomc.generic.networking.addapter;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.interfaces.ExternalModule;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.modules.ModuleLoaderService;
 import com.craftmend.openaudiomc.generic.networking.abstracts.AbstractPacketPayload;
 import com.google.gson.*;
+import com.openaudiofabric.OpenAudioFabric;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -88,7 +88,7 @@ public class AbstractPacketAdapter implements JsonSerializer<AbstractPacketPaylo
         try {
             return Class.forName(classname);
         } catch (ClassNotFoundException e) {
-            for (ExternalModule module : OpenAudioMc.getService(ModuleLoaderService.class).getModules()) {
+            for (ExternalModule module : OpenAudioFabric.getService(ModuleLoaderService.class).getModules()) {
                 try {
                     if (!walkedClassLoader) {
                         OpenAudioLogger.info("Handling a packet type that isn't in the native class loader, searching modules for the first time instead.");

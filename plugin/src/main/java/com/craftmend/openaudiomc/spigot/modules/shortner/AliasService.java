@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.shortner;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.media.MediaService;
 import com.craftmend.openaudiomc.generic.service.Inject;
@@ -9,6 +8,8 @@ import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.shortner.data.Alias;
 import com.craftmend.openaudiomc.spigot.modules.shortner.middleware.AliasMiddleware;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -38,12 +39,12 @@ public class AliasService extends Service {
     @Override
     public void onEnable() {
         OpenAudioLogger.info("Loading aliases...");
-        OpenAudioMc.getService(MediaService.class).registerMutation("a:", new AliasMiddleware(this));
+        OpenAudioFabric.getService(MediaService.class).registerMutation("a:", new AliasMiddleware(this));
 
         //load config
         Map<String, Alias> aliasWeight = new HashMap<>();
         List<Alias> deletable = new ArrayList<>();
-        for (Alias dbAlias : OpenAudioMc.getService(DatabaseService.class).getRepository(Alias.class).values()) {
+        for (Alias dbAlias : OpenAudioFabric.getService(DatabaseService.class).getRepository(Alias.class).values()) {
 
             // check if we already have this region
             if (aliasMap.containsKey(dbAlias.getName()) && aliasWeight.containsKey(dbAlias.getName())) {
@@ -65,7 +66,7 @@ public class AliasService extends Service {
         }
 
         for (Alias removeable : deletable) {
-            OpenAudioMc.getService(DatabaseService.class).getRepository(Alias.class).delete(removeable);
+            OpenAudioFabric.getService(DatabaseService.class).getRepository(Alias.class).delete(removeable);
         }
 
         OpenAudioLogger.info("Loaded " + aliasMap.size() + " aliases");

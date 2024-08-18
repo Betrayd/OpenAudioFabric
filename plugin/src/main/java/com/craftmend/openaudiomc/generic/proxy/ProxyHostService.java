@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.proxy;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.events.events.TimeServiceUpdateEvent;
@@ -20,6 +19,8 @@ import com.craftmend.openaudiomc.generic.proxy.models.ProxyNode;
 import com.craftmend.openaudiomc.generic.service.Inject;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.user.User;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -39,21 +40,21 @@ public class ProxyHostService extends Service {
     }
 
     public void onServerSwitch(User user, ProxyNode from, ProxyNode to) {
-        ClientConnection connection = OpenAudioMc.getService(NetworkingService.class).getClient(user.getUniqueId());
+        ClientConnection connection = OpenAudioFabric.getService(NetworkingService.class).getClient(user.getUniqueId());
 
         // bungeecord might fire this before player join, as they are technically connecting still, so we need to ignore it
         if (connection == null) return;
 
-        OpenAudioMc.getService(NetworkingService.class).send(connection, new PacketClientDestroyMedia(null, true));
+        OpenAudioFabric.getService(NetworkingService.class).send(connection, new PacketClientDestroyMedia(null, true));
 
-        OpenAudioMc.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
+        OpenAudioFabric.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
             if (connection.getSession().isConnectedToRtc()) {
                 // drop all peers
                 connection.sendPacket(new PacketClientBlurVoiceUi(new ClientVoiceBlurUiPayload(false)));
                 connection.sendPacket(new PacketClientDropVoiceStream(ClientVoiceDropPayload.dropAll()));
             }
 
-            if (OpenAudioMc.getService(OpenaudioAccountService.class).is(CraftmendTag.VOICECHAT)) {
+            if (OpenAudioFabric.getService(OpenaudioAccountService.class).is(CraftmendTag.VOICECHAT)) {
                 this.userHooks.sendPacket(user,
                         ClientUpdateStatePacket.of(connection)
                 );
@@ -71,17 +72,17 @@ public class ProxyHostService extends Service {
     public void onPacketReceive(User from, StandardPacket packet) {
         if (packet instanceof ForwardSocketPacket) {
             ForwardSocketPacket p = (ForwardSocketPacket) packet;
-            ClientConnection clientConnection = OpenAudioMc.getService(NetworkingService.class).getClient(from.getUniqueId());
+            ClientConnection clientConnection = OpenAudioFabric.getService(NetworkingService.class).getClient(from.getUniqueId());
             if (clientConnection == null) return;
             if (!clientConnection.isConnected()) return;
 
-            OpenAudioMc.getService(NetworkingService.class).send(clientConnection, p.getPayload());
+            OpenAudioFabric.getService(NetworkingService.class).send(clientConnection, p.getPayload());
             return;
         }
 
         if (packet instanceof ForceMuteMicrophonePacket) {
             ForceMuteMicrophonePacket p = (ForceMuteMicrophonePacket) packet;
-            OpenAudioMc.getService(NetworkingService.class).getClient(from.getUniqueId()).getRtcSessionManager().preventSpeaking(p.isCanSpeak());
+            OpenAudioFabric.getService(NetworkingService.class).getClient(from.getUniqueId()).getRtcSessionManager().preventSpeaking(p.isCanSpeak());
             return;
         }
     }

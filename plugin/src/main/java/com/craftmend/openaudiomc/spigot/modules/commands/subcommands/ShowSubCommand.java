@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.subcommands;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.generic.user.User;
@@ -9,6 +8,8 @@ import com.craftmend.openaudiomc.spigot.modules.commands.subcommands.show.*;
 import com.craftmend.openaudiomc.spigot.modules.show.ShowService;
 import com.craftmend.openaudiomc.spigot.modules.show.menu.ShowHomeMenu;
 import com.craftmend.openaudiomc.spigot.modules.show.objects.Show;
+import com.openaudiofabric.OpenAudioFabric;
+
 import org.apache.logging.log4j.util.Strings;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -96,7 +97,7 @@ public class ShowSubCommand extends SubCommand {
         }
 
         if (args[0].equalsIgnoreCase("gui") && args.length == 2) {
-            Show show = OpenAudioMc.getService(ShowService.class).getShow(args[1]);
+            Show show = OpenAudioFabric.getService(ShowService.class).getShow(args[1]);
             if (show == null) {
                 sender.sendMessage(ChatColor.RED + "There is no show called " + args[1]);
                 return;
@@ -106,7 +107,7 @@ public class ShowSubCommand extends SubCommand {
         }
 
         if (args[0].equalsIgnoreCase("list")) {
-            String names = Strings.join(OpenAudioMc.getService(ShowService.class).getAllShows(), ',');
+            String names = Strings.join(OpenAudioFabric.getService(ShowService.class).getAllShows(), ',');
             names = ChatColor.AQUA + names.replaceAll(",", ChatColor.GRAY + ", " + ChatColor.AQUA + "");
             message(sender, "All local shows: " + names);
             return;

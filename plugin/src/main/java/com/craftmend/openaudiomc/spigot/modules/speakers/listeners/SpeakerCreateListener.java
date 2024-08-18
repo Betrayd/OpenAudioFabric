@@ -3,7 +3,6 @@ package com.craftmend.openaudiomc.spigot.modules.speakers.listeners;
 import java.util.EnumSet;
 import java.util.UUID;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.speakers.ExtraSpeakerOptions;
 import com.craftmend.openaudiomc.api.speakers.SpeakerType;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
@@ -15,6 +14,7 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
 import com.mojang.logging.LogUtils;
+import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.AllArgsConstructor;
 import net.minecraft.block.BlockState;
@@ -77,7 +77,7 @@ public class SpeakerCreateListener {
                 speakerService.registerSpeaker(speaker);
 
                 // save
-                OpenAudioMc.getService(DatabaseService.class)
+                OpenAudioFabric.getService(DatabaseService.class)
                         .getRepository(Speaker.class)
                         .save(speaker);
 

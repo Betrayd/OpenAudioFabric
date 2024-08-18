@@ -6,7 +6,6 @@ import static net.minecraft.server.command.CommandManager.literal;
 import java.util.Collection;
 import java.util.Locale;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.events.client.SystemReloadEvent;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
@@ -111,7 +110,7 @@ public class OpenAudioMcCommand {
     public static SuggestionProvider<ServerCommandSource> playlistsSuggestor() {
         return (ctx, builder) -> {
 
-            PlaylistService playlistService = OpenAudioMc.getService(PlaylistService.class);
+            PlaylistService playlistService = OpenAudioFabric.getService(PlaylistService.class);
             for (Playlist s : playlistService.getAll()) {
                 builder.suggest(s.getName());
             }
@@ -130,11 +129,11 @@ public class OpenAudioMcCommand {
     }
 
     private static PlaylistService playlistService = (PlaylistService.class)
-            .cast(OpenAudioMc.getInstance().getServiceManager().loadService(PlaylistService.class));
+            .cast(OpenAudioFabric.getInstance().getServiceManager().loadService(PlaylistService.class));
 
     private static PlaylistService getPlaylistService() {
         return (PlaylistService.class)
-                .cast(OpenAudioMc.getInstance().getServiceManager().loadService(PlaylistService.class));
+                .cast(OpenAudioFabric.getInstance().getServiceManager().loadService(PlaylistService.class));
     }
 
     public static int playlistCreate(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -284,7 +283,7 @@ public class OpenAudioMcCommand {
         }
 
         player.getInventory()
-                .insertStack(SpeakerUtils.getSkull(OpenAudioMc.getService(MediaService.class).process(source), radius));
+                .insertStack(SpeakerUtils.getSkull(OpenAudioFabric.getService(MediaService.class).process(source), radius));
         sender.sendFeedback(() -> {
             return Text.literal(
                     "Speaker media created! You've received a Speaker skull in your inventory. Placing it anywhere in the world will add the configured sound in the are.");
@@ -398,14 +397,14 @@ public class OpenAudioMcCommand {
     }*/
 
     private static int link(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        if (OpenAudioMc.getInstance().getInvoker().isNodeServer()) {
+        if (OpenAudioFabric.getInstance().getInvoker().isNodeServer()) {
             PromptProxyError.sendTo(context.getSource());
             return 0;
         }
 
         // init connection so we receive the event
-        OpenAudioMc.resolveDependency(TaskService.class)
-                .runAsync(() -> OpenAudioMc.getService(NetworkingService.class).connectIfDown());
+        OpenAudioFabric.resolveDependency(TaskService.class)
+                .runAsync(() -> OpenAudioFabric.getService(NetworkingService.class).connectIfDown());
 
         context.getSource().sendFeedback(() -> {return Text.literal(OaColor.GRAY + "Generating link...");}, false);
 
@@ -432,21 +431,21 @@ public class OpenAudioMcCommand {
     private static int reload(CommandContext<ServerCommandSource> context) throws CommandSyntaxException 
     {
         context.getSource().sendFeedback(() -> {return Text.literal(Platform.makeColor("RED") + "Reloading OpenAudioMc data (config and account details)...");}, false);
-        OpenAudioMc.getInstance().getConfiguration().reloadConfig();
-        OpenAudioMc.getService(OpenaudioAccountService.class).syncAccount();
+        OpenAudioFabric.getInstance().getConfiguration().reloadConfig();
+        OpenAudioFabric.getService(OpenaudioAccountService.class).syncAccount();
 
         context.getSource().sendFeedback(() -> {return Text.literal(Platform.makeColor("RED") + "Shutting down network service and logging out...");}, false);
 
-        for (ClientConnection client : OpenAudioMc.getService(NetworkingService.class).getClients()) {
+        for (ClientConnection client : OpenAudioFabric.getService(NetworkingService.class).getClients()) {
             client.kick(() -> {
             });
         }
 
-        OpenAudioMc.getService(NetworkingService.class).stop();
+        OpenAudioFabric.getService(NetworkingService.class).stop();
 
         context.getSource().sendFeedback(() -> {return Text.literal(Platform.makeColor("RED") + "Re-activating account...");}, false);
-        OpenAudioMc.resolveDependency(TaskService.class)
-                .runAsync(() -> OpenAudioMc.getService(NetworkingService.class).connectIfDown());
+        OpenAudioFabric.resolveDependency(TaskService.class)
+                .runAsync(() -> OpenAudioFabric.getService(NetworkingService.class).connectIfDown());
 
         EventApi.getInstance().callEvent(new SystemReloadEvent());
 

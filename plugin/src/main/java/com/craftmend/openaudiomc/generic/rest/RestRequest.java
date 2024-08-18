@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.rest;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
 import com.craftmend.openaudiomc.generic.rest.response.AbstractRestResponse;
@@ -9,6 +8,8 @@ import com.craftmend.openaudiomc.generic.rest.response.SectionError;
 import com.craftmend.openaudiomc.generic.rest.response.ShorthandResponse;
 import com.craftmend.openaudiomc.generic.rest.routes.Endpoint;
 import com.craftmend.openaudiomc.generic.rest.routes.Method;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -77,7 +78,7 @@ public class RestRequest<T extends AbstractRestResponse> {
     }
 
     public RestRequest<T> withPostJsonObject(Object o) {
-        this.postBody = RequestBody.create(OpenAudioMc.getGson().toJson(o), MediaType.get("application/json; charset=utf-8"));
+        this.postBody = RequestBody.create(OpenAudioFabric.getGson().toJson(o), MediaType.get("application/json; charset=utf-8"));
         this.method = Method.POST;
         return this;
     }
@@ -120,7 +121,7 @@ public class RestRequest<T extends AbstractRestResponse> {
 
     public CompletableFuture<ShorthandResponse<T>> runAsync() {
         CompletableFuture<ShorthandResponse<T>> future = new CompletableFuture<>();
-        OpenAudioMc.resolveDependency(TaskService.class).runAsync(() -> {
+        OpenAudioFabric.resolveDependency(TaskService.class).runAsync(() -> {
             try {
                 this.run();
                 future.complete(new ShorthandResponse<T>(this.response, this.sectionError));
@@ -154,7 +155,7 @@ public class RestRequest<T extends AbstractRestResponse> {
         // create request
         Request.Builder requestBuilder = new Request.Builder()
                 .url(buildURL())
-                .header("oa-env", OpenAudioMc.SERVER_ENVIRONMENT.toString());
+                .header("oa-env", OpenAudioFabric.SERVER_ENVIRONMENT.toString());
 
         if (method == Method.POST) {
             requestBuilder = requestBuilder.post(postBody);
@@ -170,7 +171,7 @@ public class RestRequest<T extends AbstractRestResponse> {
             clientBuilder.connectTimeout(timeout, java.util.concurrent.TimeUnit.SECONDS);
         }
 
-        if (OpenAudioMc.SERVER_ENVIRONMENT == ServerEnvironment.DEVELOPMENT) {
+        if (OpenAudioFabric.SERVER_ENVIRONMENT == ServerEnvironment.DEVELOPMENT) {
             OpenAudioLogger.warn("Running in development mode, disabling SSL verification");
             clientBuilder = ignore(clientBuilder);
         }

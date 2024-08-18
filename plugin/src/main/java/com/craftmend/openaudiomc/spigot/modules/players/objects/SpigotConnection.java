@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.players.objects;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.media.Media;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
@@ -22,6 +21,8 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.objects.ApplicableSpeak
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.SpeakerSettings;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.VoiceChannelService;
 import com.craftmend.openaudiomc.spigot.services.utils.DataWatcher;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -115,11 +116,11 @@ public class SpigotConnection {
         clientConnection.addOnConnectHandler(new InitializeTrains(player));
 
         clientConnection.addOnDisconnectHandler(() -> {
-            OpenAudioMc.resolveDependency(TaskService.class).runSync(() -> {
+            OpenAudioFabric.resolveDependency(TaskService.class).runSync(() -> {
                 Bukkit.getServer().getPluginManager().callEvent(new ClientDisconnectEvent(player));
             });
 
-            OpenAudioMc.getService(VoiceChannelService.class).handleUserDisconnect(clientConnection);
+            OpenAudioFabric.getService(VoiceChannelService.class).handleUserDisconnect(clientConnection);
         });
     }
 
@@ -134,7 +135,7 @@ public class SpigotConnection {
                     (int) location.getYaw()
             );
 
-            OpenAudioMc.getService(NetworkingService.class).send(getClientConnection(), new PacketClientUpdateLocation(locationPayload));
+            OpenAudioFabric.getService(NetworkingService.class).send(getClientConnection(), new PacketClientUpdateLocation(locationPayload));
 
             if (locationFollowers.contains(PlayerLocationFollower.PROXIMITY_VOICE_CHAT)) {
                 clientConnection.getRtcSessionManager().onLocationTick(location);
@@ -150,7 +151,7 @@ public class SpigotConnection {
         this.locationDataWatcher.stop();
         this.currentSpeakers.clear();
         this.currentRegions.clear();
-        OpenAudioMc.getService(VoiceChannelService.class).handleUserDisconnect(clientConnection);
+        OpenAudioFabric.getService(VoiceChannelService.class).handleUserDisconnect(clientConnection);
     }
 
     /**

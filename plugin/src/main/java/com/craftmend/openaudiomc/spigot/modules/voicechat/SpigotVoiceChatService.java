@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.voicechat;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.basic.Actor;
 import com.craftmend.openaudiomc.api.events.client.*;
@@ -24,6 +23,8 @@ import com.craftmend.openaudiomc.spigot.modules.voicechat.filters.impl.TeamFilte
 import com.craftmend.openaudiomc.spigot.modules.voicechat.tasks.PlayerPeerTicker;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.tasks.PlayerVicinityMessageTask;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.tasks.TickVoicePacketQueue;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,7 +51,7 @@ public class SpigotVoiceChatService extends Service {
 
         if (StorageKey.SETTINGS_VOICECHAT_VICINITY_REMINDER_ENABLED.getBoolean()) {
             taskService.scheduleAsyncRepeatingTask(
-                    new PlayerVicinityMessageTask(OpenAudioMc.getService(SpigotPlayerService.class)),
+                    new PlayerVicinityMessageTask(OpenAudioFabric.getService(SpigotPlayerService.class)),
                     40,
                     40
             );

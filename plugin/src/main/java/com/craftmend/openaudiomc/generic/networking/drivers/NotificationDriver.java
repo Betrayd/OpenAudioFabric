@@ -1,9 +1,9 @@
 package com.craftmend.openaudiomc.generic.networking.drivers;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.networking.drivers.handler.CdnBucketUpdateNotification;
 import com.craftmend.openaudiomc.generic.oac.OpenaudioAccountService;
 import com.craftmend.openaudiomc.generic.oac.enums.CraftmendTag;
+import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.networking.drivers.handler.AccountUpdateNotification;
 import com.craftmend.openaudiomc.generic.networking.drivers.handler.AdminNotification;
@@ -33,7 +33,7 @@ public class NotificationDriver implements SocketDriver {
     @Override
     public void boot(Socket socket, SocketConnection connector) {
         socket.on("oa-notification", args -> {
-            BackendNotification payload = OpenAudioMc.getGson().fromJson(((String) args[args.length - 1]), BackendNotification.class);
+            BackendNotification payload = OpenAudioFabric.getGson().fromJson(((String) args[args.length - 1]), BackendNotification.class);
 
             // do we support this event?
             if (!supportsTags(payload.getRequiredTags())) return;
@@ -49,7 +49,7 @@ public class NotificationDriver implements SocketDriver {
     }
 
     private boolean supportsTags(Set<String> tagsToComplyWith) {
-        for (CraftmendTag tag : OpenAudioMc.getService(OpenaudioAccountService.class).getTags()) {
+        for (CraftmendTag tag : OpenAudioFabric.getService(OpenaudioAccountService.class).getTags()) {
             tagsToComplyWith.remove(tag.toString());
         }
         return tagsToComplyWith.isEmpty();

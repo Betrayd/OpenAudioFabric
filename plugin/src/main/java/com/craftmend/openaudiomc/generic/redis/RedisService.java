@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.redis;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.CommandService;
 import com.craftmend.openaudiomc.generic.commands.enums.CommandContext;
 import com.craftmend.openaudiomc.generic.commands.subcommands.RedisSubCommand;
@@ -16,6 +15,8 @@ import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.utils.redis.RedisUtils;
+import com.openaudiofabric.OpenAudioFabric;
+
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
@@ -77,7 +78,7 @@ public class RedisService extends Service {
 
     @Override
     public void onEnable() {
-        if (!Arrays.stream(ChannelKey.values()).anyMatch(value -> value.getTargetPlatform() == OpenAudioMc.getInstance().getPlatform())) return;
+        if (!Arrays.stream(ChannelKey.values()).anyMatch(value -> value.getTargetPlatform() == OpenAudioFabric.getInstance().getPlatform())) return;
         if (!Configuration.getBoolean(StorageKey.REDIS_ENABLED)) return;
         enabled = true;
 
@@ -115,7 +116,7 @@ public class RedisService extends Service {
         asyncSub = redisSubConnection.async();
 
         for (ChannelKey value : ChannelKey.values()) {
-            if (value.getTargetPlatform().equals(OpenAudioMc.getInstance().getPlatform())) asyncSub.subscribe(value.getRedisChannelName());
+            if (value.getTargetPlatform().equals(OpenAudioFabric.getInstance().getPlatform())) asyncSub.subscribe(value.getRedisChannelName());
         }
 
         // set up publisher
@@ -125,10 +126,10 @@ public class RedisService extends Service {
         asyncPub = redisPubConnection.async();
 
         // queue handler
-        OpenAudioMc.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(messageQueHandler, 1, 1);
+        OpenAudioFabric.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(messageQueHandler, 1, 1);
 
         // enable command
-        OpenAudioMc.getService(CommandService.class).registerSubCommands(CommandContext.OPENAUDIOMC, new RedisSubCommand(this));
+        OpenAudioFabric.getService(CommandService.class).registerSubCommands(CommandContext.OPENAUDIOMC, new RedisSubCommand(this));
 
         OpenAudioLogger.info("Enabled redis service!");
     }

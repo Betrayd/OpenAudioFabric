@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.commands.subcommands;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.clients.Client;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
@@ -11,6 +10,7 @@ import com.craftmend.openaudiomc.generic.networking.packets.client.media.PacketC
 import com.craftmend.openaudiomc.generic.networking.payloads.client.media.ClientPreFetchPayload;
 import com.craftmend.openaudiomc.generic.platform.OaColor;
 import com.craftmend.openaudiomc.generic.user.User;
+import com.openaudiofabric.OpenAudioFabric;
 
 import java.util.Optional;
 
@@ -34,7 +34,7 @@ public class PreloadSubCommand extends SubCommand {
         if (args.length == 2) {
             int affected = 0;
 
-            ClientPreFetchPayload payload = new ClientPreFetchPayload(OpenAudioMc.getService(MediaService.class).process(args[1]), "command", false, false);
+            ClientPreFetchPayload payload = new ClientPreFetchPayload(OpenAudioFabric.getService(MediaService.class).process(args[1]), "command", false, false);
 
             for (User<?> user : resolveSelector(sender, args[0])) {
                 Optional<Client> client = user.findClient();

@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.rd.routes;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.client.helpers.SerializableClient;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
@@ -10,6 +9,8 @@ import com.craftmend.openaudiomc.generic.rd.http.Route;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.state.StateService;
 import com.craftmend.openaudiomc.generic.state.interfaces.StateDetail;
+import com.openaudiofabric.OpenAudioFabric;
+
 import fi.iki.elonen.NanoHTTPD;
 import lombok.AllArgsConstructor;
 
@@ -36,19 +37,19 @@ public class StateRoute extends Route {
 
         Map<String, Object> r = new HashMap<>();
 
-        r.put("version", OpenAudioMc.BUILD);
+        r.put("version", OpenAudioFabric.BUILD);
 
         // list services
         List<String> services = new ArrayList<>();
-        for (Service allService : OpenAudioMc.getInstance().getServiceManager().allServices()) {
+        for (Service allService : OpenAudioFabric.getInstance().getServiceManager().allServices()) {
             services.add(allService.getClass().getName());
         }
         r.put("services", services);
-        r.put("state", OpenAudioMc.getService(StateService.class).getCurrentState().asString());
+        r.put("state", OpenAudioFabric.getService(StateService.class).getCurrentState().asString());
 
         Map<String, String> readableState = new HashMap<>();
 
-        for (StateDetail detail : OpenAudioMc.getService(StateService.class).getDetails()) {
+        for (StateDetail detail : OpenAudioFabric.getService(StateService.class).getDetails()) {
             readableState.put(detail.title(), detail.value());
         }
 
@@ -56,14 +57,14 @@ public class StateRoute extends Route {
 
         // list clients
         List<SerializableClient> clients = new ArrayList<>();
-        for (ClientConnection c : OpenAudioMc.getService(NetworkingService.class).getClients()) {
+        for (ClientConnection c : OpenAudioFabric.getService(NetworkingService.class).getClients()) {
             clients.add(c.getSession().asSerializableCopy());
         }
         r.put("services", services);
         r.put("clients", clients);
-        r.put("state", OpenAudioMc.getService(StateService.class).getCurrentState().asString());
+        r.put("state", OpenAudioFabric.getService(StateService.class).getCurrentState().asString());
 
-        return HttpResponse.json(OpenAudioMc.getGson().toJson(r));
+        return HttpResponse.json(OpenAudioFabric.getGson().toJson(r));
 
     }
 

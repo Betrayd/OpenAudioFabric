@@ -1,7 +1,7 @@
 package com.craftmend.openaudiomc.spigot.modules.predictive.serialization;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.utils.data.ConcurrentHeatMap;
+import com.openaudiofabric.OpenAudioFabric;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Map;
 public class ChunkMapSerializer {
 
     public String toJson(ConcurrentHeatMap<String, ConcurrentHeatMap<String, Byte>> data) {
-        return OpenAudioMc.getGson().toJson(serialize(data));
+        return OpenAudioFabric.getGson().toJson(serialize(data));
     }
 
     public ConcurrentHeatMap<String, ConcurrentHeatMap<String, Byte>> applyFromChunkMap(SerializedAudioChunk.ChunkMap loaded, ConcurrentHeatMap<String, ConcurrentHeatMap<String, Byte>> currentMap) {

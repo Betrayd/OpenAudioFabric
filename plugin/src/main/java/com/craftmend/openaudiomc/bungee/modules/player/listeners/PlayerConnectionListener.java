@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.bungee.modules.player.listeners;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.bungee.modules.platform.BungeeProxyNode;
 import com.craftmend.openaudiomc.bungee.utils.BungeeUtils;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
@@ -10,6 +9,8 @@ import com.craftmend.openaudiomc.generic.node.packets.AnnouncePlatformPacket;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.proxy.ProxyHostService;
 import com.craftmend.openaudiomc.generic.user.adapters.BungeeUserAdapter;
+import com.openaudiofabric.OpenAudioFabric;
+
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
@@ -38,18 +39,18 @@ public class PlayerConnectionListener implements Listener {
             return;
         }
 
-        OpenAudioMc.getService(NetworkingService.class).register(new BungeeUserAdapter(event.getPlayer()), null);
+        OpenAudioFabric.getService(NetworkingService.class).register(new BungeeUserAdapter(event.getPlayer()), null);
     }
 
     @EventHandler
     public void onLogout(PlayerDisconnectEvent event) {
-        OpenAudioMc.getService(NetworkingService.class).remove(event.getPlayer().getUniqueId());
+        OpenAudioFabric.getService(NetworkingService.class).remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void onConnect(ServerConnectedEvent event) {
         new BungeeProxyNode(event.getServer().getInfo()).sendPacket(new AnnouncePlatformPacket(
-                OpenAudioMc.getService(AuthenticationService.class).getServerKeySet().getPublicKey().getValue(),
+                OpenAudioFabric.getService(AuthenticationService.class).getServerKeySet().getPublicKey().getValue(),
                 Platform.BUNGEE
         ));
 
@@ -59,9 +60,9 @@ public class PlayerConnectionListener implements Listener {
         }
 
         // possibly polyfill the missing client
-        if (!OpenAudioMc.getService(NetworkingService.class).hasClient(event.getPlayer().getUniqueId())) {
+        if (!OpenAudioFabric.getService(NetworkingService.class).hasClient(event.getPlayer().getUniqueId())) {
             OpenAudioLogger.warn("Player " + event.getPlayer().getName() + "is not registered yet, forcing login during connect");
-            OpenAudioMc.getService(NetworkingService.class).register(new BungeeUserAdapter(event.getPlayer()), null);
+            OpenAudioFabric.getService(NetworkingService.class).register(new BungeeUserAdapter(event.getPlayer()), null);
         }
     }
 
@@ -72,12 +73,12 @@ public class PlayerConnectionListener implements Listener {
         }
 
         // did we have to skip the login packet?
-        if (!OpenAudioMc.getService(NetworkingService.class).hasClient(event.getPlayer().getUniqueId())) {
+        if (!OpenAudioFabric.getService(NetworkingService.class).hasClient(event.getPlayer().getUniqueId())) {
             OpenAudioLogger.warn("Player " + event.getPlayer().getName() + " is not registered yet, forcing login during switch");
-            OpenAudioMc.getService(NetworkingService.class).register(new BungeeUserAdapter(event.getPlayer()), null);
+            OpenAudioFabric.getService(NetworkingService.class).register(new BungeeUserAdapter(event.getPlayer()), null);
         }
 
-        OpenAudioMc.getService(ProxyHostService.class).onServerSwitch(
+        OpenAudioFabric.getService(ProxyHostService.class).onServerSwitch(
                 new BungeeUserAdapter(event.getPlayer()),
                 null,
                 new BungeeProxyNode(event.getPlayer().getServer().getInfo())

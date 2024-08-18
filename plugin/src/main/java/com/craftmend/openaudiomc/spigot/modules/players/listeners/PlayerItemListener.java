@@ -1,12 +1,13 @@
 package com.craftmend.openaudiomc.spigot.modules.players.listeners;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.networking.packets.client.voice.PacketClientToggleMicrophone;
 import com.craftmend.openaudiomc.generic.networking.payloads.client.voice.ClientVoiceChatToggleMicrophonePayload;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.spigot.modules.players.SpigotPlayerService;
 import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotConnection;
+import com.openaudiofabric.OpenAudioFabric;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -38,7 +39,7 @@ public class PlayerItemListener implements Listener {
             }
 
             playerMuteTimeout.put(event.getPlayer().getUniqueId(), Instant.now());
-            SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(event.getPlayer().getUniqueId());
+            SpigotConnection spigotConnection = OpenAudioFabric.getService(SpigotPlayerService.class).getClient(event.getPlayer().getUniqueId());
 
             if (!spigotConnection.getClientConnection().getSession().isConnectedToRtc()) {
                 String message = Platform.translateColors(StorageKey.MESSAGE_VC_NOT_CONNECTED.getString());

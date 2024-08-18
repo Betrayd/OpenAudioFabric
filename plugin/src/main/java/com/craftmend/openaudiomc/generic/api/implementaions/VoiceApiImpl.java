@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.api.implementaions;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.VoiceApi;
 import com.craftmend.openaudiomc.api.channels.VoiceChannel;
@@ -18,6 +17,7 @@ import com.craftmend.openaudiomc.generic.networking.payloads.client.voice.Client
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.VoiceChannelService;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.filters.FilterService;
+import com.openaudiofabric.OpenAudioFabric;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -55,7 +55,7 @@ public class VoiceApiImpl implements VoiceApi {
         }
 
         // update the options
-        ClientConnection peerCon = OpenAudioMc.getService(NetworkingService.class).getClient(peerConnection.getUser().getUniqueId());
+        ClientConnection peerCon = OpenAudioFabric.getService(NetworkingService.class).getClient(peerConnection.getUser().getUniqueId());
         PacketClientVoiceOptionsUpdate packet = new PacketClientVoiceOptionsUpdate(
                 new ClientVoiceOptionsPayload(peerCon.getRtcSessionManager().getStreamKey(), options)
         );
@@ -118,7 +118,7 @@ public class VoiceApiImpl implements VoiceApi {
 
     @Override
     public void removeStaticPeer(Client client, Client peerToRemove, boolean mutual) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
+        if (OpenAudioFabric.getInstance().getPlatform() != Platform.SPIGOT) {
             throw new IllegalStateException("This method is only available on the spigot platform");
         }
 
@@ -138,37 +138,37 @@ public class VoiceApiImpl implements VoiceApi {
 
     @Override
     public void addFilterFunction(CustomPlayerFilter customPlayerFilter) {
-        OpenAudioMc.getService(FilterService.class).addCustomFilter(customPlayerFilter);
+        OpenAudioFabric.getService(FilterService.class).addCustomFilter(customPlayerFilter);
     }
 
     @Override
     public List<CustomPlayerFilter> getCustomPlayerFilters() {
-        return OpenAudioMc.getService(FilterService.class).getCustomPlayerFilters();
+        return OpenAudioFabric.getService(FilterService.class).getCustomPlayerFilters();
     }
 
     @Override
     public Collection<VoiceChannel> getChannels() {
-        return new ArrayList<>(OpenAudioMc.getService(VoiceChannelService.class).getChannels());
+        return new ArrayList<>(OpenAudioFabric.getService(VoiceChannelService.class).getChannels());
     }
 
     @Nullable
     @Override
     public VoiceChannel getChannel(String name) {
-        return OpenAudioMc.getService(VoiceChannelService.class).getChannel(name);
+        return OpenAudioFabric.getService(VoiceChannelService.class).getChannel(name);
     }
 
     @Override
     public VoiceChannel createChannel(String name, Client creator, boolean requiresPermission, @Nullable String requiredPermission) {
-        return OpenAudioMc.getService(VoiceChannelService.class).createChannel(name, creator, requiresPermission, requiredPermission);
+        return OpenAudioFabric.getService(VoiceChannelService.class).createChannel(name, creator, requiresPermission, requiredPermission);
     }
 
     @Override
     public void deleteChannel(VoiceChannel channel) {
-        OpenAudioMc.getService(VoiceChannelService.class).deleteChannel(channel.getName());
+        OpenAudioFabric.getService(VoiceChannelService.class).deleteChannel(channel.getName());
     }
 
     @Override
     public boolean isChannelNameValid(String s) {
-        return OpenAudioMc.getService(VoiceChannelService.class).isChannelNameValid(s);
+        return OpenAudioFabric.getService(VoiceChannelService.class).isChannelNameValid(s);
     }
 }

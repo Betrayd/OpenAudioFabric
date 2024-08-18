@@ -1,11 +1,11 @@
 package com.craftmend.openaudiomc.generic.environment;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
 import com.craftmend.openaudiomc.generic.rest.RestRequest;
 import com.craftmend.openaudiomc.generic.rest.routes.Endpoint;
 import com.craftmend.openaudiomc.generic.user.User;
+import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.platform.Platform;
@@ -26,7 +26,7 @@ public class GlobalConstantService extends Service {
     }
 
     private void scheduleStatusUpdate() {
-        OpenAudioMc.resolveDependency(TaskService.class).runAsync(
+        OpenAudioFabric.resolveDependency(TaskService.class).runAsync(
                 () -> {
                     try {
                         projectStatus = new RestRequest<ProjectStatus>(ProjectStatus.class, Endpoint.GITHUB_VERSION_CHECK)
@@ -45,8 +45,8 @@ public class GlobalConstantService extends Service {
     }
 
     private boolean allowChecks() {
-        boolean notifyUpdates = OpenAudioMc.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_NOTIFY_UPDATES);
-        boolean notifyAnnouncements = OpenAudioMc.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_NOTIFY_ANNOUNCEMENTS);
+        boolean notifyUpdates = OpenAudioFabric.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_NOTIFY_UPDATES);
+        boolean notifyAnnouncements = OpenAudioFabric.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_NOTIFY_ANNOUNCEMENTS);
         return notifyAnnouncements || notifyUpdates;
     }
 
@@ -55,8 +55,8 @@ public class GlobalConstantService extends Service {
         if (!allowChecks()) return;
         scheduleStatusUpdate();
 
-        boolean notifyUpdates = OpenAudioMc.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_NOTIFY_UPDATES);
-        boolean notifyAnnouncements = OpenAudioMc.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_NOTIFY_ANNOUNCEMENTS);
+        boolean notifyUpdates = OpenAudioFabric.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_NOTIFY_UPDATES);
+        boolean notifyAnnouncements = OpenAudioFabric.getInstance().getConfiguration().getBoolean(StorageKey.SETTINGS_NOTIFY_ANNOUNCEMENTS);
 
         String prefix = MagicValue.COMMAND_PREFIX.get(String.class);
 

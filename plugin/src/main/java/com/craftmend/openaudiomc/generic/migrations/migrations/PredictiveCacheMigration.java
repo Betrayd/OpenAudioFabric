@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.migrations.migrations;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.database.internal.Repository;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
@@ -10,6 +9,7 @@ import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.predictive.serialization.SerializedAudioChunk;
 import com.craftmend.openaudiomc.spigot.modules.predictive.sorage.StoredWorldChunk;
+import com.openaudiofabric.OpenAudioFabric;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class PredictiveCacheMigration extends SimpleMigration {
 
     @Override
     public boolean shouldBeRun(MigrationWorker migrationWorker) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) return false;
+        if (OpenAudioFabric.getInstance().getPlatform() != Platform.SPIGOT) return false;
 
         return new File(
                 OpenAudioMcSpigot.getInstance().getDataFolder(), "cache.json"
@@ -30,10 +30,10 @@ public class PredictiveCacheMigration extends SimpleMigration {
     @Override
     public void execute(MigrationWorker migrationWorker) {
         OpenAudioLogger.info("Migrating world audio heatmap");
-        DatabaseService service = OpenAudioMc.getService(DatabaseService.class);
+        DatabaseService service = OpenAudioFabric.getService(DatabaseService.class);
         Repository<StoredWorldChunk> repo = service.getRepository(StoredWorldChunk.class);
         try {
-            SerializedAudioChunk.ChunkMap filemap = OpenAudioMc.getGson().fromJson(
+            SerializedAudioChunk.ChunkMap filemap = OpenAudioFabric.getGson().fromJson(
                     new String(Files.readAllBytes(new File(
                             OpenAudioMcSpigot.getInstance().getDataFolder(), "cache.json"
                     ).toPath())),

@@ -1,7 +1,8 @@
 package com.craftmend.openaudiomc.generic.redis.packets.interfaces;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.redis.RedisService;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,11 +13,11 @@ public abstract class OARedisPacket {
     public abstract String serialize();
 
     public OARedisPacket deSerialize(String json) {
-        return OpenAudioMc.getGson().fromJson(json, getClass());
+        return OpenAudioFabric.getGson().fromJson(json, getClass());
     }
 
     public void receive(OARedisPacket received) {
-        if (OpenAudioMc.getService(RedisService.class).getServiceId().equals(getSenderUUID())) return;
+        if (OpenAudioFabric.getService(RedisService.class).getServiceId().equals(getSenderUUID())) return;
         handle(received);
     }
 

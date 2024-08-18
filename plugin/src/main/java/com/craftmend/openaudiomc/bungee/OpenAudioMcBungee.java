@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.bungee;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.impl.RegistryApiImpl;
 import com.craftmend.openaudiomc.api.interfaces.AudioApi;
 import com.craftmend.openaudiomc.bungee.modules.commands.BungeeCommandModule;
@@ -21,6 +20,7 @@ import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.state.states.IdleState;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
+import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.bungee.modules.punishments.LitebansIntegration;
 import com.craftmend.openaudiomc.generic.proxy.messages.implementations.BungeeCordPacketManager;
 import lombok.Getter;
@@ -60,7 +60,7 @@ public class OpenAudioMcBungee extends Plugin implements OpenAudioInvoker {
 
         // setup core
         try {
-            OpenAudioMc openAudioMc = new OpenAudioMc(this);
+            OpenAudioFabric openAudioMc = new OpenAudioFabric(this);
             openAudioMc.getServiceManager().registerDependency(OpenAudioMcBungee.class, this);
             this.messageHandler = new BungeeCordPacketManager(this, "openaudiomc:node");
 
@@ -72,15 +72,15 @@ public class OpenAudioMcBungee extends Plugin implements OpenAudioInvoker {
             openAudioMc.getServiceManager().getService(BungeeDependencyService.class)
                     .ifPluginEnabled("LiteBans", new LitebansIntegration());
 
-            OpenAudioMc.getService(RestDirectService.class).boot();
+            OpenAudioFabric.getService(RestDirectService.class).boot();
 
             // set state to idle, to allow connections and such
-            OpenAudioMc.getService(StateService.class).setState(new IdleState("OpenAudioMc started and awaiting command"));
+            OpenAudioFabric.getService(StateService.class).setState(new IdleState("OpenAudioMc started and awaiting command"));
 
             // timing end and calc
             Instant finish = Instant.now();
             OpenAudioLogger.info("Starting and loading took " + Duration.between(boot, finish).toMillis() + "MS");
-            OpenAudioMc.getInstance().postBoot();
+            OpenAudioFabric.getInstance().postBoot();
         } catch (Exception e) {
             OpenAudioLogger.error(e, "Failed to boot OpenAudioMc, please report this stacktrace");
         }
@@ -91,7 +91,7 @@ public class OpenAudioMcBungee extends Plugin implements OpenAudioInvoker {
      */
     @Override
     public void onDisable() {
-        OpenAudioMc.getInstance().disable();
+        OpenAudioFabric.getInstance().disable();
     }
 
     @Override

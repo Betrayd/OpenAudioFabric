@@ -1,12 +1,12 @@
 package com.craftmend.openaudiomc.generic.rd.ports;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.rest.RestRequest;
 import com.craftmend.openaudiomc.generic.rest.ServerEnvironment;
 import com.craftmend.openaudiomc.generic.rest.response.NoResponse;
 import com.craftmend.openaudiomc.generic.rest.routes.Endpoint;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
+import com.openaudiofabric.OpenAudioFabric;
 
 public class PortChecker {
 
@@ -42,7 +42,7 @@ public class PortChecker {
 
         // anything goes on a test server lol
         OpenAudioLogger.info("Attaching cdn host to " + url());
-        if (OpenAudioMc.SERVER_ENVIRONMENT == ServerEnvironment.DEVELOPMENT) {
+        if (OpenAudioFabric.SERVER_ENVIRONMENT == ServerEnvironment.DEVELOPMENT) {
             return PortCheckResponse.MATCH;
         }
 

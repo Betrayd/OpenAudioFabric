@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.users;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
@@ -13,6 +12,8 @@ import com.craftmend.openaudiomc.spigot.modules.proxy.service.ProxyNetworkingSer
 import com.craftmend.openaudiomc.spigot.modules.users.adapters.LegacySpigotUserAdapter;
 import com.craftmend.openaudiomc.spigot.modules.users.adapters.SpigotUserAdapter;
 import com.craftmend.openaudiomc.spigot.modules.users.interfaces.SpigotUserProvider;
+import com.openaudiofabric.OpenAudioFabric;
+
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -163,7 +164,7 @@ public class SpigotUserHooks implements UserHooks {
     @Override
     public void sendPacket(User user, StandardPacket packet) {
         // do nothing
-        NetworkingService ns = OpenAudioMc.getService(NetworkingService.class);
+        NetworkingService ns = OpenAudioFabric.getService(NetworkingService.class);
         if (ns instanceof ProxyNetworkingService) {
             ((ProxyNetworkingService) ns).getPacketManager().sendPacket(new PacketPlayer(
                             (Player) user.getOriginal()),

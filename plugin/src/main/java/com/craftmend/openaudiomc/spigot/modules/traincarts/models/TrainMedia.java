@@ -1,8 +1,9 @@
 package com.craftmend.openaudiomc.spigot.modules.traincarts.models;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.media.Media;
 import com.craftmend.openaudiomc.generic.media.time.TimeService;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Data;
 
 import java.time.Instant;
@@ -12,7 +13,7 @@ import java.util.UUID;
 public class    TrainMedia {
 
     private UUID mediaId = UUID.randomUUID();
-    private Instant startedAt = OpenAudioMc.getService(TimeService.class).getSyncedInstant();
+    private Instant startedAt = OpenAudioFabric.getService(TimeService.class).getSyncedInstant();
     private String source;
     private Media media;
 

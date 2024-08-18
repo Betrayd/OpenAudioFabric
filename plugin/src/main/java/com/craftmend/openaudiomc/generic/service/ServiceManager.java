@@ -1,7 +1,8 @@
 package com.craftmend.openaudiomc.generic.service;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Constructor;
@@ -89,8 +90,8 @@ public class ServiceManager {
         if (Service.class.isAssignableFrom(type)) {
             // its depended upon
             return loadService((Class<? extends Service>) type);
-        } else if (type == OpenAudioMc.class) {
-            return OpenAudioMc.getInstance();
+        } else if (type == OpenAudioFabric.class) {
+            return OpenAudioFabric.getInstance();
         } else {
             if (otherInjectables.containsKey(type)) {
                 return otherInjectables.get(type);

@@ -1,10 +1,11 @@
 package com.craftmend.openaudiomc.generic.rest.response;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class IntermediateResponse<R extends AbstractRestResponse> {
             return response;
         }
 
-        UntypedResponse untypedResponse = OpenAudioMc.getGson().fromJson(body, UntypedResponse.class);
+        UntypedResponse untypedResponse = OpenAudioFabric.getGson().fromJson(body, UntypedResponse.class);
 
         // convert to typed response
         IntermediateResponse<T> intermediateResponse = new IntermediateResponse<>();
@@ -51,7 +52,7 @@ public class IntermediateResponse<R extends AbstractRestResponse> {
     }
 
     public R getResponse(Class<R> type) {
-        Gson gson = OpenAudioMc.getGson();
+        Gson gson = OpenAudioFabric.getGson();
         JsonObject jsonObject;
         try {
             jsonObject = gson.toJsonTree(response).getAsJsonObject();

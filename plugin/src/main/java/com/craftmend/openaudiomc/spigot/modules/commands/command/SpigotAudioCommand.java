@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.command;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.clients.Client;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
@@ -20,6 +19,7 @@ import com.craftmend.openaudiomc.generic.state.interfaces.State;
 import com.craftmend.openaudiomc.generic.state.states.WorkerState;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.modules.users.adapters.SpigotUserAdapter;
+import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.spigot.modules.events.SpigotAudioCommandEvent;
 import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotPlayerSelector;
 
@@ -54,12 +54,12 @@ public class SpigotAudioCommand implements CommandExecutor {
         if (CommandMiddewareExecutor.shouldBeCanceled(sua, null, commandMiddleware))
             return true;
 
-        State state = OpenAudioMc.getService(StateService.class).getCurrentState();
+        State state = OpenAudioFabric.getService(StateService.class).getCurrentState();
 
         if (state instanceof WorkerState) {
             // velocity work around
             if (commandSender instanceof Player && MagicValue.PARENT_PLATFORM.get(Platform.class) == Platform.VELOCITY) {
-                UserHooks hooks = OpenAudioMc.resolveDependency(UserHooks.class);
+                UserHooks hooks = OpenAudioFabric.resolveDependency(UserHooks.class);
                 Player sender = (Player) commandSender;
                 User user = hooks.byUuid(sender.getUniqueId());
 
@@ -68,7 +68,7 @@ public class SpigotAudioCommand implements CommandExecutor {
                     enteredToken = args[0];
                 }
 
-                OpenAudioMc.resolveDependency(UserHooks.class).sendPacket(user, new ClientRunAudioPacket(user.getUniqueId(), enteredToken));
+                OpenAudioFabric.resolveDependency(UserHooks.class).sendPacket(user, new ClientRunAudioPacket(user.getUniqueId(), enteredToken));
             } else {
                 // its on a sub-server without an activated proxy, so completely ignore it
                 PromptProxyError.sendTo(sua);
@@ -79,7 +79,7 @@ public class SpigotAudioCommand implements CommandExecutor {
         if (commandSender instanceof Player) {
             // do we have an argument called "token",  "bedrock" or "key"?
             if (args.length == 1) {
-                OpenAudioMc.getService(NetworkingService.class).getClient(sua.getUniqueId()).getAuth().activateToken(
+                OpenAudioFabric.getService(NetworkingService.class).getClient(sua.getUniqueId()).getAuth().activateToken(
                         sua,
                         args[0]
                 );
@@ -87,7 +87,7 @@ public class SpigotAudioCommand implements CommandExecutor {
             }
 
             Player sender = (Player) commandSender;
-            OpenAudioMc.getService(NetworkingService.class).getClient(sender.getUniqueId()).getAuth().publishSessionUrl();
+            OpenAudioFabric.getService(NetworkingService.class).getClient(sender.getUniqueId()).getAuth().publishSessionUrl();
         } else {
             if (args.length == 0) {
                 commandSender.sendMessage(MagicValue.COMMAND_PREFIX.get(String.class) + ChatColor.RED + "You must provide a player name OR selector to send trigger the URL");

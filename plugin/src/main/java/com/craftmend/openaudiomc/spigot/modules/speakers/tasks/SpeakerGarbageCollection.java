@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.speakers.tasks;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
@@ -12,6 +11,7 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
+import com.openaudiofabric.OpenAudioFabric;
 
 import net.minecraft.server.MinecraftServer;
 
@@ -33,7 +33,7 @@ public class SpeakerGarbageCollection extends OARunnable {
         this.server = server;
         this.speakerService = speakerService;
         runTaskTimer(600, 600);
-        OpenAudioMc.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(() -> {
+        OpenAudioFabric.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(() -> {
             if (PROCESSED_SPEAKERS != 0) {
                 OpenAudioLogger.info("The garbage collector found and processed " + PROCESSED_SPEAKERS + " broken speakers");
                 PROCESSED_SPEAKERS = 0;
@@ -45,7 +45,7 @@ public class SpeakerGarbageCollection extends OARunnable {
         super();
         this.server = server;
         this.forceRun = true;
-        this.speakerService = OpenAudioMc.getService(SpeakerService.class);
+        this.speakerService = OpenAudioFabric.getService(SpeakerService.class);
     }
 
     @Override
@@ -105,11 +105,11 @@ public class SpeakerGarbageCollection extends OARunnable {
     private void remove(Speaker speaker) {
         GcStrategy strategy = GcStrategy.valueOf(StorageKey.SETTINGS_GC_STRATEGY.getString());
         if (strategy == GcStrategy.DELETE) {
-            OpenAudioMc.getService(DatabaseService.class)
+            OpenAudioFabric.getService(DatabaseService.class)
                     .getRepository(Speaker.class)
                     .delete(speaker);
         }
-        OpenAudioMc.resolveDependency(TaskService.class).runAsync(() -> {
+        OpenAudioFabric.resolveDependency(TaskService.class).runAsync(() -> {
             speakerService.getSpeakerMap().remove(speaker.getLocation());
         });
         PROCESSED_SPEAKERS++;

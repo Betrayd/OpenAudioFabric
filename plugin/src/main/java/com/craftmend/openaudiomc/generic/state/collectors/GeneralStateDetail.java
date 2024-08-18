@@ -1,8 +1,8 @@
 package com.craftmend.openaudiomc.generic.state.collectors;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.state.StateService;
 import com.craftmend.openaudiomc.generic.state.interfaces.StateDetail;
+import com.openaudiofabric.OpenAudioFabric;
 
 public class GeneralStateDetail implements StateDetail {
     @Override
@@ -12,6 +12,6 @@ public class GeneralStateDetail implements StateDetail {
 
     @Override
     public String value() {
-        return OpenAudioMc.getService(StateService.class).getCurrentState().getClass().getSimpleName() + " - " + OpenAudioMc.getService(StateService.class).getCurrentState().getDescription();
+        return OpenAudioFabric.getService(StateService.class).getCurrentState().getClass().getSimpleName() + " - " + OpenAudioFabric.getService(StateService.class).getCurrentState().getDescription();
     }
 }

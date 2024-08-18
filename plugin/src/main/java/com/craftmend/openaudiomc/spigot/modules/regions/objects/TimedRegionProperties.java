@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.regions.objects;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.media.Media;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
@@ -8,6 +7,8 @@ import com.craftmend.openaudiomc.spigot.modules.players.SpigotPlayerService;
 import com.craftmend.openaudiomc.spigot.modules.regions.registry.WorldRegionManager;
 import com.craftmend.storm.api.markers.Column;
 import com.craftmend.storm.api.markers.Table;
+import com.openaudiofabric.OpenAudioFabric;
+
 import org.bukkit.Bukkit;
 
 
@@ -31,7 +32,7 @@ public class TimedRegionProperties extends RegionProperties {
         super(source, volume, fadeTimeMs, true, regionName, worldName);
         this.regionId = regionId;
 
-        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
+        if (OpenAudioFabric.getInstance().getPlatform() == Platform.SPIGOT) {
             this.task = Bukkit.getScheduler().scheduleAsyncDelayedTask(OpenAudioMcSpigot.getInstance(), () -> {
 
                 // remove myself from all my worlds
@@ -48,7 +49,7 @@ public class TimedRegionProperties extends RegionProperties {
     }
 
     private void forceUpdateClients() {
-        OpenAudioMc.getService(SpigotPlayerService.class).getClients()
+        OpenAudioFabric.getService(SpigotPlayerService.class).getClients()
                 .stream()
                 .filter(client -> client.getRegions().stream().anyMatch(region -> region.getId().equals(regionId)))
                 .forEach(client -> client.getLocationDataWatcher().forceTicK());

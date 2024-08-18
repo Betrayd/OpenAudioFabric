@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import com.openaudiofabric.OpenAudioFabric;
+
 /**
  * This is a simple class that contains the current build number, as well as some other details
  * about the compiler and compile environment. This could be used in update checks and is
@@ -26,7 +28,7 @@ public class OpenAudioMcBuild {
     @SneakyThrows
     public OpenAudioMcBuild() {
         Properties prop = new Properties();
-        try (InputStream inputStream = OpenAudioMc.class.getResourceAsStream("/openaudiomc-build.properties")) {
+        try (InputStream inputStream = OpenAudioFabric.class.getResourceAsStream("/openaudiomc-build.properties")) {
             prop.load(inputStream);
 
             // this loads the build version and details, which are placed in the resources directory by a bash script

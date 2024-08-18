@@ -1,12 +1,12 @@
 package com.craftmend.openaudiomc.spigot.modules.commands.middleware;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.CommandService;
 import com.craftmend.openaudiomc.generic.commands.enums.CommandContext;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.modules.users.adapters.SpigotUserAdapter;
+import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotPlayerSelector;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
@@ -31,10 +31,10 @@ public class CommandTranslationMiddleware implements Listener {
         parts[0] = parts[0].toLowerCase();
 
         if (parts.length < 2) return;
-        if (!OpenAudioMc.getService(CommandService.class).getAliases().contains(parts[0])) return;
+        if (!OpenAudioFabric.getService(CommandService.class).getAliases().contains(parts[0])) return;
 
         // get the command
-        SubCommand subCommand = OpenAudioMc.getService(CommandService.class).getSubCommand(CommandContext.OPENAUDIOMC, parts[1].toLowerCase());
+        SubCommand subCommand = OpenAudioFabric.getService(CommandService.class).getSubCommand(CommandContext.OPENAUDIOMC, parts[1].toLowerCase());
         if (subCommand == null) return;
 
         String selector = null;

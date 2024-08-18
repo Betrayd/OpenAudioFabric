@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.voicechat.bus;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.events.client.ClientEnableVoiceEvent;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
@@ -21,6 +20,8 @@ import com.craftmend.openaudiomc.generic.state.states.ReconnectingState;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.voicechat.enums.VoiceApiStatus;
 import com.craftmend.openaudiomc.generic.voicechat.enums.VoiceServerEventType;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,14 +44,14 @@ public class VoiceApiConnection {
 
     public VoiceApiConnection() {
         // setup tasks
-        taskService = OpenAudioMc.resolveDependency(TaskService.class);
+        taskService = OpenAudioFabric.resolveDependency(TaskService.class);
 
         taskService.scheduleAsyncRepeatingTask(() -> {
             if (status == VoiceApiStatus.CONNECTED) pushEvent(VoiceServerEventType.HEARTBEAT, EMPTY_PAYLOAD);
         }, 80, 80);
 
         // subscribe to player joins and leaves
-        NetworkingService networkingService = OpenAudioMc.getService(NetworkingService.class);
+        NetworkingService networkingService = OpenAudioFabric.getService(NetworkingService.class);
 
         // only register if this is the default handler
         if (networkingService instanceof DefaultNetworkingService) {
@@ -102,7 +103,7 @@ public class VoiceApiConnection {
 
             networkingService.subscribeToDisconnections((clientConnection ->{
                 // client will be removed
-                OpenAudioMc.resolveDependency(TaskService.class).runAsync(() -> {
+                OpenAudioFabric.resolveDependency(TaskService.class).runAsync(() -> {
                     pushEvent(VoiceServerEventType.REMOVE_PLAYER, new HashMap<String, String>() {{
                         put("streamKey", clientConnection.getRtcSessionManager().getStreamKey());
                     }});
@@ -159,7 +160,7 @@ public class VoiceApiConnection {
             return;
         }
 
-        StateService stateService = OpenAudioMc.getService(StateService.class);
+        StateService stateService = OpenAudioFabric.getService(StateService.class);
         boolean shouldAttemptReconnect = stateService.getCurrentState().isConnected() || stateService.getCurrentState() instanceof ReconnectingState;
 
         // or was it intentional?
@@ -183,7 +184,7 @@ public class VoiceApiConnection {
             reconnectAttempts++;
             OpenAudioLogger.warn("Voice chat connection lost, attempting to reconnect in 2 seconds... (attempt " + reconnectAttempts + "/5)");
             status = VoiceApiStatus.RECONNECTING;
-            OpenAudioMc.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
+            OpenAudioFabric.resolveDependency(TaskService.class).schduleSyncDelayedTask(() -> {
                 OpenAudioLogger.warn("Reconnecting to voice chat...");
                 start(host, lastToken, maxSlots);
             }, 20 * 2);
@@ -195,7 +196,7 @@ public class VoiceApiConnection {
             // we disconnected! only fires once
             // logout, since we're not using this session anymore
             new RestRequest(NoResponse.class, Endpoint.VOICE_INVALIDATE_PASSWORD).run();
-            for (ClientConnection client : OpenAudioMc.getService(NetworkingService.class).getClients()) {
+            for (ClientConnection client : OpenAudioFabric.getService(NetworkingService.class).getClients()) {
                 if (client.getRtcSessionManager().isReady()) {
                     client.getUser().sendMessage(Platform.translateColors(StorageKey.MESSAGE_VC_UNSTABLE.getString()));
                     client.kick(() -> {
@@ -215,7 +216,7 @@ public class VoiceApiConnection {
         // seed online players
         pushEvent(VoiceServerEventType.HEARTBEAT, EMPTY_PAYLOAD);
         pushEvent(VoiceServerEventType.HEARTBEAT, EMPTY_PAYLOAD);
-        Collection<ClientConnection> clients = OpenAudioMc.getService(NetworkingService.class).getClients();
+        Collection<ClientConnection> clients = OpenAudioFabric.getService(NetworkingService.class).getClients();
         for (ClientConnection client : clients) {
             if (client.isConnected()) {
                 handleClientConnection(client);
@@ -223,7 +224,7 @@ public class VoiceApiConnection {
         }
 
         // is there no one online? then just close
-        if (OpenAudioMc.getService(NetworkingService.class).getClients().isEmpty()) {
+        if (OpenAudioFabric.getService(NetworkingService.class).getClients().isEmpty()) {
             stop();
         }
     }
@@ -269,7 +270,7 @@ public class VoiceApiConnection {
      * @return Amount of clients connected to voicechat
      */
     public int getUsedSlots() {
-        return (int) OpenAudioMc.getService(NetworkingService.class).getClients()
+        return (int) OpenAudioFabric.getService(NetworkingService.class).getClients()
                 .stream()
                 .filter(client -> client.getRtcSessionManager().isReady())
                 .count();

@@ -1,12 +1,11 @@
 package com.craftmend.openaudiomc.generic.commands.subcommands;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
-
 import com.craftmend.openaudiomc.api.clients.Client;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.platform.OaColor;
 import com.craftmend.openaudiomc.generic.user.User;
+import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.generic.networking.packets.client.media.PacketClientDestroyMedia;
@@ -42,7 +41,7 @@ public class StopSubCommand extends SubCommand {
                     if (client.get().isConnected()) affected++;
                     ClientConnection clientConnection = (ClientConnection) client.get();
                     clientConnection.getSession().getOngoingMedia().clear();
-                    OpenAudioMc.getService(NetworkingService.class).send(clientConnection, new PacketClientDestroyMedia(null));
+                    OpenAudioFabric.getService(NetworkingService.class).send(clientConnection, new PacketClientDestroyMedia(null));
                 }
             }
 
@@ -58,7 +57,7 @@ public class StopSubCommand extends SubCommand {
                 if (client.isPresent()) {
                     if (client.get().isConnected()) affected++;
                     ClientConnection clientConnection = (ClientConnection) client.get();
-                    OpenAudioMc.getService(NetworkingService.class).send(clientConnection, new PacketClientDestroyMedia(args[1]));
+                    OpenAudioFabric.getService(NetworkingService.class).send(clientConnection, new PacketClientDestroyMedia(args[1]));
                 }
             }
 

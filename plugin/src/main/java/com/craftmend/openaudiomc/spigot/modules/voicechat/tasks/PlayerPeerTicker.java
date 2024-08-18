@@ -6,7 +6,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.events.client.ClientPeerRemovedEvent;
 import com.craftmend.openaudiomc.api.events.client.SystemReloadEvent;
@@ -17,6 +16,7 @@ import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService
 import com.craftmend.openaudiomc.generic.utils.data.Filter;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.filters.PeerFilter;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.utils.CombinationChecker;
+import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.Setter;
 import net.minecraft.entity.player.PlayerEntity;
@@ -69,7 +69,7 @@ public class PlayerPeerTicker implements Runnable {
         // we'll reference everything during this tick based on this initial time snapshot. This prevents
         // concurrency issues later on, and means we can do relatively fast arrayCopy's when needed.
         // to save time, we'll pre-filter some results.
-        ClientConnection[] allClients = OpenAudioMc.getService(NetworkingService.class)
+        ClientConnection[] allClients = OpenAudioFabric.getService(NetworkingService.class)
                 .getClients()
                 .stream()
                 .filter((c) -> c.getRtcSessionManager().isReady())
@@ -143,7 +143,7 @@ public class PlayerPeerTicker implements Runnable {
                     .collect(Collectors.toSet())) {
 
                 // unsubscribe these
-                ClientConnection peer = OpenAudioMc.getService(NetworkingService.class).getClient(uuid);
+                ClientConnection peer = OpenAudioFabric.getService(NetworkingService.class).getClient(uuid);
 
                 if (peer == null) {
                     // remove from list
@@ -169,7 +169,7 @@ public class PlayerPeerTicker implements Runnable {
 
             for (UUID currentGlobalPeer : client.getRtcSessionManager().getCurrentGlobalPeers()) {
                 // clean
-                ClientConnection peer = OpenAudioMc.getService(NetworkingService.class).getClient(currentGlobalPeer);
+                ClientConnection peer = OpenAudioFabric.getService(NetworkingService.class).getClient(currentGlobalPeer);
                 boolean dead = peer == null || !peer.getRtcSessionManager().isReady();
                 if (dead) {
                     client.getRtcSessionManager().getCurrentGlobalPeers().remove(currentGlobalPeer);

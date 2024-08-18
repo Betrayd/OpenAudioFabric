@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.state;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.generic.events.events.StateChangeEvent;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
@@ -11,6 +10,8 @@ import com.craftmend.openaudiomc.generic.state.interfaces.State;
 import com.craftmend.openaudiomc.generic.state.interfaces.StateDetail;
 import com.craftmend.openaudiomc.generic.state.states.BootingState;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,7 +38,7 @@ public class StateService extends Service {
         registerDetail(new RestDirectDetail());
         registerDetail(new ClientCacheDetail());
 
-        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
+        if (OpenAudioFabric.getInstance().getPlatform() == Platform.SPIGOT) {
             // minecraft specific shit
             registerDetail(new SpigotConnectedClients());
             registerDetail(new SpigotRegionDetail());

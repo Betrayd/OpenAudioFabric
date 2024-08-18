@@ -1,10 +1,11 @@
 package com.craftmend.openaudiomc.generic.proxy.messages.implementations;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.bungee.utils.BungeeUtils;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.proxy.messages.PacketManager;
 import com.craftmend.openaudiomc.generic.proxy.messages.PacketPlayer;
+import com.openaudiofabric.OpenAudioFabric;
+
 import net.md_5.bungee.ServerConnection;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -29,7 +30,7 @@ public class BungeeCordPacketManager extends PacketManager implements Listener {
     @Override
     protected void sendPluginMessage(PacketPlayer packetPlayer, String channel, byte[] bytes) {
         if (packetPlayer.getBungeePlayer().getServer() == null) {
-            if (OpenAudioMc.BUILD.IS_TESTING) {
+            if (OpenAudioFabric.BUILD.IS_TESTING) {
                 OpenAudioLogger.warn("Couldn't send bungee packet because the user isn't on a server");
             }
             return;

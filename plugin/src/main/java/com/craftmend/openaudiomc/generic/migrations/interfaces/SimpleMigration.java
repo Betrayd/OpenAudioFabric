@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.migrations.interfaces;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.migrations.MigrationWorker;
@@ -8,6 +7,8 @@ import com.craftmend.openaudiomc.generic.storage.enums.StorageLocation;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.utils.system.FileUtil;
+import com.openaudiofabric.OpenAudioFabric;
+
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -28,7 +29,7 @@ public abstract class SimpleMigration {
     protected void migrateFilesFromResources() {
         //loadDefaultValues();
 
-        OpenAudioMc openAudioMc = OpenAudioMc.getInstance();
+        OpenAudioFabric openAudioMc = OpenAudioFabric.getInstance();
         Configuration config = openAudioMc.getConfiguration();
 
         // settings that should be moved over
@@ -79,7 +80,7 @@ public abstract class SimpleMigration {
         // soft save to reflect the old values and write them to the new file
         config.saveAll(true);
         // force oa to reload
-        OpenAudioMc.getInstance().getInvoker().getConfigurationProvider().reloadConfig();
+        OpenAudioFabric.getInstance().getInvoker().getConfigurationProvider().reloadConfig();
     }
 
     private String escapeValues(String input, Object original) {

@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.generic.migrations.migrations;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.migrations.MigrationWorker;
@@ -13,6 +12,7 @@ import com.craftmend.openaudiomc.api.speakers.ExtraSpeakerOptions;
 import com.craftmend.openaudiomc.api.speakers.SpeakerType;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
+import com.openaudiofabric.OpenAudioFabric;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -22,17 +22,17 @@ public class SpeakerDatabaseMigration extends SimpleMigration {
 
     @Override
     public boolean shouldBeRun(MigrationWorker migrationWorker) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) return false;
+        if (OpenAudioFabric.getInstance().getPlatform() != Platform.SPIGOT) return false;
 
-        Configuration config = OpenAudioMc.getInstance().getConfiguration();
+        Configuration config = OpenAudioFabric.getInstance().getConfiguration();
         return !config.getStringSet("speakers", StorageLocation.DATA_FILE).isEmpty();
     }
 
     @Override
     public void execute(MigrationWorker migrationWorker) {
         OpenAudioLogger.info("Migrating speakers from the data.yml");
-        Configuration config = OpenAudioMc.getInstance().getConfiguration();
-        DatabaseService service = OpenAudioMc.getService(DatabaseService.class);
+        Configuration config = OpenAudioFabric.getInstance().getConfiguration();
+        DatabaseService service = OpenAudioFabric.getService(DatabaseService.class);
 
         for (String id : config.getStringSet("speakers", StorageLocation.DATA_FILE)) {
             // check if said world is loaded
@@ -61,7 +61,7 @@ public class SpeakerDatabaseMigration extends SimpleMigration {
     }
 
     public Speaker loadFromFile(String id) {
-        Configuration config = OpenAudioMc.getInstance().getConfiguration();
+        Configuration config = OpenAudioFabric.getInstance().getConfiguration();
 
         String world = config.getStringFromPath("speakers." + id + ".world", StorageLocation.DATA_FILE);
         String media = config.getStringFromPath("speakers." + id + ".media", StorageLocation.DATA_FILE);

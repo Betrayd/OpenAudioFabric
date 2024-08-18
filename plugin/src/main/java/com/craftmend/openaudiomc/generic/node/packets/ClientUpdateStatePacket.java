@@ -1,9 +1,10 @@
 package com.craftmend.openaudiomc.generic.node.packets;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.proxy.messages.PacketWriter;
 import com.craftmend.openaudiomc.generic.proxy.messages.StandardPacket;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ public class ClientUpdateStatePacket extends StandardPacket {
     private int volume;
 
     public void handle(DataInputStream dataInputStream) throws IOException {
-        ClientUpdateStatePacket self = OpenAudioMc.getGson().fromJson(dataInputStream.readUTF(), ClientUpdateStatePacket.class);
+        ClientUpdateStatePacket self = OpenAudioFabric.getGson().fromJson(dataInputStream.readUTF(), ClientUpdateStatePacket.class);
         this.clientUuid = self.getClientUuid();
         this.streamId = self.getStreamId();
         this.enabled = self.isEnabled();
@@ -50,7 +51,7 @@ public class ClientUpdateStatePacket extends StandardPacket {
 
     public PacketWriter write() throws IOException {
         PacketWriter packetWriter = new PacketWriter(this);
-        packetWriter.writeUTF(OpenAudioMc.getGson().toJson(this));
+        packetWriter.writeUTF(OpenAudioFabric.getGson().toJson(this));
         return packetWriter;
     }
 }

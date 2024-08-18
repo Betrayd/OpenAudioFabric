@@ -4,7 +4,6 @@ import com.bergerkiller.bukkit.tc.controller.MinecartGroup;
 import com.bergerkiller.bukkit.tc.controller.MinecartMember;
 import com.bergerkiller.bukkit.tc.events.SignActionEvent;
 import com.bergerkiller.bukkit.tc.signactions.SignAction;
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.networking.packets.client.media.PacketClientDestroyMedia;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
@@ -13,6 +12,8 @@ import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotConnection
 import com.craftmend.openaudiomc.spigot.modules.traincarts.listeners.TrainListener;
 import com.craftmend.openaudiomc.spigot.modules.traincarts.models.TrainMedia;
 import com.craftmend.openaudiomc.spigot.modules.traincarts.signs.AudioSign;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import org.bukkit.entity.Player;
 
@@ -44,8 +45,8 @@ public class TrainCartsModule {
             MinecartGroup member = event.getGroup();
             for (MinecartMember<?> minecartMember : member) {
                 for (Player playerPassenger : minecartMember.getEntity().getPlayerPassengers()) {
-                    SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(playerPassenger);
-                    OpenAudioMc.getService(NetworkingService.class).send(spigotConnection.getClientConnection(), new PacketClientDestroyMedia(media.getMediaId().toString()));
+                    SpigotConnection spigotConnection = OpenAudioFabric.getService(SpigotPlayerService.class).getClient(playerPassenger);
+                    OpenAudioFabric.getService(NetworkingService.class).send(spigotConnection.getClientConnection(), new PacketClientDestroyMedia(media.getMediaId().toString()));
                 }
             }
         }
@@ -66,7 +67,7 @@ public class TrainCartsModule {
             MinecartGroup member = event.getGroup();
             for (MinecartMember<?> minecartMember : member) {
                 for (Player playerPassenger : minecartMember.getEntity().getPlayerPassengers()) {
-                    SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(playerPassenger);
+                    SpigotConnection spigotConnection = OpenAudioFabric.getService(SpigotPlayerService.class).getClient(playerPassenger);
                     spigotConnection.getClientConnection().sendMedia(media.toMedia());
                 }
             }

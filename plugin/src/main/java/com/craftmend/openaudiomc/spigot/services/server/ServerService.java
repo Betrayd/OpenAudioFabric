@@ -1,10 +1,11 @@
 package com.craftmend.openaudiomc.spigot.services.server;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.rest.ServerEnvironment;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.spigot.services.server.enums.ServerVersion;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
@@ -19,7 +20,7 @@ public class ServerService extends Service {
     public void onEnable() {
 
         // test skip
-        if (OpenAudioMc.SERVER_ENVIRONMENT == ServerEnvironment.TESTING) {
+        if (OpenAudioFabric.SERVER_ENVIRONMENT == ServerEnvironment.TESTING) {
             version = ServerVersion.MODERN;
             return;
         }

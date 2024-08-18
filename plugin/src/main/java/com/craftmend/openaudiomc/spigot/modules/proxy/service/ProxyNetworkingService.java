@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.proxy.service;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.networking.DefaultNetworkingService;
 import com.craftmend.openaudiomc.generic.networking.abstracts.AbstractPacket;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
@@ -14,7 +13,7 @@ import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.proxy.listeners.BukkitPacketListener;
-
+import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.generic.proxy.messages.implementations.BukkitPacketManager;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,7 @@ public class ProxyNetworkingService extends NetworkingService {
         packetManager.registerListener(new BukkitPacketListener());
 
         // schedule repeating task to clear the throughput
-        OpenAudioMc.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(() -> {
+        OpenAudioFabric.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(() -> {
             packetThroughput = 0;
         }, 20, 20);
     }
@@ -60,7 +59,7 @@ public class ProxyNetworkingService extends NetworkingService {
             throw new UnsupportedOperationException("The bungee adapter for the networking service only supports client connections");
         if (packet.getClass().getSimpleName().startsWith("PacketClient")) {
             packet.setClient(client.getOwner().getUniqueId());
-            OpenAudioMc.resolveDependency(UserHooks.class).sendPacket(((ClientConnection) client).getUser(),
+            OpenAudioFabric.resolveDependency(UserHooks.class).sendPacket(((ClientConnection) client).getUser(),
                     new ForwardSocketPacket(packet));
         }
 

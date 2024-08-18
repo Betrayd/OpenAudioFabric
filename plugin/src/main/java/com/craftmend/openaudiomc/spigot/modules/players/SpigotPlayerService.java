@@ -1,6 +1,5 @@
 package com.craftmend.openaudiomc.spigot.modules.players;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
@@ -14,6 +13,8 @@ import com.craftmend.openaudiomc.spigot.modules.players.listeners.PlayerTeleport
 import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotConnection;
 import com.craftmend.openaudiomc.spigot.services.server.ServerService;
 import com.craftmend.openaudiomc.spigot.services.server.enums.ServerVersion;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
@@ -59,8 +60,8 @@ public class SpigotPlayerService extends Service {
      * @param player registers the player
      */
     public void register(Player player) {
-        User sua = OpenAudioMc.resolveDependency(UserHooks.class).byUuid(player.getUniqueId());
-        ClientConnection clientConnection = OpenAudioMc.getService(NetworkingService.class).register(sua, null);
+        User sua = OpenAudioFabric.resolveDependency(UserHooks.class).byUuid(player.getUniqueId());
+        ClientConnection clientConnection = OpenAudioFabric.getService(NetworkingService.class).register(sua, null);
         spigotConnectionMap.put(player.getUniqueId(), new SpigotConnection(player, clientConnection));
     }
 
@@ -108,7 +109,7 @@ public class SpigotPlayerService extends Service {
             spigotConnectionMap.remove(player.getUniqueId());
         }
 
-        OpenAudioMc.getService(NetworkingService.class).remove(player.getUniqueId());
+        OpenAudioFabric.getService(NetworkingService.class).remove(player.getUniqueId());
     }
 
     public boolean hasClient(Player player) {

@@ -3,7 +3,6 @@ package com.craftmend.openaudiomc.spigot.modules.predictive;
 import java.io.IOException;
 import java.util.Map;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.database.internal.Repository;
@@ -20,6 +19,7 @@ import com.craftmend.openaudiomc.generic.utils.data.ConcurrentHeatMap;
 import com.craftmend.openaudiomc.spigot.modules.predictive.serialization.ChunkMapSerializer;
 import com.craftmend.openaudiomc.spigot.modules.predictive.serialization.SerializedAudioChunk;
 import com.craftmend.openaudiomc.spigot.modules.predictive.sorage.StoredWorldChunk;
+import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,7 +47,7 @@ public class PredictiveMediaService extends Service {
 
     @Override
     public void onEnable() {
-        OpenAudioMc.getService(NetworkingService.class).addEventHandler(getPacketHook());
+        OpenAudioFabric.getService(NetworkingService.class).addEventHandler(getPacketHook());
 
         chunkTracker.setDeleteConsumer((deletable) -> {
             Repository<StoredWorldChunk> repo = databaseService.getRepository(StoredWorldChunk.class);
