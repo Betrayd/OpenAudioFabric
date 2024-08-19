@@ -44,7 +44,6 @@ import com.craftmend.openaudiomc.spigot.modules.users.SpigotUserHooks;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.SpigotVoiceChatService;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.VoiceChannelService;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.filters.FilterService;
-import com.craftmend.openaudiomc.spigot.services.dependency.SpigotDependencyService;
 import com.craftmend.openaudiomc.spigot.services.scheduling.SpigotTaskService;
 import com.craftmend.openaudiomc.spigot.services.server.ServerService;
 import com.craftmend.openaudiomc.spigot.services.threading.ExecutorService;
@@ -129,8 +128,10 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 				proxyModule.onEnable();
 
 				openAudioMc.getServiceManager().loadServices(
-						SpigotDependencyService.class,
-						AliasService.class,
+						//remove this one since we no longer have plugins that load with it
+						//SpigotDependencyService.class,
+						//remove this since alias is removed because we decided that MC functions should be used instead if it matters or plenty of other alternatives
+						//AliasService.class,
 						ExecutorService.class,
 						ServerService.class,
 						SpigotPlayerService.class,

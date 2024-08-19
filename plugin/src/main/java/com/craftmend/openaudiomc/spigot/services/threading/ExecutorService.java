@@ -2,11 +2,10 @@ package com.craftmend.openaudiomc.spigot.services.threading;
 
 import com.craftmend.openaudiomc.generic.service.Inject;
 import com.craftmend.openaudiomc.generic.service.Service;
+import com.craftmend.openaudiomc.generic.utils.CustomPayloadOARunnable;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -35,14 +34,14 @@ public class ExecutorService extends Service {
     public void onEnable() {
         boot();
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, executor::tickSync, 1, 1);
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+        new CustomPayloadOARunnable(() -> {executor.tickSync();}).runTaskTimer(1,1);
+        new CustomPayloadOARunnable(() -> {
             if (Duration.between(lastPing, Instant.now()).toMillis() > 10000) {
                 executor.stop();
                 executor = null;
                 boot();
             }
-        }, 80, 80);
+        }).runTaskTimer(80, 80);
     }
 
     private void boot() {
