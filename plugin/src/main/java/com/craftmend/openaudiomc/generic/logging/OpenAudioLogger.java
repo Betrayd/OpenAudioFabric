@@ -1,24 +1,21 @@
 package com.craftmend.openaudiomc.generic.logging;
 
-import com.craftmend.openaudiomc.generic.logging.platform.StdOutLog;
-import lombok.Setter;
+import com.openaudiofabric.OpenAudioFabric;
 
 /**
- * Static-accessible logging instance, with wrapper methods to prevent the instance
- * to be accessed directly
- * The log adapter can be set using {@link #setLogAdapter(LogAdapter)} to change the logging implementation.
+ * Class exists to cut work out of changing all log statements to use the new Logger
  */
 public class OpenAudioLogger {
 
-    @Setter
-    private static LogAdapter logAdapter = new StdOutLog();
+    //should not need this variable as we already have a debugger in the logger
+    //private static boolean debugEnabled = false;
 
     /**
      * Log a regular information message
      * @param message the message to log
      */
     public static void info(String message) {
-        logAdapter.info(message);
+        OpenAudioFabric.LOGGER.info(message);
     }
 
     /**
@@ -38,7 +35,7 @@ public class OpenAudioLogger {
         // get the class and method name of the caller
         String caller = Thread.currentThread().getStackTrace()[2 + callerDepth].getFileName();
         String method = Thread.currentThread().getStackTrace()[2 + callerDepth].getMethodName();
-        logAdapter.debug("[" + caller + ":" + method + "] " +message);
+        OpenAudioFabric.LOGGER.debug("[" + caller + ":" + method + "] " +message);
     }
 
     /**
@@ -47,7 +44,7 @@ public class OpenAudioLogger {
      * @param message the message to log
      */
     public static void error(Throwable e, String message) {
-        logAdapter.error(e, message);
+        OpenAudioFabric.LOGGER.error(message, e);
     }
 
     /**
@@ -55,23 +52,23 @@ public class OpenAudioLogger {
      * @param message the message to log
      */
     public static void warn(String message) {
-        logAdapter.warn(message);
+        OpenAudioFabric.LOGGER.warn(message);
     }
 
     /**
      * Enable or disable debug logging
      * @param enable true to enable, false to disable
      */
-    public static void enableDebug(boolean enable) {
-        logAdapter.enableDebug(enable);
-    }
+    /*public static void enableDebug(boolean enable) {
+        debugEnabled = enable;
+    }*/
 
     /**
      * Check if debug logging is enabled
      * @return true if debug logging is enabled
      */
-    public static boolean isDebugEnabled() {
-        return logAdapter.isDebugEnabled();
-    }
+    /*public static boolean isDebugEnabled() {
+        return debugEnabled;
+    }*/
 
 }

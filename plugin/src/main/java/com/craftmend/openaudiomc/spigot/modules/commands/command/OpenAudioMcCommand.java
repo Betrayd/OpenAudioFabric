@@ -123,7 +123,7 @@ public class OpenAudioMcCommand {
     private static int sendVersion(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         context.getSource().sendFeedback(() -> {
             return Text.literal(MagicValue.COMMAND_PREFIX.get(String.class) + "OpenAudioFabric version "
-                    + FabricLoader.getInstance().getModContainer(OpenAudioFabric.modID).get().getMetadata().getVersion()
+                    + OpenAudioFabric.getInstance().getPluginVersion()
                     + ". For help, please use /openaudio help");
         }, false);
         return 1;
@@ -311,7 +311,7 @@ public class OpenAudioMcCommand {
         context.getSource().sendFeedback(() -> {
             return Text.literal("Starting garbage collector...");
         }, true);
-        SpeakerGarbageCollection sgc = new SpeakerGarbageCollection(context.getSource().getServer());
+        SpeakerGarbageCollection sgc = new SpeakerGarbageCollection();
         // run the wrapper twice to force a cache refresh at the end
         sgc.run();
         context.getSource().sendFeedback(() -> {
