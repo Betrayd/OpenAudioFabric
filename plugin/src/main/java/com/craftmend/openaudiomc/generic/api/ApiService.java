@@ -10,8 +10,6 @@ import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService
 import com.craftmend.openaudiomc.generic.service.Inject;
 import com.craftmend.openaudiomc.generic.service.Service;
 
-import net.minecraft.server.MinecraftServer;
-
 public class ApiService extends Service {
 
     /*

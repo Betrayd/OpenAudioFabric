@@ -19,8 +19,6 @@ import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.VoiceChannelService;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.filters.FilterService;
 
-import net.minecraft.server.MinecraftServer;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;

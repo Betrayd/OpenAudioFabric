@@ -15,13 +15,13 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
 import com.mojang.logging.LogUtils;
+import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.AllArgsConstructor;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -31,11 +31,9 @@ public class SpeakerCreateListener {
 
     private SpeakerService speakerService;
 
-    private final MinecraftServer server;
     private static SpeakerCreateListener singleton = null;
 
-    SpeakerCreateListener(MinecraftServer server) {
-        this.server = server;
+    SpeakerCreateListener() {
         if (SpeakerCreateListener.singleton == null) {
             SpeakerCreateListener.singleton = this;
             BlockPlaceCallback.EVENT.register((context, state) -> {
@@ -71,7 +69,7 @@ public class SpeakerCreateListener {
                 UUID id = UUID.randomUUID();
                 MappedLocation location = new MappedLocation(new Location(serverPlayer.getServerWorld(), context.getBlockPos().getX(), context.getBlockPos().getY(), context.getBlockPos().getZ()));
 
-                SpeakerType speakerType = speakerService.getCollector().guessSpeakerType(server, location.toLocation(server), src);
+                SpeakerType speakerType = speakerService.getCollector().guessSpeakerType(OpenAudioFabric.getInstance().getServer(), location.toLocation(OpenAudioFabric.getInstance().getServer()), src);
                 Speaker speaker = new Speaker(src, id, radius, location, speakerType,
                         EnumSet.noneOf(ExtraSpeakerOptions.class));
                 speakerService.registerSpeaker(speaker);

@@ -12,8 +12,7 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
-
-import net.minecraft.server.MinecraftServer;
+import com.openaudiofabric.OpenAudioFabric;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,11 +25,8 @@ public class SpeakerGarbageCollection extends OARunnable {
     private final int FRACTION_GROUP_SIZE = 50;
     private boolean forceRun = false;
 
-    private final MinecraftServer server;
-
-    public SpeakerGarbageCollection(MinecraftServer server, SpeakerService speakerService) {
+    public SpeakerGarbageCollection(SpeakerService speakerService) {
         super();
-        this.server = server;
         this.speakerService = speakerService;
         runTaskTimer(600, 600);
         OpenAudioMc.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(() -> {
@@ -41,9 +37,8 @@ public class SpeakerGarbageCollection extends OARunnable {
         }, 20 * 30, 20 * 30);
     }
 
-    public SpeakerGarbageCollection(MinecraftServer server) {
+    public SpeakerGarbageCollection() {
         super();
-        this.server = server;
         this.forceRun = true;
         this.speakerService = OpenAudioMc.getService(SpeakerService.class);
     }
@@ -76,7 +71,7 @@ public class SpeakerGarbageCollection extends OARunnable {
                     }
 
                     // check if the chunk is loaded, if not, don't do shit lmao
-                    Location bukkitLocation = mappedLocation.toLocation(server);
+                    Location bukkitLocation = mappedLocation.toLocation(OpenAudioFabric.getInstance().getServer());
                     if (bukkitLocation == null || bukkitLocation.getWorld() == null) {
                         OpenAudioLogger.warn("Can't find world " + mappedLocation.getWorld() + " so speaker " + speaker.getSpeakerId() + " is being deleted");
                         remove(speaker);
@@ -92,7 +87,7 @@ public class SpeakerGarbageCollection extends OARunnable {
                                 return;
                             }
     
-                            if (!SpeakerUtils.isSpeakerSkull(speaker.getLocation().getBlockEntity(server))) {
+                            if (!SpeakerUtils.isSpeakerSkull(speaker.getLocation().getBlockEntity(OpenAudioFabric.getInstance().getServer()))) {
                                 remove(speaker);
                             } else {
                                 speaker.setValidated(true);

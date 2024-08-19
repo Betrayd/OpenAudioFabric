@@ -29,17 +29,11 @@ import com.craftmend.openaudiomc.spigot.modules.regions.objects.TimedRegionPrope
 import com.craftmend.openaudiomc.spigot.modules.regions.registry.WorldRegionManager;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
+import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.AllArgsConstructor;
-import net.minecraft.server.MinecraftServer;
 
 public class WorldApiImpl implements WorldApi {
-
-    private final MinecraftServer server;
-
-    public WorldApiImpl(MinecraftServer server) {
-        this.server = server;
-    }
 
     @NotNull
     @Override
@@ -53,7 +47,7 @@ public class WorldApiImpl implements WorldApi {
         List<AudioRegion> regions = new ArrayList<>();
 
         for (ApiRegion apiRegion : regionModule.getRegionAdapter().getRegionsAtLocation(
-                new Location(FabricUtils.getWorld(server, world), x, y, z)
+                new Location(FabricUtils.getWorld(OpenAudioFabric.getInstance().getServer(), world), x, y, z)
         )) {
             RegionProperties rp = regionModule.getWorld(world).getRegionProperties(apiRegion.getName());
             regions.add(new WrappedRegion(apiRegion, world, rp.getMediaForWorld(world)));
@@ -78,7 +72,7 @@ public class WorldApiImpl implements WorldApi {
         Objects.requireNonNull(regionId, "Region id cannot be null");
         Objects.requireNonNull(regionMedia, "Region media cannot be null");
 
-        if (!server.isOnThread()) {
+        if (!OpenAudioFabric.getInstance().getServer().isOnThread()) {
             throw new InvalidThreadException();
         }
 
@@ -124,7 +118,7 @@ public class WorldApiImpl implements WorldApi {
         Objects.requireNonNull(regionId, "Region id cannot be null");
         Objects.requireNonNull(regionMedia, "Region media cannot be null");
 
-        if (!server.isOnThread()) {
+        if (!OpenAudioFabric.getInstance().getServer().isOnThread()) {
             throw new InvalidThreadException();
         }
 
@@ -166,7 +160,7 @@ public class WorldApiImpl implements WorldApi {
         Objects.requireNonNull(worldName, "World name cannot be null");
         Objects.requireNonNull(regionId, "Region id cannot be null");
 
-        if (!server.isOnThread()) {
+        if (!OpenAudioFabric.getInstance().getServer().isOnThread()) {
             throw new InvalidThreadException();
         }
 
@@ -219,9 +213,5 @@ public class WorldApiImpl implements WorldApi {
         public int getPriority() {
             return region.getPriority();
         }
-    }
-
-    public MinecraftServer getServer() {
-        return server;
     }
 }

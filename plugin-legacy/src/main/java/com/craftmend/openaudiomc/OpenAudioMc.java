@@ -1,7 +1,5 @@
 package com.craftmend.openaudiomc;
 
-import net.minecraft.server.MinecraftServer;
-
 import com.craftmend.openaudiomc.api.enums.ModuleEvent;
 import com.craftmend.openaudiomc.api.impl.event.ApiEventDriver;
 import com.craftmend.openaudiomc.generic.api.ApiService;
