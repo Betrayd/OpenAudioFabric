@@ -28,15 +28,20 @@ public class SpeakerDestroyListener {
 
     private static SpeakerDestroyListener singleton = null;
 
-    SpeakerDestroyListener() {
+    private SpeakerDestroyListener()
+    {
+        BlockStateChangedCallback.EVENT.register((BlockPos pos, BlockState state, boolean moved, World world, CallbackInfoReturnable<BlockState> cir) -> {
+            this.blockStateChanged(pos, state, moved, world, cir);
+        });
+    }
+
+    public static SpeakerDestroyListener create() {
         if (SpeakerDestroyListener.singleton == null) {
-            SpeakerDestroyListener.singleton = this;
-            BlockStateChangedCallback.EVENT.register((BlockPos pos, BlockState state, boolean moved, World world, CallbackInfoReturnable<BlockState> cir) -> {
-                this.blockStateChanged(pos, state, moved, world, cir);
-            });
+            SpeakerDestroyListener.singleton = new SpeakerDestroyListener();
         } else {
             LogUtils.getLogger().warn("tried to create a new SpeakerCreateListener but one already exists!");
         }
+        return SpeakerDestroyListener.singleton;
     }
 
     public void blockStateChanged(BlockPos pos, BlockState state, boolean moved, World world, CallbackInfoReturnable<BlockState> cir)

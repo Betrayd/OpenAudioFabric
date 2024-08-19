@@ -48,17 +48,21 @@ public class SpeakerService extends Service {
     @Getter private final Map<MappedLocation, Speaker> speakerMap = new ConcurrentHashMap<>();
     private final Map<String, SpeakerMedia> speakerMediaMap = new ConcurrentHashMap<>();
     @Getter private Item playerSkullItem;
-    @Getter private BlockState playerSkullBlock;
-    @Getter private ServerVersion version;
+
+    private SpeakerDestroyListener destroyListener;
+
+    //Removed this because I was too lazy to add the setblock command and read the MC code to see how to do that with a skull.
+    //I also accidentally hard coded some of these to be player heads when they should not have been I think but whatever
+    //@Getter private BlockState playerSkullBlock;
+
+    //@Getter private ServerVersion version;
     private final IRayTracer estimatedRayTracer = new DummyTracer();
 
     @Override
     public void onEnable() {
-        openAudioMcSpigot.registerEvents(
-                //new SpeakerSelectListener(this),
-                new SpeakerCreateListener(server, this),
-                new SpeakerDestroyListener(this)
-        );
+
+        SpeakerCreateListener.create();
+        SpeakerDestroyListener.create();
 
         collector = new SpeakerCollector(this);
 
@@ -71,7 +75,7 @@ public class SpeakerService extends Service {
         }
 
         // setup garbage system
-        new SpeakerGarbageCollection(server, this);
+        new SpeakerGarbageCollection(this);
 
         // reset with new addon
         OpenAudioMc.getService(MediaService.class).getResetTriggers().add(() -> {
@@ -129,10 +133,10 @@ public class SpeakerService extends Service {
     }
 
     private void initializeVersion() {
-        version = OpenAudioMc.getService(ServerService.class).getVersion();
+        //version = OpenAudioMc.getService(ServerService.class).getVersion();
 
         playerSkullItem = Items.PLAYER_HEAD;
-        playerSkullBlock = BlockState.PLAYER_HEAD;
+        //playerSkullBlock = BlockState.PLAYER_HEAD;
     }
 
     public Speaker registerSpeaker(Speaker speaker) {

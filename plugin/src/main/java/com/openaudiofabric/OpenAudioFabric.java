@@ -133,8 +133,12 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 						//remove this since alias is removed because we decided that MC functions should be used instead if it matters or plenty of other alternatives
 						//AliasService.class,
 						ExecutorService.class,
-						ServerService.class,
+						//removed ServerService because this is used for multiversion support, which is a bad idea in a dirrect fabric mod
+						//ServerService.class,
+
+						//MAY remove this if I can figure out how nessisary it is later and if we can repllace it with real MC stuff
 						SpigotPlayerService.class,
+
 						SpeakerService.class,
 						SpigotCommandService.class,
 						ShowService.class,

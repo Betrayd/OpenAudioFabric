@@ -33,15 +33,20 @@ public class SpeakerCreateListener {
 
     private static SpeakerCreateListener singleton = null;
 
-    SpeakerCreateListener() {
+    private SpeakerCreateListener()
+    {
+        BlockPlaceCallback.EVENT.register((context, state) -> {
+            return this.onBlockPlace(context, state);
+        });
+    }
+
+    public static SpeakerCreateListener create() {
         if (SpeakerCreateListener.singleton == null) {
-            SpeakerCreateListener.singleton = this;
-            BlockPlaceCallback.EVENT.register((context, state) -> {
-                return this.onBlockPlace(context, state);
-            });
+            SpeakerCreateListener.singleton = new SpeakerCreateListener();
         } else {
-            LogUtils.getLogger().warn("tried to create a new SpeakerCreateListener but one already exists!");
+            LogUtils.getLogger().warn("tried to create a new SpeakerCreateListener but one already exists! Passing old...");
         }
+        return SpeakerCreateListener.singleton;
     }
 
     public ActionResult onBlockPlace(ItemPlacementContext context, BlockState state) {
