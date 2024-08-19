@@ -38,7 +38,6 @@ import com.craftmend.openaudiomc.generic.utils.data.GsonFactory;
 import com.google.gson.Gson;
 
 import lombok.Getter;
-import net.minecraft.server.MinecraftServer;
 
 @Getter
 public class OpenAudioMc {
@@ -64,7 +63,6 @@ public class OpenAudioMc {
     private final boolean cleanStartup;
     @Getter
     private boolean isDisabled = false;
-    private MinecraftServer server;
 
     /**
      * Legacy and static instances (API, ENV, instance, build number and gson along with its type adapters)
