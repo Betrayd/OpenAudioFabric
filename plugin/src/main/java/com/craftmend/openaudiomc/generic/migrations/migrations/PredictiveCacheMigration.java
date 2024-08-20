@@ -7,9 +7,9 @@ import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.migrations.MigrationWorker;
 import com.craftmend.openaudiomc.generic.migrations.interfaces.SimpleMigration;
 import com.craftmend.openaudiomc.generic.platform.Platform;
-import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.predictive.serialization.SerializedAudioChunk;
 import com.craftmend.openaudiomc.spigot.modules.predictive.sorage.StoredWorldChunk;
+import com.openaudiofabric.OpenAudioFabric;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +20,10 @@ public class PredictiveCacheMigration extends SimpleMigration {
 
     @Override
     public boolean shouldBeRun(MigrationWorker migrationWorker) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) return false;
+        //if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) return false;
 
         return new File(
-                OpenAudioMcSpigot.getInstance().getDataFolder(), "cache.json"
+                OpenAudioFabric.getInstance().getDataFolder(), "cache.json"
         ).exists();
     }
 
@@ -35,7 +35,7 @@ public class PredictiveCacheMigration extends SimpleMigration {
         try {
             SerializedAudioChunk.ChunkMap filemap = OpenAudioMc.getGson().fromJson(
                     new String(Files.readAllBytes(new File(
-                            OpenAudioMcSpigot.getInstance().getDataFolder(), "cache.json"
+                            OpenAudioFabric.getInstance().getDataFolder(), "cache.json"
                     ).toPath())),
                     SerializedAudioChunk.ChunkMap.class
             );
@@ -50,7 +50,7 @@ public class PredictiveCacheMigration extends SimpleMigration {
             }
 
             new File(
-                    OpenAudioMcSpigot.getInstance().getDataFolder(), "cache.json"
+                    OpenAudioFabric.getInstance().getDataFolder(), "cache.json"
             ).delete();
         } catch (IOException e) {
             OpenAudioLogger.error(e, "Failed to migrate world audio heatmap");

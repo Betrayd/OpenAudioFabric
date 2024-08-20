@@ -19,12 +19,12 @@ public class ClientChangedVolumeHandler extends PayloadHandler<ClientChangedVolu
             connection.getSession().setVolume(payload.getVolume());
 
             // are we running in spigot? if not then we should forward this as a state change
-            if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
+            /*if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
                 UserHooks hooks = OpenAudioMc.getInstance().getInvoker().getUserHooks();
                 hooks.sendPacket(connection.getUser(),
                         ClientUpdateStatePacket.of(connection)
                 );
-            }
+            }*/
         } else {
             // you don't even have volume
             authenticatable.kickConnection();

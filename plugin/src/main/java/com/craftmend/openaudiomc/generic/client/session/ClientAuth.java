@@ -60,7 +60,7 @@ public class ClientAuth implements Serializable {
         String baseUrl = OpenAudioMc.getService(OpenaudioAccountService.class).getAccountResponse().getClientUrl();
 
         // cancel if the player is via proxy because the proxy should handle it
-        if (openAudioMc.getPlatform() == Platform.SPIGOT && OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.NODE)
+        if (/*openAudioMc.getPlatform() == Platform.SPIGOT &&*/ OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.NODE)
             return;
 
         if (!config.getBoolean(StorageKey.LEGAL_ACCEPTED_TOS_AND_PRIVACY)) {

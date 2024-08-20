@@ -32,8 +32,8 @@ import com.craftmend.openaudiomc.spigot.modules.proxy.ProxyModule;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
 import com.craftmend.openaudiomc.spigot.modules.punishments.EssentialsIntegration;
 import com.craftmend.openaudiomc.spigot.modules.punishments.LitebansIntegration;
-import com.craftmend.openaudiomc.spigot.modules.regions.RegionModule;
-import com.craftmend.openaudiomc.spigot.modules.regions.service.RegionService;
+//import com.craftmend.openaudiomc.spigot.modules.regions.RegionModule;
+//import com.craftmend.openaudiomc.spigot.modules.regions.service.RegionService;
 import com.craftmend.openaudiomc.spigot.modules.rules.MediaRuleService;
 import com.craftmend.openaudiomc.spigot.modules.shortner.AliasService;
 import com.craftmend.openaudiomc.spigot.modules.show.ShowService;
@@ -72,6 +72,7 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 	//traincarts are not in OpenAudioFabric since I was too lazy to implement them
 	//@Setter private TrainCartsModule trainCartsModule;
     private OpenAudioMc openAudioMc;
+	@Getter
     private ProxyModule proxyModule;
 	private boolean bound = false;
 

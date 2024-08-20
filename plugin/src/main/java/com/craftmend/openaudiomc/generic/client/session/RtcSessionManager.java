@@ -138,7 +138,7 @@ public class RtcSessionManager implements Serializable {
      */
     public void preventSpeaking(boolean allow) {
         // platform dependant
-        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMc.getInstance().getInvoker().isNodeServer()) {
+        if (/*OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT &&*/ OpenAudioMc.getInstance().getInvoker().isNodeServer()) {
             // forward to proxy
             User user = clientConnection.getUser();
             OpenAudioMc.resolveDependency(UserHooks.class).sendPacket(user, new ForceMuteMicrophonePacket(clientConnection.getOwner().getUniqueId(), allow));
@@ -192,7 +192,7 @@ public class RtcSessionManager implements Serializable {
     }
 
     public void updateLocationWatcher() {
-        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
+        //if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
             SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(clientConnection.getOwner().getUniqueId());
             if (spigotConnection == null) {
                 // player logged out, ignoring
@@ -203,7 +203,7 @@ public class RtcSessionManager implements Serializable {
             } else {
                 spigotConnection.getLocationFollowers().add(PlayerLocationFollower.PROXIMITY_VOICE_CHAT);
             }
-        }
+        //}
     }
 
     public boolean isReady() {

@@ -37,16 +37,16 @@ public class StateService extends Service {
         registerDetail(new RestDirectDetail());
         registerDetail(new ClientCacheDetail());
 
-        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
+        //if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
             // minecraft specific shit
             registerDetail(new SpigotConnectedClients());
             registerDetail(new SpigotRegionDetail());
             registerDetail(new SpigotSpeakerDetail());
             registerDetail(new SpigotAliasDetail());
             registerDetail(new SpigotVersionDetail());
-        } else {
-            registerDetail(new GeneralConnectedClients());
-        }
+        //} else {
+        //    registerDetail(new GeneralConnectedClients());
+        //}
     }
 
     public void registerDetail(StateDetail detail) {

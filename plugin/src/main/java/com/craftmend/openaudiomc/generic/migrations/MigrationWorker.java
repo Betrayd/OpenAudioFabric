@@ -37,7 +37,7 @@ public class MigrationWorker {
                 new AddConfigKeyMigration(SETTINGS_VC_USE_HOTBAR, "new setting for message location"),
                 new AddAutoClaimMigration(),            // add a config value to configure automatic claiming hooks
                 new SpeakerDatabaseMigration(),         // Migrate speakers from data.yml to the database
-                new RegionDatabaseMigration(),          // migrate speakers, just like regions
+                //new RegionDatabaseMigration(),          // migrate speakers, just like regions
                 new AliasDatabaseMigration(),           // migrate aliases
                 new PredictiveCacheMigration(),         // migrate audio smart cache
                 new AddConfigKeyMigration(CDN_TIMEOUT, "Add cdn timeout"),
@@ -47,7 +47,7 @@ public class MigrationWorker {
                 new AddConfigKeyMigration(SETTINGS_VC_ALLOW_JOIN_DURING_LOAD, "adds the option to enable/disable vc join during load"),
                 new AddConfigKeyMigration(SETTINGS_SEND_URL_ON_JOIN_DELAY, "adds the option to delay the send on join message"),
                 new AddConfigKeyMigration(CDN_ENABLED, "adds the option to enable/disable cdn and offlinemode"),
-                new CommandSenderWorldMigration(),      // adds the default world name value
+                //new CommandSenderWorldMigration(),      // adds the default world name value
                 new AddConfigKeyMigration(MESSAGE_VOICE_IN_VICINITY, "adds the voice vicinity messages and settings"),
                 new AddConfigKeyMigration(SETTINGS_SPEAKER_REDSTONE_TICK_ENABLED, "adds the speaker tick rate setting"),
                 new AddConfigKeyMigration(CDN_SKIP_VALIDATION, "adds the option to skip cdn validation"),

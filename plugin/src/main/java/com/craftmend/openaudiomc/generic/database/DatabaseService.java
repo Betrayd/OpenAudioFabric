@@ -12,8 +12,6 @@ import com.craftmend.openaudiomc.generic.mojang.store.MojangProfile;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.spigot.modules.predictive.sorage.StoredWorldChunk;
-import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties;
-import com.craftmend.openaudiomc.spigot.modules.regions.objects.TimedRegionProperties;
 import com.craftmend.openaudiomc.spigot.modules.rules.adapter.RuleTestTypeAdapter;
 import com.craftmend.openaudiomc.spigot.modules.rules.adapter.RuleTypeAdapter;
 import com.craftmend.openaudiomc.spigot.modules.rules.data.Rule;
@@ -58,13 +56,13 @@ public class DatabaseService extends Service implements StormLogger {
         tables.add(Alias.class);
         tables.add(ClientDataStore.class);
         tables.add(MojangProfile.class);
-        tables.add(RegionProperties.class);
+        //tables.add(RegionProperties.class);
         tables.add(Speaker.class);
         tables.add(StoredWorldChunk.class);
 
-        if (OpenAudioMcBuild.IS_TESTING || OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
+        if (OpenAudioMcBuild.IS_TESTING /*|| OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT*/) {
             log("Adding spigot tables");
-            tables.add(TimedRegionProperties.class);
+            //tables.add(TimedRegionProperties.class);
             tables.add(MediaRule.class);
         }
 

@@ -18,7 +18,7 @@ public enum MagicValue {
     STORAGE_DIRECTORY(new File("./")),
     FORCED_HOOK_INJECTION(null),
     DYNAMIC_REGISTRATIONS(false),
-    PARENT_PLATFORM(Platform.UNKNOWN),
+    //PARENT_PLATFORM(Platform.UNKNOWN),
     PLATFORM_FORCE_LATE_FIND(false),
     FORCE_DISABLE_CLIENT_NET_LOOKUP(false),
     COMMAND_PREFIX("[OpenAudioMc - Magic]");

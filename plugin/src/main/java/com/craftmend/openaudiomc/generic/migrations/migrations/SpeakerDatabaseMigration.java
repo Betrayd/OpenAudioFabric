@@ -22,7 +22,7 @@ public class SpeakerDatabaseMigration extends SimpleMigration {
 
     @Override
     public boolean shouldBeRun(MigrationWorker migrationWorker) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) return false;
+        //if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) return false;
 
         Configuration config = OpenAudioMc.getInstance().getConfiguration();
         return !config.getStringSet("speakers", StorageLocation.DATA_FILE).isEmpty();
