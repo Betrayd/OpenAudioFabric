@@ -5,13 +5,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
+import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.utils.BlockStateChangedCallback;
 import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
-import com.mojang.logging.LogUtils;
 
 import lombok.AllArgsConstructor;
 import net.minecraft.block.BlockState;
@@ -39,7 +39,7 @@ public class SpeakerDestroyListener {
         if (SpeakerDestroyListener.singleton == null) {
             SpeakerDestroyListener.singleton = new SpeakerDestroyListener();
         } else {
-            LogUtils.getLogger().warn("tried to create a new SpeakerCreateListener but one already exists!");
+            OpenAudioLogger.warn("tried to create a new SpeakerCreateListener but one already exists!");
         }
         return SpeakerDestroyListener.singleton;
     }

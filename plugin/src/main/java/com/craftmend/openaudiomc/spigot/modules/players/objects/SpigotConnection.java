@@ -8,7 +8,8 @@ import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService
 import com.craftmend.openaudiomc.generic.networking.packets.client.speakers.PacketClientUpdateLocation;
 import com.craftmend.openaudiomc.generic.networking.payloads.client.speakers.ClientPlayerLocationPayload;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
-import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
+import com.craftmend.openaudiomc.generic.utils.CustomPayloadOARunnable;
+import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.spigot.modules.players.enums.PlayerLocationFollower;
 import com.craftmend.openaudiomc.spigot.modules.players.events.ClientDisconnectEvent;
 import com.craftmend.openaudiomc.spigot.modules.players.handlers.AudioChunkHandler;
@@ -22,11 +23,11 @@ import com.craftmend.openaudiomc.spigot.modules.speakers.objects.ApplicableSpeak
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.SpeakerSettings;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.VoiceChannelService;
 import com.craftmend.openaudiomc.spigot.services.utils.DataWatcher;
+import com.openaudiofabric.OpenAudioFabric;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -48,7 +49,6 @@ public class SpigotConnection {
     // data watcher that watches for changes in the location, every 2 ticks.
     @Getter
     private final DataWatcher<Location> locationDataWatcher = new DataWatcher<>(
-            OpenAudioMcSpigot.getInstance(),
             false,
             MagicValue.LOCATION_TRACK_INTERVAL.get(Integer.class)
     );
@@ -58,7 +58,7 @@ public class SpigotConnection {
     @Getter private RegionHandler regionHandler;
     @Getter private final AudioChunkHandler audioChunkHandler;
     @Getter private final Set<PlayerLocationFollower> locationFollowers = new HashSet<>();
-    @Getter private final Player bukkitPlayer;
+    @Getter private final PlayerEntity bukkitPlayer;
     @Setter @Getter private Instant lastVoiceReminderMessage = Instant.now();
 
     //plugin data
@@ -69,12 +69,9 @@ public class SpigotConnection {
     /**
      * @param player client startup logic
      */
-    public SpigotConnection(Player player, ClientConnection clientConnection) {
+    public SpigotConnection(PlayerEntity player, ClientConnection clientConnection) {
         this.clientConnection = clientConnection;
         this.bukkitPlayer = player;
-        // if the region system is enabled, then load the handler
-        if (OpenAudioMcSpigot.getInstance().getRegionModule() != null)
-            this.regionHandler = new RegionHandler(player, this);
         // register the speaker handler
         this.speakerHandler = new SpeakerHandler(player, this);
         this.audioChunkHandler = new AudioChunkHandler(player, this);
@@ -83,7 +80,8 @@ public class SpigotConnection {
         locationDataWatcher.setTask(updatedLocation -> {
             // if the client is not connected, then dont do shit, they wont hear it anyway
             if (!this.clientConnection.isConnected()) return;
-            if (!player.isOnline()) return; // how?.. what?..
+            //keeping this comment because it's funny
+            //if (!player.isOnline()) return; // how?.. what?..
 
             this.audioChunkHandler.tick();
 
@@ -97,8 +95,9 @@ public class SpigotConnection {
             tickLocationFollowers();
         });
 
+        //if position is not getting updated then this is probably to blame
         // the feeder, how the data watcher gets its new fed data
-        locationDataWatcher.setFeeder(player::getLocation);
+        locationDataWatcher.setFeeder(() -> {return Location.locationFromEntity(player);});
 
         // set handlers
         clientConnection.addOnConnectHandler(() -> {
@@ -106,13 +105,13 @@ public class SpigotConnection {
             currentRegions.clear();
             currentSpeakers.clear();
 
-            if (player.isOnline()) {
-                locationDataWatcher.getCallback().accept(player.getLocation());
-                Bukkit.getScheduler().runTask(OpenAudioMcSpigot.getInstance(), () -> Bukkit.getServer().getPluginManager().callEvent(new ClientConnectEvent(player, this)));
-            }
+            locationDataWatcher.getCallback().accept(Location.locationFromEntity(player));
+            
+            //not sure when this is called. Will try running without it for now and look for issues
+            //Bukkit.getScheduler().runTask(OpenAudioFabric.getInstance(), () -> Bukkit.getServer().getPluginManager().callEvent(new ClientConnectEvent(player, this)));
         });
 
-        clientConnection.addOnConnectHandler(new InitializeTrains(player));
+        //clientConnection.addOnConnectHandler(new InitializeTrains(player));
 
         clientConnection.addOnDisconnectHandler(() -> {
             OpenAudioMc.resolveDependency(TaskService.class).runSync(() -> {

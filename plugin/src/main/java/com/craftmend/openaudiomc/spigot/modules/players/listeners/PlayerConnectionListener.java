@@ -1,22 +1,42 @@
 package com.craftmend.openaudiomc.spigot.modules.players.listeners;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
+import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.spigot.modules.players.SpigotPlayerService;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
-public class PlayerConnectionListener implements Listener {
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        OpenAudioMc.getService(SpigotPlayerService.class).register(event.getPlayer());
+public class PlayerConnectionListener {
+
+    private static PlayerConnectionListener singleton = null;
+
+    private PlayerConnectionListener() {
+        ServerPlayConnectionEvents.JOIN.register((networkHandler, packetSender, server)->
+        {
+            this.onJoin(networkHandler);
+        });
+        ServerPlayConnectionEvents.DISCONNECT.register((networkHandler, server)->
+        {
+            this.onQuit(networkHandler);
+        });
     }
 
-    @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
-        OpenAudioMc.getService(SpigotPlayerService.class).remove(event.getPlayer());
+    public static PlayerConnectionListener create() {
+        if (PlayerConnectionListener.singleton == null) {
+            PlayerConnectionListener.singleton = new PlayerConnectionListener();
+        } else {
+            OpenAudioLogger.warn("tried to create a new PlayerConnectionListener but one already exists! Passing old...");
+        }
+        return PlayerConnectionListener.singleton;
+    }
+
+    public void onJoin(ServerPlayNetworkHandler handler) {
+        OpenAudioMc.getService(SpigotPlayerService.class).register(handler.getPlayer());
+    }
+
+    public void onQuit(ServerPlayNetworkHandler handler) {
+        OpenAudioMc.getService(SpigotPlayerService.class).remove(handler.getPlayer());
     }
 
 }

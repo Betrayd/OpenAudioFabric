@@ -8,13 +8,13 @@ import com.craftmend.openaudiomc.api.speakers.ExtraSpeakerOptions;
 import com.craftmend.openaudiomc.api.speakers.SpeakerType;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
+import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.utils.BlockPlaceCallback;
 import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 import com.craftmend.openaudiomc.spigot.modules.speakers.utils.SpeakerUtils;
-import com.mojang.logging.LogUtils;
 import com.openaudiofabric.OpenAudioFabric;
 
 import lombok.AllArgsConstructor;
@@ -44,7 +44,7 @@ public class SpeakerCreateListener {
         if (SpeakerCreateListener.singleton == null) {
             SpeakerCreateListener.singleton = new SpeakerCreateListener();
         } else {
-            LogUtils.getLogger().warn("tried to create a new SpeakerCreateListener but one already exists! Passing old...");
+            OpenAudioLogger.warn("tried to create a new SpeakerCreateListener but one already exists! Passing old...");
         }
         return SpeakerCreateListener.singleton;
     }

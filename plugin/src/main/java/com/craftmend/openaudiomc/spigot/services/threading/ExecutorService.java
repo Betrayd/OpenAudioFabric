@@ -34,14 +34,14 @@ public class ExecutorService extends Service {
     public void onEnable() {
         boot();
 
-        new CustomPayloadOARunnable(() -> {executor.tickSync();}).runTaskTimer(1,1);
+        new CustomPayloadOARunnable(() -> {executor.tickSync();}).runTaskTimerSync(1,1);
         new CustomPayloadOARunnable(() -> {
             if (Duration.between(lastPing, Instant.now()).toMillis() > 10000) {
                 executor.stop();
                 executor = null;
                 boot();
             }
-        }).runTaskTimer(80, 80);
+        }).runTaskTimerSync(80, 80);
     }
 
     private void boot() {

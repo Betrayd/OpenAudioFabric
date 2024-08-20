@@ -28,7 +28,7 @@ public class SpeakerGarbageCollection extends OARunnable {
     public SpeakerGarbageCollection(SpeakerService speakerService) {
         super();
         this.speakerService = speakerService;
-        runTaskTimer(600, 600);
+        runTaskTimerSync(600, 600);
         OpenAudioMc.resolveDependency(TaskService.class).scheduleAsyncRepeatingTask(() -> {
             if (PROCESSED_SPEAKERS != 0) {
                 OpenAudioLogger.info("The garbage collector found and processed " + PROCESSED_SPEAKERS + " broken speakers");

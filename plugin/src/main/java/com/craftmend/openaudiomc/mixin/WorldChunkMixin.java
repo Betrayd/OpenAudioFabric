@@ -15,7 +15,7 @@ import net.minecraft.world.chunk.WorldChunk;
 @Mixin  (WorldChunk.class)
 public class WorldChunkMixin {
 
-    @Inject(method = "setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Z;)Lnet/minecraft/block/BlockState", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "setBlockState", at = @At("HEAD"), cancellable = true)
         private void openaudio$setBlockState(BlockPos pos, BlockState state, boolean moved, CallbackInfoReturnable<BlockState> cir) {
         World world = ((WorldChunkAccessor)((WorldChunk)((Object)(this)))).getWorld();
         BlockStateChangedCallback.EVENT.invoker().interact(pos, state, moved, world, cir);

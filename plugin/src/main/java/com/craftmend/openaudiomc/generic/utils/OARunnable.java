@@ -1,6 +1,7 @@
 package com.craftmend.openaudiomc.generic.utils;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.util.Util;
 
 // TODO: fix memory leak pls
 public abstract class OARunnable implements Runnable {
@@ -21,6 +22,7 @@ public abstract class OARunnable implements Runnable {
         });
     }
     
+    boolean async = false;
     int ticks = -1;
     int maxTicks = -1;
 
@@ -38,8 +40,12 @@ public abstract class OARunnable implements Runnable {
     {
         if(ticks > -1 && ticks <= 0)
         {
-            run();
-            //Util.getIoWorkerExecutor().execute(this);
+            if(!async) {
+                run();
+            } else {
+                Util.getIoWorkerExecutor().execute(this);
+            }
+            
             if(maxTicks != -1)
             {
                 ticks = maxTicks;
@@ -58,9 +64,26 @@ public abstract class OARunnable implements Runnable {
     @Override
     public abstract void run();
     
-    public void runTaskTimer(int delay, int period)
+    public OARunnable runTaskTimerSync(int delay, int period)
     {
         ticks = delay;
         maxTicks = period;
+        async = false;
+        return this;
+    }
+
+    public OARunnable runTaskTimerAsync(int delay, int period)
+    {
+        ticks = delay;
+        maxTicks = period;
+        async = true;
+        return this;
+    }
+
+    public void cancel()
+    {
+        ticks = -1;
+        maxTicks = -1;
+        instances.remove(this);
     }
 }

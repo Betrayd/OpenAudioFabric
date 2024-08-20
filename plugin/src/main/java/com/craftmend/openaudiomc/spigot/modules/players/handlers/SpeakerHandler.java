@@ -8,7 +8,9 @@ import com.craftmend.openaudiomc.generic.networking.packets.client.speakers.Pack
 import com.craftmend.openaudiomc.generic.networking.payloads.client.speakers.ClientSpeakerCreatePayload;
 import com.craftmend.openaudiomc.generic.networking.payloads.client.speakers.ClientSpeakerDestroyPayload;
 import com.craftmend.openaudiomc.generic.networking.payloads.client.speakers.objects.ClientSpeaker;
+import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.spigot.services.world.Vector3;
+import com.openaudiofabric.OpenAudioFabric;
 import com.craftmend.openaudiomc.spigot.modules.players.enums.PlayerLocationFollower;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.api.speakers.ExtraSpeakerOptions;
@@ -17,7 +19,7 @@ import com.craftmend.openaudiomc.spigot.modules.players.interfaces.ITickableHand
 import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotConnection;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.ApplicableSpeaker;
 import lombok.AllArgsConstructor;
-import org.bukkit.entity.Player;
+import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @AllArgsConstructor
 public class SpeakerHandler implements ITickableHandler {
 
-    private final Player player;
+    private final PlayerEntity player;
     private final SpigotConnection spigotConnection;
     private final Queue<AbstractPacket> packetQue = new ConcurrentLinkedQueue<AbstractPacket>();
     private final SpeakerService speakerService = OpenAudioMc.getService(SpeakerService.class);
@@ -37,7 +39,7 @@ public class SpeakerHandler implements ITickableHandler {
      */
     @Override
     public void tick() {
-        List<ApplicableSpeaker> applicableSpeakers = new ArrayList<>(speakerService.getCollector().getApplicableSpeakers(player.getLocation(), true));
+        List<ApplicableSpeaker> applicableSpeakers = new ArrayList<>(speakerService.getCollector().getApplicableSpeakers(OpenAudioFabric.getInstance().getServer(), Location.locationFromEntity(player), true));
         List<ApplicableSpeaker> enteredSpeakers = new ArrayList<>(applicableSpeakers);
         enteredSpeakers.removeIf(speaker -> containsSpeaker(spigotConnection.getSpeakers(), speaker));
         List<ApplicableSpeaker> leftSpeakers = new ArrayList<>(spigotConnection.getSpeakers());
@@ -50,7 +52,7 @@ public class SpeakerHandler implements ITickableHandler {
                 // calculate obstructions?
                 // yea, but only if enabled for this speaker
                 if (ExtraSpeakerOptions.PROCESS_OBSTRUCTIONS.isEnabledFor(entered.getSpeaker())) {
-                    obstructions = speakerService.getRayTracer().obstructionsBetweenLocations(player.getLocation(), entered.getLocation());
+                    obstructions = speakerService.getRayTracer().obstructionsBetweenLocations(Location.locationFromEntity(player), entered.getLocation());
                 }
 
                 if (!entered.getSpeaker().isRedstonePowered()) {
