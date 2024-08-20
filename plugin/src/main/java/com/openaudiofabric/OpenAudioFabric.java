@@ -1,21 +1,12 @@
 package com.openaudiofabric;
 
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.server.MinecraftServer;
-
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.WeakHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.craftmend.openaudiomc.generic.utils.FabricUtils;
-
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
@@ -30,14 +21,16 @@ import com.craftmend.openaudiomc.generic.rd.RestDirectService;
 import com.craftmend.openaudiomc.generic.state.StateService;
 import com.craftmend.openaudiomc.generic.state.states.IdleState;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
-import com.craftmend.openaudiomc.spigot.modules.proxy.ProxyModule;
+import com.craftmend.openaudiomc.generic.utils.FabricUtils;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
-import com.craftmend.openaudiomc.velocity.modules.commands.VelocityCommandModule;
-import com.craftmend.openaudiomc.velocity.modules.player.listeners.PlayerConnectionListener;
-import com.craftmend.openaudiomc.velocity.platform.CommandPacketListener;
-import com.craftmend.openaudiomc.velocity.platform.VelocityUserHooks;
+import com.openaudiofabric.modules.scheduling.FabricTaskService;
 
 import lombok.Getter;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.MinecraftServer;
 
 public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
     // This logger is used to write text to the console and the log file.
@@ -60,12 +53,15 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 	public OpenAudioFabric()
 	{
-		this.dataDir = FabricLoader.getInstance().getConfigDir();
+        // TODO: implement proper config folder
+		this.dataDir = FabricLoader.getInstance().getConfigDir().toFile();
 
         if (!dataDir.exists() && !dataDir.mkdirs()) {
             throw new RuntimeException("Could not create data directory (" + dataDir + ")!");
         }
 	}
+
+    private WeakHashMap<MinecraftServer, FabricTaskService> taskServices = new WeakHashMap<>();
 
 	@Override
 	public void onInitialize() {
@@ -77,8 +73,11 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 		instance = this;
 
+        
+
 		ServerLifecycleEvents.SERVER_STARTED.register((MinecraftServer startedServer) -> 
 		{
+            taskServices.put(startedServer, new FabricTaskService(startedServer));
 			boolean hasServer = true;
 			if(FabricUtils.currentServer == null)
 			{
@@ -123,6 +122,21 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 				}
 			}
 		});
+
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            FabricTaskService taskService = this.taskServices.get(server);
+            if (taskService != null) {
+                taskService.shutdown();
+                this.taskServices.remove(server);
+            }
+        });
+
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            FabricTaskService taskService = this.taskServices.get(server);
+            if (taskService != null) {
+                taskService.tickTasks();
+            }
+        });
 	}
 
 	@Override
@@ -147,7 +161,7 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 	@Override
 	public TaskService getTaskProvider() {
-		//return new VelocityTaskService();
+		return taskServices.get(FabricUtils.currentServer);
 	}
 
 	@Override
