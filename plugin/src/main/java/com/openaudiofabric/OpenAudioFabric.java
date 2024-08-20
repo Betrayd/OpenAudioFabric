@@ -148,7 +148,8 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 						SpigotVoiceChatService.class,
 						VoiceChannelService.class,
 						FilterService.class,
-						MediaRuleService.class,
+						//what the heck is a media rule?
+						//MediaRuleService.class,
 						PlaylistService.class);
 
 				/*OpenAudioMc.getService(SpigotDependencyService.class)

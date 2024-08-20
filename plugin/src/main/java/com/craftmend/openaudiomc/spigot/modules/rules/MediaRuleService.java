@@ -12,7 +12,6 @@ import com.craftmend.openaudiomc.spigot.modules.rules.rules.time.WorldTimeRule;
 import com.craftmend.openaudiomc.spigot.modules.rules.rules.world.WorldRule;
 import com.craftmend.openaudiomc.spigot.modules.rules.rules.world.WorldRuleTest;
 import com.craftmend.openaudiomc.spigot.modules.rules.storage.MediaRule;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class MediaRuleService extends Service {
 
         DamageListener damageListener = new DamageListener();
         addRule(new DamageRule(damageListener));
-        Bukkit.getPluginManager().registerEvents(damageListener, OpenAudioMcSpigot.getInstance());
+        //Bukkit.getPluginManager().registerEvents(damageListener, OpenAudioMcSpigot.getInstance());
     }
 
     public void addRule(Rule<?> rule) {
