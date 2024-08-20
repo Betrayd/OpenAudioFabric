@@ -77,18 +77,12 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 		ServerLifecycleEvents.SERVER_STARTED.register((MinecraftServer startedServer) -> 
 		{
-            taskServices.put(startedServer, new FabricTaskService(startedServer));
-			boolean hasServer = true;
-			if(FabricUtils.currentServer == null)
-			{
-				hasServer = false;
-			}
 			FabricUtils.currentServer = startedServer;
+
+            taskServices.put(startedServer, new FabricTaskService(startedServer));
 
 			MagicValue.overWrite(MagicValue.STORAGE_DIRECTORY, this.dataDir);
 
-			if(!hasServer)
-			{
 				try {
 					Instant.now();
 
@@ -120,7 +114,6 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 				{
 					OpenAudioLogger.error(e, "Failed to start OpenAudioMc");
 				}
-			}
 		});
 
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
