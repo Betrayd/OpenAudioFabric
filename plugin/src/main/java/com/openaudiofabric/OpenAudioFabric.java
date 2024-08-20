@@ -5,25 +5,32 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 
+import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.craftmend.openaudiomc.generic.utils.FabricUtils;
+
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+
 import com.craftmend.openaudiomc.OpenAudioMc;
+import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.platform.interfaces.OpenAudioInvoker;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
-import com.craftmend.openaudiomc.generic.proxy.messages.implementations.VelocityPacketManager;
 import com.craftmend.openaudiomc.generic.rd.RestDirectService;
 import com.craftmend.openaudiomc.generic.state.StateService;
 import com.craftmend.openaudiomc.generic.state.states.IdleState;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.spigot.modules.proxy.ProxyModule;
+import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
 import com.craftmend.openaudiomc.velocity.modules.commands.VelocityCommandModule;
 import com.craftmend.openaudiomc.velocity.modules.player.listeners.PlayerConnectionListener;
 import com.craftmend.openaudiomc.velocity.platform.CommandPacketListener;
@@ -32,9 +39,9 @@ import com.craftmend.openaudiomc.velocity.platform.VelocityUserHooks;
 import lombok.Getter;
 
 public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
+    // This logger is used to write text to the console and the log file.
+    // It is considered best practice to use your mod id as the logger's name.
+    // That way, it's clear which mod wrote info, warnings, and errors.
     public static final Logger LOGGER = LoggerFactory.getLogger("open-audio-fabric");
 
 	private static OpenAudioFabric instance;
@@ -49,6 +56,16 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 	private MinecraftServer server;
 
 	private final Instant boot = Instant.now();
+	@Getter private final File dataDir;
+
+	public OpenAudioFabric()
+	{
+		this.dataDir = FabricLoader.getInstance().getConfigDir();
+
+        if (!dataDir.exists() && !dataDir.mkdirs()) {
+            throw new RuntimeException("Could not create data directory (" + dataDir + ")!");
+        }
+	}
 
 	@Override
 	public void onInitialize() {
@@ -59,33 +76,48 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 		LOGGER.info("Starting OpenAudioFabric");
 
 		instance = this;
+
 		ServerLifecycleEvents.SERVER_STARTED.register((MinecraftServer startedServer) -> 
 		{
+			boolean hasServer = true;
+			if(server == null)
+			{
+				hasServer = false;
+			}
 			server = startedServer;
 
-            new OpenAudioMc(this);
+			MagicValue.overWrite(MagicValue.STORAGE_DIRECTORY, this.dataDir);
 
-			//add fabric of this
-            //getServer().getEventManager().register(this, new PlayerConnectionListener());
+			if(!hasServer)
+			{
+				try {
+					new OpenAudioMc(this);
+					//add fabric of this
+            		//getServer().getEventManager().register(this, new PlayerConnectionListener());
 
-			//remove this one
-            //this.commandModule = new VelocityCommandModule(this);
+					//remove this one
+            		//this.commandModule = new VelocityCommandModule(this);
 			
-			//add fabric of this
-            //this.messageReceiver = new VelocityPacketManager(this, getServer(),"openaudiomc:node");
+            		//this.messageReceiver = new VelocityPacketManager(this, getServer(),"openaudiomc:node");
 
-            OpenAudioMc.getService(RestDirectService.class).boot();
+            		OpenAudioMc.getService(RestDirectService.class).boot();
 
-            // set state to idle, to allow connections and such
-            OpenAudioMc.getService(StateService.class).setState(new IdleState("OpenAudioMc started and awaiting command"));
+           			// set state to idle, to allow connections and such
+            		OpenAudioMc.getService(StateService.class).setState(new IdleState("OpenAudioMc started and awaiting command"));
 
-            // timing end and calc
-            Instant finish = Instant.now();
-            OpenAudioLogger.info("Starting and loading took " + Duration.between(boot, finish).toMillis() + "MS");
+            		// timing end and calc
+            		Instant finish = Instant.now();
+            		OpenAudioLogger.info("Starting and loading took " + Duration.between(boot, finish).toMillis() + "MS");
 
-            this.messageReceiver.registerListener(new CommandPacketListener());
+            		//this.messageReceiver.registerListener(new CommandPacketListener());
 
-            OpenAudioMc.getInstance().postBoot();
+            		OpenAudioMc.getInstance().postBoot();
+				}
+				catch (Exception e)
+				{
+					OpenAudioLogger.error(e, "Failed to start OpenAudioMc");
+				}
+			}
 		});
 	}
 
@@ -106,20 +138,17 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 	@Override
 	public Class<? extends NetworkingService> getServiceClass() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getServiceClass'");
+		return OAClientMode.STAND_ALONE.getServiceClass();
 	}
 
 	@Override
 	public TaskService getTaskProvider() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getTaskProvider'");
+		//return new VelocityTaskService();
 	}
 
 	@Override
 	public Configuration getConfigurationProvider() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getConfigurationProvider'");
+		//return new VelocityConfiguration();
 	}
 
 	@Override
@@ -134,6 +163,6 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 	@Override
 	public UserHooks getUserHooks() {
-		return new VelocityUserHooks(this);
+		//return new VelocityUserHooks(this);
 	}
 }

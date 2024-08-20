@@ -1,4 +1,4 @@
-package com.craftmend.openaudiomc.spigot.modules.commands.command;
+package com.craftmend.openaudiomc.bungee.modules.commands;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;

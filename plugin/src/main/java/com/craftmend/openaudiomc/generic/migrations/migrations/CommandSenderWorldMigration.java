@@ -5,9 +5,12 @@ import com.craftmend.openaudiomc.generic.migrations.MigrationWorker;
 import com.craftmend.openaudiomc.generic.migrations.interfaces.SimpleMigration;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.WorldType;
+// import org.bukkit.Bukkit;
+// import org.bukkit.World;
+// import org.bukkit.WorldType;
+import com.craftmend.openaudiomc.generic.utils.FabricUtils;
+
+import net.minecraft.world.World;
 
 public class CommandSenderWorldMigration extends SimpleMigration {
 
@@ -24,10 +27,10 @@ public class CommandSenderWorldMigration extends SimpleMigration {
             // check if Bukkit is available
             Class.forName("org.bukkit.Bukkit");
             // if it is, we can safely assume that the server is running bukkit
-            for (World world : Bukkit.getWorlds()) {
+            for (World world : FabricUtils.currentServer.getWorlds()) {
                 // get the first world that is not a nether or end world, this is a nice to have and not a requirement
-                if (world.getName().contains("_nether") || world.getName().contains("_end")) continue;
-                forceOverwrittenValues.put(StorageKey.SETTINGS_DEFAULT_WORLD_NAME.getSubSection(), world.getName());
+                if (FabricUtils.getWorldName(world).contains("_nether") || FabricUtils.getWorldName(world).contains("_end")) continue;
+                forceOverwrittenValues.put(StorageKey.SETTINGS_DEFAULT_WORLD_NAME.getSubSection(), FabricUtils.getWorldName(world));
                 break;
             }
         } catch (ClassNotFoundException | NoClassDefFoundError | NullPointerException e ) {

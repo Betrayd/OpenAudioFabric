@@ -1,19 +1,31 @@
 package com.craftmend.openaudiomc.generic.client.session;
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
-import com.craftmend.openaudiomc.api.events.client.*;
+import com.craftmend.openaudiomc.api.events.client.ClientPeerAddEvent;
+import com.craftmend.openaudiomc.api.events.client.ClientPeerRemovedEvent;
+import com.craftmend.openaudiomc.api.events.client.MicrophoneMuteEvent;
+import com.craftmend.openaudiomc.api.events.client.MicrophoneUnmuteEvent;
+import com.craftmend.openaudiomc.api.events.client.VoicechatDeafenEvent;
+import com.craftmend.openaudiomc.api.events.client.VoicechatUndeafenEvent;
 import com.craftmend.openaudiomc.api.voice.VoicePeerOptions;
 import com.craftmend.openaudiomc.generic.client.enums.RtcBlockReason;
 import com.craftmend.openaudiomc.generic.client.enums.RtcStateFlag;
 import com.craftmend.openaudiomc.generic.client.helpers.ClientRtcLocationUpdate;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
-import com.craftmend.openaudiomc.generic.oac.OpenaudioAccountService;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.node.packets.ForceMuteMicrophonePacket;
+import com.craftmend.openaudiomc.generic.oac.OpenaudioAccountService;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.user.User;
+import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.generic.utils.data.RandomString;
 import com.craftmend.openaudiomc.generic.voicechat.bus.VoiceApiConnection;
 import com.craftmend.openaudiomc.spigot.modules.players.SpigotPlayerService;
@@ -21,15 +33,9 @@ import com.craftmend.openaudiomc.spigot.modules.players.enums.PlayerLocationFoll
 import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotConnection;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.channels.Channel;
 import com.craftmend.openaudiomc.spigot.services.world.Vector3;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Location;
-
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class RtcSessionManager implements Serializable {
 
@@ -140,7 +146,7 @@ public class RtcSessionManager implements Serializable {
         // platform dependant
         if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMc.getInstance().getInvoker().isNodeServer()) {
             // forward to proxy
-            User user = clientConnection.getUser();
+            User<?> user = clientConnection.getUser();
             OpenAudioMc.resolveDependency(UserHooks.class).sendPacket(user, new ForceMuteMicrophonePacket(clientConnection.getOwner().getUniqueId(), allow));
             return;
         }

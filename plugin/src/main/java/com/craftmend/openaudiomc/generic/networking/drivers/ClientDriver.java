@@ -1,21 +1,21 @@
 package com.craftmend.openaudiomc.generic.networking.drivers;
 
+import java.util.UUID;
+
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.EventApi;
 import com.craftmend.openaudiomc.api.events.client.ClientAuthenticationEvent;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.networking.abstracts.AbstractPacket;
-import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.networking.interfaces.Authenticatable;
 import com.craftmend.openaudiomc.generic.networking.interfaces.INetworkingEvents;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.networking.interfaces.SocketDriver;
 import com.craftmend.openaudiomc.generic.networking.io.SocketConnection;
 import com.craftmend.openaudiomc.generic.networking.payloads.AcknowledgeClientPayload;
+
 import io.socket.client.Ack;
 import io.socket.client.Socket;
-
-import java.util.UUID;
 
 public class ClientDriver implements SocketDriver {
 

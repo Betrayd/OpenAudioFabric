@@ -1,16 +1,21 @@
 package com.craftmend.openaudiomc.spigot.modules.show.interfaces;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import com.craftmend.openaudiomc.generic.utils.Location;
+
+import lombok.Getter;
+import lombok.Setter;
+// import org.bukkit.Bukkit;
+// import org.bukkit.Chunk;
+// import org.bukkit.World;
+// import org.bukkit.entity.Entity;
+// import org.bukkit.entity.Player;
+import net.minecraft.entity.Entity;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 public abstract class ShowRunnable implements Runnable {
 
@@ -25,7 +30,7 @@ public abstract class ShowRunnable implements Runnable {
     protected Entity getExecutorEntity(String world) {
         Entity fromCache = executorEntityCache.get(world);
 
-        if (fromCache != null && !fromCache.isDead() && fromCache.getLocation().getChunk().isLoaded()) {
+        if (fromCache != null && fromCache.isAlive() && Location.fromEntity(fromCache).getChunk().isLoaded()) {
             return fromCache;
         }
 

@@ -1,27 +1,28 @@
 package com.craftmend.openaudiomc.generic.client.session;
 
+import static com.craftmend.openaudiomc.generic.platform.Platform.*;
+
+import java.io.Serializable;
+
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.authentication.AuthenticationService;
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.commands.middleware.CatchLegalBindingMiddleware;
-import com.craftmend.openaudiomc.generic.oac.OpenaudioAccountService;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
-import com.craftmend.openaudiomc.generic.rest.Task;
+import com.craftmend.openaudiomc.generic.oac.OpenaudioAccountService;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
+import com.craftmend.openaudiomc.generic.rest.Task;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serializable;
-
-import static com.craftmend.openaudiomc.generic.platform.Platform.translateColors;
 
 @Getter
 @AllArgsConstructor
@@ -35,7 +36,7 @@ public class ClientAuth implements Serializable {
         return webSessionKey.equals(input);
     }
 
-    public void activateToken(User sender, String token) {
+    public void activateToken(User<?> sender, String token) {
         Task<Boolean> activationAttempt = OpenAudioMc.getService(AuthenticationService.class).getDriver().activateToken(client, token);
         // initial loading message
         sender.sendMessage(translateColors(StorageKey.MESSAGE_TOKEN_ACTIVATION_LOADING.getString()));
