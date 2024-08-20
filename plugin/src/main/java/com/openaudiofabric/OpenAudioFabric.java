@@ -140,8 +140,10 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 						SpigotPlayerService.class,
 
 						SpeakerService.class,
-						SpigotCommandService.class,
-						ShowService.class,
+						//removed since we are now using actual commands
+						//SpigotCommandService.class,
+						//removed as shows are not really that useful and should be done in a seperate mod
+						//ShowService.class,
 						PredictiveMediaService.class,
 						SpigotVoiceChatService.class,
 						VoiceChannelService.class,

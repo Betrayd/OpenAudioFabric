@@ -58,7 +58,6 @@ public class OpenAudioMc {
      */
     private final ApiEventDriver apiEventDriver = new ApiEventDriver();
     private final Configuration configuration;
-    private final Platform platform;
     private final OpenAudioInvoker invoker;
     private final boolean cleanStartup;
     @Getter
@@ -106,8 +105,7 @@ public class OpenAudioMc {
         );
 
         // setup
-        this.invoker = invoker;
-        this.platform = invoker.getPlatform(); // constants
+        this.invoker = invoker; // constants
         this.cleanStartup = !this.invoker.hasPlayersOnline();
         this.configuration = invoker.getConfigurationProvider();
 

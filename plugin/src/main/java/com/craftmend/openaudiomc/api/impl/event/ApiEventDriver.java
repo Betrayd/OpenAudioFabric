@@ -5,7 +5,6 @@ import com.craftmend.openaudiomc.OpenAudioMcBuild;
 import com.craftmend.openaudiomc.api.impl.event.enums.EventSupport;
 import com.craftmend.openaudiomc.api.interfaces.EventSupportFlag;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
-import com.craftmend.openaudiomc.generic.platform.Platform;
 import lombok.SneakyThrows;
 
 import java.util.HashMap;
@@ -95,7 +94,7 @@ public class ApiEventDriver {
         // is the plugin real?
         if (!OpenAudioMcBuild.IS_TESTING) {
             if (OpenAudioMc.getInstance() != null) {
-                if (!isSupported(support, OpenAudioMc.getInstance().getPlatform(), OpenAudioMc.getInstance().getInvoker().isNodeServer())) {
+                if (!isSupported(OpenAudioMc.getInstance().getInvoker().isNodeServer())) {
                     throw new IllegalStateException(support.getErrorMessage());
                 }
             }
@@ -133,36 +132,20 @@ public class ApiEventDriver {
     }
 
     @Deprecated
-    public boolean isSupported(EventSupport supportType, Platform platform, boolean isNode) {
-        switch (supportType) {
-            case UNKNOWN:
-                return false;
-
-            case EVERYWHERE:
-                return true;
-
-            case PROXY_ONLY:
-                return platform == Platform.BUNGEE || platform == Platform.VELOCITY || platform == Platform.STANDALONE;
-
-            case SPIGOT_ONLY:
-                return platform == Platform.SPIGOT || platform == Platform.STANDALONE;
-
-            case ONLY_PROXY_IF_AVAILABLE:
-                if ((platform == Platform.SPIGOT && !isNode) || platform == Platform.STANDALONE) {
-                    return true;
-                }
-
-                return platform == Platform.BUNGEE || platform == Platform.VELOCITY;
+    public boolean isSupported(boolean isNode) {
+        if ((!isNode) /*|| platform == Platform.STANDALONE*/) {
+            return true;
         }
         return false;
     }
 
     @Deprecated
     public boolean isSupported(Class<? extends AudioEvent> af) {
-        try {
-            return isSupported(getEventSupportFor(af), OpenAudioMc.getInstance().getPlatform(), OpenAudioMc.getInstance().getInvoker().isNodeServer());
+        return isSupported(OpenAudioMc.getInstance().getInvoker().isNodeServer());
+        /*try {
+            return isSupported(OpenAudioMc.getInstance().getInvoker().isNodeServer());
         } catch (InstantiationException | IllegalAccessException e) {
             return false;
-        }
+        }*/
     }
 }

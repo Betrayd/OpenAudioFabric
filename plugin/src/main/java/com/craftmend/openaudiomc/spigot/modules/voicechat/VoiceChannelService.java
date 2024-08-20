@@ -15,8 +15,6 @@ import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.channels.Channel;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.commands.*;
-import org.bukkit.Bukkit;
-import org.bukkit.permissions.Permission;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -74,14 +72,14 @@ public class VoiceChannelService extends Service {
                     continue;
                 }
 
-                boolean requirePermission = (boolean) obj.get("requirePermission");
+                /*boolean requirePermission = (boolean) obj.get("requirePermission");
                 String permission = (String) obj.get("permission");
 
                 if (requirePermission) {
                     Permission registeredPermission = new Permission(permission);
                     registeredPermission.setDescription("This permission allows a user access to the " + obj.get("name") + " voice channel.");
                     Bukkit.getPluginManager().addPermission(registeredPermission);
-                }
+                }*/
 
                 String name = (String) obj.get("name");
 
@@ -91,9 +89,11 @@ public class VoiceChannelService extends Service {
                     continue;
                 }
 
+                //at some point  probably add back channel permissions but not super vital ATM
                 Channel staticChannel = new Channel(
                         name,
-                        requirePermission ? permission : null,
+                        null,
+                        //requirePermission ? permission : null,
                         this
                 );
                 channelMap.put(staticChannel.getName(), staticChannel);

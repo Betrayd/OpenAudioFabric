@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.craftmend.openaudiomc.api.voice.CustomPlayerFilter;
-import com.craftmend.openaudiomc.api.voice.Player;
 import com.craftmend.openaudiomc.generic.service.Service;
 
 import lombok.NoArgsConstructor;
