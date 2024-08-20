@@ -23,6 +23,7 @@ import com.craftmend.openaudiomc.generic.state.states.IdleState;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.utils.FabricUtils;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
+import com.openaudiofabric.modules.platform.FabricUserHooks;
 import com.openaudiofabric.modules.scheduling.FabricTaskService;
 
 import lombok.Getter;
@@ -174,6 +175,6 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 	@Override
 	public UserHooks getUserHooks() {
-		//return new VelocityUserHooks(this);
+		return new FabricUserHooks();
 	}
 }
