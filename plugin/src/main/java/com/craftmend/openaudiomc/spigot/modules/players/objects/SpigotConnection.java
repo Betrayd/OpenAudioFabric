@@ -114,9 +114,10 @@ public class SpigotConnection {
         //clientConnection.addOnConnectHandler(new InitializeTrains(player));
 
         clientConnection.addOnDisconnectHandler(() -> {
-            OpenAudioMc.resolveDependency(TaskService.class).runSync(() -> {
+            //also not sure what this is used for so I will also ignore it for now
+            /*OpenAudioMc.resolveDependency(TaskService.class).runSync(() -> {
                 Bukkit.getServer().getPluginManager().callEvent(new ClientDisconnectEvent(player));
-            });
+            });*/
 
             OpenAudioMc.getService(VoiceChannelService.class).handleUserDisconnect(clientConnection);
         });
@@ -124,7 +125,7 @@ public class SpigotConnection {
 
     private void tickLocationFollowers() {
         if (!locationFollowers.isEmpty()) {
-            Location location = bukkitPlayer.getLocation();
+            Location location = Location.locationFromEntity(bukkitPlayer);
             ClientPlayerLocationPayload locationPayload = new ClientPlayerLocationPayload(
                     round(location.getX(), 1),
                     round(location.getY(), 1),
