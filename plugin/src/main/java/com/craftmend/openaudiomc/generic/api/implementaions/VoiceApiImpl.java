@@ -116,9 +116,6 @@ public class VoiceApiImpl implements VoiceApi {
 
     @Override
     public void removeStaticPeer(Client client, Client peerToRemove, boolean mutual) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
-            throw new IllegalStateException("This method is only available on the spigot platform");
-        }
 
         EventApi.getInstance().callEvent(new ClientPeerRemovedEvent(client, peerToRemove));
 

@@ -7,26 +7,26 @@ import org.jetbrains.annotations.Nullable;
 
 import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.generic.utils.data.ConcurrentHeatMap;
-import com.craftmend.openaudiomc.spigot.modules.regions.interfaces.AbstractRegionAdapter;
-import com.craftmend.openaudiomc.spigot.modules.regions.interfaces.IRegion;
+//import com.craftmend.openaudiomc.spigot.modules.regions.interfaces.AbstractRegionAdapter;
+//import com.craftmend.openaudiomc.spigot.modules.regions.interfaces.IRegion;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 
 @Deprecated
 public interface WorldApi {
 
-    /**
+    /*
      * Forcefully enable the region system with your own adapter
      * In cases where you use something custom instead of worldguard
      * @param regionHandler Region adapter
      */
-    void setRegionHandler(AbstractRegionAdapter regionHandler);
+    //void setRegionHandler(AbstractRegionAdapter regionHandler);
 
-    /**
+    /*
      * Get applicable audio regions on a location
      * @param location Target location
      * @return Applicable regions
      */
-    Collection<IRegion> getApplicableRegions(Location location);
+    //Collection<IRegion> getApplicableRegions(Location location);
 
     /**
      * Get a speaker instance for a placed speaker at a location, or null if invalid

@@ -22,11 +22,11 @@ import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.utils.FabricUtils;
 import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
-import com.craftmend.openaudiomc.spigot.modules.regions.RegionModule;
+/*import com.craftmend.openaudiomc.spigot.modules.regions.RegionModule;
 import com.craftmend.openaudiomc.spigot.modules.regions.interfaces.ApiRegion;
 import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties;
 import com.craftmend.openaudiomc.spigot.modules.regions.objects.TimedRegionProperties;
-import com.craftmend.openaudiomc.spigot.modules.regions.registry.WorldRegionManager;
+import com.craftmend.openaudiomc.spigot.modules.regions.registry.WorldRegionManager;*/
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
 import com.openaudiofabric.OpenAudioFabric;
@@ -35,7 +35,7 @@ import lombok.AllArgsConstructor;
 
 public class WorldApiImpl implements WorldApi {
 
-    @NotNull
+    /*@NotNull
     @Override
     public Collection<AudioRegion> getRegionsAt(int x, int y, int z, @NotNull String world) {
         if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
@@ -54,19 +54,42 @@ public class WorldApiImpl implements WorldApi {
         }
 
         return regions;
-    }
+    }*/
 
     @Nullable
     @Override
     public BasicSpeaker getSpeakerAt(int x, int y, int z, @NotNull String world) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
-            throw new IllegalStateException("This method is only available on the spigot platform");
-        }
 
         return OpenAudioMc.getService(SpeakerService.class).getSpeaker(new MappedLocation(x, y, z, world));
     }
 
     @Override
+    public Collection<AudioRegion> getRegionsAt(int x, int y, int z, String world) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRegionsAt'");
+    }
+
+    @Override
+    public void registerRegion(String worldName, String regionId, RegionMediaOptions regionMedia)
+            throws UnknownWorldException, InvalidThreadException, InvalidRegionException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'registerRegion'");
+    }
+
+    @Override
+    public void registerTempRegion(String worldName, String regionId, RegionMediaOptions regionMedia, int duration)
+            throws UnknownWorldException, InvalidThreadException, InvalidRegionException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'registerTempRegion'");
+    }
+
+    @Override
+    public void unregisterRegion(String worldName, String regionId) throws InvalidThreadException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'unregisterRegion'");
+    }
+
+    /*@Override
     public void registerRegion(String worldName, String regionId, RegionMediaOptions regionMedia) throws InvalidRegionException, InvalidThreadException {
         Objects.requireNonNull(worldName, "World name cannot be null");
         Objects.requireNonNull(regionId, "Region id cannot be null");
@@ -213,5 +236,5 @@ public class WorldApiImpl implements WorldApi {
         public int getPriority() {
             return region.getPriority();
         }
-    }
+    }*/
 }

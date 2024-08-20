@@ -16,9 +16,9 @@ import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.utils.data.Filter;
 import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
-import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties;
-import com.craftmend.openaudiomc.spigot.modules.regions.objects.TimedRegionProperties;
-import com.craftmend.openaudiomc.spigot.modules.regions.registry.WorldRegionManager;
+//import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties;
+//import com.craftmend.openaudiomc.spigot.modules.regions.objects.TimedRegionProperties;
+//import com.craftmend.openaudiomc.spigot.modules.regions.registry.WorldRegionManager;
 import com.craftmend.openaudiomc.spigot.modules.shortner.AliasService;
 import com.craftmend.openaudiomc.spigot.modules.shortner.data.Alias;
 import com.craftmend.openaudiomc.spigot.modules.voicechat.SpigotVoiceChatService;
@@ -73,7 +73,7 @@ public class RegistryApiImpl implements RegistryApi {
         AuthenticationService.TOKEN_PROVIDER = provider;
     }
 
-    @Override
+    /*@Override
     @Deprecated
     public void removeRegion(String worldName, String regionName) throws RegionException {
         if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new RegionException("This API functionality is only accessible on Spigot");
@@ -142,6 +142,6 @@ public class RegistryApiImpl implements RegistryApi {
 
         worldRegionManager.registerRegion(regionProperties);
         openAudioMcSpigot.getRegionModule().forceUpdateRegions();
-    }
+    }*/
 
 }
