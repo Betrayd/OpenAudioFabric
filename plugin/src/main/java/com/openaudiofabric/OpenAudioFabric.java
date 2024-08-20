@@ -25,6 +25,7 @@ import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.platform.interfaces.OpenAudioInvoker;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
+import com.craftmend.openaudiomc.generic.proxy.messages.implementations.FabricPacketManager;
 import com.craftmend.openaudiomc.generic.rd.RestDirectService;
 import com.craftmend.openaudiomc.generic.state.StateService;
 import com.craftmend.openaudiomc.generic.state.states.IdleState;
@@ -52,11 +53,10 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 		return instance;
 	}
 
-	@Getter
-	private MinecraftServer server;
-
-	private final Instant boot = Instant.now();
 	@Getter private final File dataDir;
+
+	private Instant boot = Instant.now();
+	@Getter private FabricPacketManager messageReceiver;
 
 	public OpenAudioFabric()
 	{
@@ -80,17 +80,19 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 		ServerLifecycleEvents.SERVER_STARTED.register((MinecraftServer startedServer) -> 
 		{
 			boolean hasServer = true;
-			if(server == null)
+			if(FabricUtils.currentServer == null)
 			{
 				hasServer = false;
 			}
-			server = startedServer;
+			FabricUtils.currentServer = startedServer;
 
 			MagicValue.overWrite(MagicValue.STORAGE_DIRECTORY, this.dataDir);
 
 			if(!hasServer)
 			{
 				try {
+					Instant.now();
+
 					new OpenAudioMc(this);
 					//add fabric of this
             		//getServer().getEventManager().register(this, new PlayerConnectionListener());
@@ -98,7 +100,9 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 					//remove this one
             		//this.commandModule = new VelocityCommandModule(this);
 			
+					this.messageReceiver = new FabricPacketManager("openaudiomc:node");
             		//this.messageReceiver = new VelocityPacketManager(this, getServer(),"openaudiomc:node");
+
 
             		OpenAudioMc.getService(RestDirectService.class).boot();
 
@@ -123,7 +127,7 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 	@Override
 	public boolean hasPlayersOnline() {
-		return server.getPlayerManager().getPlayerList().size() > 0;
+		return FabricUtils.currentServer.getPlayerManager().getPlayerList().size() > 0;
 	}
 
 	@Override
@@ -158,7 +162,7 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 	@Override
 	public int getServerPort() {
-		return server.getServerPort();
+		return FabricUtils.currentServer.getServerPort();
 	}
 
 	@Override
