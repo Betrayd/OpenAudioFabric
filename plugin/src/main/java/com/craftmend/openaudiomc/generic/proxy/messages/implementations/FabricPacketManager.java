@@ -8,6 +8,7 @@ import com.craftmend.openaudiomc.generic.utils.FabricUtils;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
@@ -22,8 +23,10 @@ public class FabricPacketManager extends PacketManager {
 
     @Override
     protected void sendPluginMessage(PacketPlayer packetPlayer, String channel, byte[] bytes) {
-        // MinecraftServer server = packetPlayer.getFabricPlayer().getServer();
-        ServerPlayNetworking.send(packetPlayer.getFabricPlayer(), new Identifier(channel), PacketByteBufs.create());
+        // MinecraftServer server = packetPlayer.getFabricPlayer().getServer();'
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeBytes(bytes);
+        ServerPlayNetworking.send(packetPlayer.getFabricPlayer(), new Identifier(channel), buf);
     }
 
     @Override
