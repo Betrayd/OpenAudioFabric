@@ -4,11 +4,12 @@ import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.redis.RedisService;
 import com.craftmend.openaudiomc.generic.redis.packets.channels.ChannelKey;
 import com.craftmend.openaudiomc.generic.redis.packets.interfaces.OARedisPacket;
+import com.craftmend.openaudiomc.generic.utils.FabricUtils;
 import com.craftmend.openaudiomc.spigot.modules.show.runnables.CommandRunnable;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.bukkit.Bukkit;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +26,7 @@ public class ExecuteCommandPacket extends OARedisPacket {
     public void handle(OARedisPacket a) {
         ExecuteCommandPacket received = (ExecuteCommandPacket) a;
         CommandRunnable commandRunnable = new CommandRunnable();
-        commandRunnable.prepare(received.getCommand(), Bukkit.getWorlds().get(0));
+        commandRunnable.prepare(received.getCommand(), FabricUtils.currentServer.getOverworld());
         commandRunnable.setExecutedFromRedis(true);
         commandRunnable.run();
     }

@@ -1,22 +1,25 @@
 package com.craftmend.openaudiomc.generic.commands.interfaces;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.commands.CommandService;
+import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.generic.commands.objects.CommandError;
 import com.craftmend.openaudiomc.generic.commands.selectors.SelectorTranslator;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.platform.Platform;
-import com.craftmend.openaudiomc.generic.commands.objects.Argument;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.user.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import org.bukkit.Bukkit;
-import org.bukkit.permissions.Permission;
-
-import java.util.*;
 
 public abstract class SubCommand {
 
@@ -35,16 +38,16 @@ public abstract class SubCommand {
      */
     public SubCommand(String argument) {
         this.command = argument;
-        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
-            // try, could already be registered
-            try {
-                Permission permission = new Permission(permissionScope + command);
-                permission.setDescription("Allows access to the " + command + " command");
-                Bukkit.getPluginManager().addPermission(permission);
-            } catch (IllegalArgumentException e) {
-                // ignored
-            }
-        }
+        // if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
+        //     // try, could already be registered
+        //     try {
+        //         Permission permission = new Permission(permissionScope + command);
+        //         permission.setDescription("Allows access to the " + command + " command");
+        //         Bukkit.getPluginManager().addPermission(permission);
+        //     } catch (IllegalArgumentException e) {
+        //         // ignored
+        //     }
+        // }
     }
 
     public SubCommand(String argument, String... aliases) {

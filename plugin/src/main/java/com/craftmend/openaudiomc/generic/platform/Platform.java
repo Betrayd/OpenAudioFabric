@@ -17,16 +17,17 @@ public enum Platform {
     ;
 
     public static String translateColors(String input) {
-        switch (OpenAudioMc.getInstance().getPlatform()) {
-            case SPIGOT:
-                return org.bukkit.ChatColor.translateAlternateColorCodes('&', input);
-            case BUNGEE:
-                return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', input);
-            case VELOCITY:
-                return VelocityChatColor.translateAlternateColorCodes('&', input);
-            default:
-                return input; // unknown platform
-        }
+        return VelocityChatColor.translateAlternateColorCodes('&', input);
+        // switch (OpenAudioMc.getInstance().getPlatform()) {
+        //     case SPIGOT:
+        //         return org.bukkit.ChatColor.translateAlternateColorCodes('&', input);
+        //     case BUNGEE:
+        //         return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', input);
+        //     case VELOCITY:
+        //         return VelocityChatColor.translateAlternateColorCodes('&', input);
+        //     default:
+        //         return input; // unknown platform
+        // }
     }
 
     public static SelectorTranslator<?> getSelectorTranslator() {
@@ -43,16 +44,17 @@ public enum Platform {
     }
 
     public static String makeColor(String color) {
-        switch (OpenAudioMc.getInstance().getPlatform()){
-            case SPIGOT:
-                return org.bukkit.ChatColor.valueOf(color).toString();
-            case BUNGEE:
-                return net.md_5.bungee.api.ChatColor.valueOf(color).toString();
-            case VELOCITY:
-                return VelocityChatColor.valueOf(color).toString();
-            default:
-                return ""; // unknown platform
-        }
+        return VelocityChatColor.valueOf(color).toString();
+        // switch (OpenAudioMc.getInstance().getPlatform()){
+        //     case SPIGOT:
+        //         return org.bukkit.ChatColor.valueOf(color).toString();
+        //     case BUNGEE:
+        //         return net.md_5.bungee.api.ChatColor.valueOf(color).toString();
+        //     case VELOCITY:
+        //         return VelocityChatColor.valueOf(color).toString();
+        //     default:
+        //         return ""; // unknown platform
+        // }
     }
 
 }

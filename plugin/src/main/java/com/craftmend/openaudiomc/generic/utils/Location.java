@@ -6,6 +6,7 @@ import org.joml.Vector3d;
 import org.joml.Vector3dc;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
@@ -18,6 +19,17 @@ import net.minecraft.world.chunk.Chunk;
  * A re-implementation of Bukkit's <code>Location</code> class.
  */
 public class Location {
+
+    public static Location fromEntity(Entity entity) {
+        return new Location(
+                entity.getWorld(),
+                entity.getX(),
+                entity.getY(),
+                entity.getZ(),
+                entity.getYaw(),
+                entity.getPitch());
+    }
+
     private World world;
     private final Vector3d position;
     private float yaw, pitch;
