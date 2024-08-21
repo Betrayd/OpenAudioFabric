@@ -1,4 +1,4 @@
-package com.craftmend.openaudiomc.generic.state.collectors;
+/*package com.craftmend.openaudiomc.generic.state.collectors;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.state.interfaces.StateDetail;
@@ -17,4 +17,4 @@ public class SpigotVersionDetail implements StateDetail {
         return OpenAudioMc.getService(ServerService.class).getVersion().toString();
     }
 
-}
+}*/

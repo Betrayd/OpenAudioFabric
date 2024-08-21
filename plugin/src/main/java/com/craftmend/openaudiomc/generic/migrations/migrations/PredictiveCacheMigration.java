@@ -1,4 +1,4 @@
-package com.craftmend.openaudiomc.generic.migrations.migrations;
+/*package com.craftmend.openaudiomc.generic.migrations.migrations;
 
 import com.craftmend.openaudiomc.generic.migrations.MigrationWorker;
 import com.craftmend.openaudiomc.generic.migrations.interfaces.SimpleMigration;
@@ -45,4 +45,4 @@ public class PredictiveCacheMigration extends SimpleMigration {
         // }
     }
 
-}
+}*/

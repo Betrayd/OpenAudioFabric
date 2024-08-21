@@ -6,9 +6,6 @@ import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.media.MediaService;
 import com.craftmend.openaudiomc.generic.uploads.UploadIndexService;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.craftmend.openaudiomc.spigot.modules.playlists.PlaylistService;
-import com.craftmend.openaudiomc.spigot.modules.playlists.models.Playlist;
-import com.craftmend.openaudiomc.spigot.modules.shortner.AliasService;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -42,7 +39,7 @@ public class MediaTabcompleteProvider implements TabCompleteProvider {
         }
 
         // do we have playlists on this service?
-        if (OpenAudioMc.getInstance().getServiceManager().isServiceEnabled(PlaylistService.class)) {
+        /*if (OpenAudioMc.getInstance().getServiceManager().isServiceEnabled(PlaylistService.class)) {
             // this might be false if we're not running on spigot
             PlaylistService playlistService = OpenAudioMc.getService(PlaylistService.class);
             for (Playlist s : playlistService.getAll()) {
@@ -57,7 +54,7 @@ public class MediaTabcompleteProvider implements TabCompleteProvider {
                 options.add("a:" + s);
             }
             hasFiles = true;
-        }
+        }*/
 
         // did we find anything?
         if (!hasFiles) {

@@ -1,7 +1,6 @@
-package com.craftmend.openaudiomc.generic.node.packets;
+/*package com.craftmend.openaudiomc.generic.node.packets;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
-import com.craftmend.openaudiomc.spigot.modules.proxy.objects.CommandProxyPayload;
 import com.craftmend.openaudiomc.generic.proxy.messages.PacketWriter;
 import com.craftmend.openaudiomc.generic.proxy.messages.StandardPacket;
 import lombok.AllArgsConstructor;
@@ -28,4 +27,4 @@ public class CommandProxyPacket extends StandardPacket {
         packetWriter.writeUTF(OpenAudioMc.getGson().toJson(this));
         return packetWriter;
     }
-}
+}*/

@@ -26,13 +26,9 @@ import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.user.User;
 import com.craftmend.openaudiomc.generic.utils.Location;
+import com.craftmend.openaudiomc.generic.utils.Vector3;
 import com.craftmend.openaudiomc.generic.utils.data.RandomString;
 import com.craftmend.openaudiomc.generic.voicechat.bus.VoiceApiConnection;
-import com.craftmend.openaudiomc.spigot.modules.players.SpigotPlayerService;
-import com.craftmend.openaudiomc.spigot.modules.players.enums.PlayerLocationFollower;
-import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotConnection;
-import com.craftmend.openaudiomc.spigot.modules.voicechat.channels.Channel;
-import com.craftmend.openaudiomc.spigot.services.world.Vector3;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -62,9 +58,9 @@ public class RtcSessionManager implements Serializable {
     private final transient Set<UUID> currentProximityDrops = new HashSet<>();
 
     // channel stuff
-    @Getter
-    @Setter
-    private Channel currentChannel = null;
+    //@Getter
+    //@Setter
+    //private Channel currentChannel = null;
 
 
     @Setter
@@ -199,7 +195,7 @@ public class RtcSessionManager implements Serializable {
 
     public void updateLocationWatcher() {
         if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
-            SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(clientConnection.getOwner().getUniqueId());
+            /*SpigotConnection spigotConnection = OpenAudioMc.getService(SpigotPlayerService.class).getClient(clientConnection.getOwner().getUniqueId());
             if (spigotConnection == null) {
                 // player logged out, ignoring
                 return;
@@ -208,7 +204,7 @@ public class RtcSessionManager implements Serializable {
                 spigotConnection.getLocationFollowers().remove(PlayerLocationFollower.PROXIMITY_VOICE_CHAT);
             } else {
                 spigotConnection.getLocationFollowers().add(PlayerLocationFollower.PROXIMITY_VOICE_CHAT);
-            }
+            }*/
         }
     }
 

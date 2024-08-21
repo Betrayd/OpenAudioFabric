@@ -5,7 +5,7 @@ import java.util.List;
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.redis.packets.interfaces.OARedisPacket;
 import com.craftmend.openaudiomc.generic.utils.FabricUtils;
-import com.craftmend.openaudiomc.spigot.modules.show.runnables.CommandRunnable;
+//import com.craftmend.openaudiomc.spigot.modules.show.runnables.CommandRunnable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,12 +25,12 @@ public class ExecuteBulkCommandsPacket extends OARedisPacket {
 
     @Override
     public void handle(OARedisPacket a) {
-        ExecuteBulkCommandsPacket received = (ExecuteBulkCommandsPacket) a;
-        for (String command : received.getCommands()) {
-            CommandRunnable commandRunnable = new CommandRunnable();
-            commandRunnable.prepare(command, FabricUtils.currentServer.getOverworld());
-            commandRunnable.setExecutedFromRedis(true);
-            commandRunnable.run();
-        }
+        //ExecuteBulkCommandsPacket received = (ExecuteBulkCommandsPacket) a;
+        //for (String command : received.getCommands()) {
+            //CommandRunnable commandRunnable = new CommandRunnable();
+            //commandRunnable.prepare(command, FabricUtils.currentServer.getOverworld());
+            //commandRunnable.setExecutedFromRedis(true);
+            //commandRunnable.run();
+        //}
     }
 }

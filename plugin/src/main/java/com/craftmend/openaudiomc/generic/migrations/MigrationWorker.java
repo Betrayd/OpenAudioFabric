@@ -36,10 +36,10 @@ public class MigrationWorker {
                 new AddConfigKeyMigration(SETTINGS_VC_TOGGLE_MIC_SWAP, "adds the config option to disable mute/unmute hokeys"),
                 new AddConfigKeyMigration(SETTINGS_VC_USE_HOTBAR, "new setting for message location"),
                 new AddAutoClaimMigration(),            // add a config value to configure automatic claiming hooks
-                new SpeakerDatabaseMigration(),         // Migrate speakers from data.yml to the database
-                new RegionDatabaseMigration(),          // migrate speakers, just like regions
-                new AliasDatabaseMigration(),           // migrate aliases
-                new PredictiveCacheMigration(),         // migrate audio smart cache
+                //new SpeakerDatabaseMigration(),         // Migrate speakers from data.yml to the database
+                //new RegionDatabaseMigration(),          // migrate speakers, just like regions
+                //new AliasDatabaseMigration(),           // migrate aliases
+                //new PredictiveCacheMigration(),         // migrate audio smart cache
                 new AddConfigKeyMigration(CDN_TIMEOUT, "Add cdn timeout"),
                 new AddConfigKeyMigration(SETTINGS_PAPI_CLIENT_CONNECTED, "Add papi messages"),
                 new AddConfigKeyMigration(CDN_IP_OVERWRITE, "Add rd ip overwrite"),

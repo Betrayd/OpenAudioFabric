@@ -1,11 +1,12 @@
 package com.craftmend.openaudiomc.generic.client.helpers;
 
 import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
+import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.utils.Location;
-import com.craftmend.openaudiomc.spigot.services.world.Vector3;
-import com.craftmend.openaudiomc.spigot.services.world.interfaces.IRayTracer;
-import com.craftmend.openaudiomc.spigot.services.world.tracing.DummyTracer;
+import com.craftmend.openaudiomc.generic.utils.Vector3;
+//import com.craftmend.openaudiomc.spigot.services.world.interfaces.IRayTracer;
+//import com.craftmend.openaudiomc.spigot.services.world.tracing.DummyTracer;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 public class ClientRtcLocationUpdate {
 
     private static final boolean PROCESS_OBSTRUCTIONS = StorageKey.SETTINGS_VC_PROCESS_OBSTRUCTIONS.getBoolean();
-    private static IRayTracer rayTracer = new DummyTracer();
+    //private static IRayTracer rayTracer = new DummyTracer();
 
     private String streamKey;
     private double x, y, z;
@@ -27,13 +28,14 @@ public class ClientRtcLocationUpdate {
     public static ClientRtcLocationUpdate fromClientWithLocation(ClientConnection clientConnection, Location source, Vector3 targetLocation) {
         int obstructions = 0;
 
+        //TODO: add process obsructions with fabric code
         if (PROCESS_OBSTRUCTIONS) {
             // check line-of-sight
-            obstructions = rayTracer.obstructionsBetweenLocations(
-                    source,
-                    targetLocation
-            );
-
+            //obstructions = rayTracer.obstructionsBetweenLocations(
+            //        source,
+            //        targetLocation
+            //);
+            OpenAudioLogger.info("Process_Obstructions not curretnly implemented");
         }
 
         return new ClientRtcLocationUpdate(
@@ -52,10 +54,10 @@ public class ClientRtcLocationUpdate {
 
         if (PROCESS_OBSTRUCTIONS) {
             // check line-of-sight
-            obstructions = rayTracer.obstructionsBetweenLocations(
-                    Location.fromEntity(player),
-                    originLocation
-            );
+            //obstructions = rayTracer.obstructionsBetweenLocations(
+            //        Location.fromEntity(player),
+            //        originLocation
+            //);
 
         }
 

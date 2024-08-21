@@ -45,8 +45,8 @@ import com.craftmend.openaudiomc.generic.rest.Task;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
-import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
+//import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
+//import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -126,8 +126,8 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
 
         EventApi.getInstance().callEvent(new ClientConnectEvent(this));
 
-        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.NODE)
-            return;
+        //if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.NODE)
+        //    return;
         String connectedMessage = Configuration.getString(StorageKey.MESSAGE_CLIENT_OPENED);
         user.sendMessage(Platform.translateColors(connectedMessage));
     }
@@ -149,8 +149,8 @@ public class ClientConnection implements Authenticatable, Client, Serializable,
         EventApi.getInstance().callEvent(new ClientDisconnectEvent(this));
 
         // Don't send if i'm spigot and a node
-        if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.NODE)
-            return;
+        //if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT && OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.NODE)
+        //    return;
         String message = OpenAudioMc.getInstance().getConfiguration().getString(StorageKey.MESSAGE_CLIENT_CLOSED);
         user.sendMessage(Platform.translateColors(message));
     }

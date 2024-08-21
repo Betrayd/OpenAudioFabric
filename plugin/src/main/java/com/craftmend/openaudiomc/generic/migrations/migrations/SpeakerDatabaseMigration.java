@@ -8,11 +8,8 @@ import com.craftmend.openaudiomc.generic.migrations.interfaces.SimpleMigration;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageLocation;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
-import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.api.speakers.ExtraSpeakerOptions;
 import com.craftmend.openaudiomc.api.speakers.SpeakerType;
-import com.craftmend.openaudiomc.spigot.modules.speakers.objects.MappedLocation;
-import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -43,9 +40,9 @@ public class SpeakerDatabaseMigration extends SimpleMigration {
                 continue;
             }
 
-            Speaker speaker = loadFromFile(id);
-            service.getRepository(Speaker.class)
-                    .save(speaker);
+            //Speaker speaker = loadFromFile(id);
+            //service.getRepository(Speaker.class)
+            //        .save(speaker);
             config.setString(StorageLocation.DATA_FILE, "speakers." + id, null);
             config.saveAll(true);
         }
@@ -60,7 +57,7 @@ public class SpeakerDatabaseMigration extends SimpleMigration {
         return true;
     }
 
-    public Speaker loadFromFile(String id) {
+    /*public Speaker loadFromFile(String id) {
         Configuration config = OpenAudioMc.getInstance().getConfiguration();
 
         String world = config.getStringFromPath("speakers." + id + ".world", StorageLocation.DATA_FILE);
@@ -88,12 +85,12 @@ public class SpeakerDatabaseMigration extends SimpleMigration {
             speakerType = SpeakerType.valueOf(typeName);
         } else {
             // like i said, falling back on 2D, but might fallback to 3D later
-            speakerType = SpeakerService.DEFAULT_SPEAKER_TYPE;
+            //speakerType = SpeakerService.DEFAULT_SPEAKER_TYPE;
         }
 
-        MappedLocation mappedLocation = new MappedLocation(x, y, z, world);
-        Speaker speaker = new Speaker(media, UUID.fromString(id), radius, mappedLocation, speakerType, extraOptions);
-        return speaker;
-    }
+        //MappedLocation mappedLocation = new MappedLocation(x, y, z, world);
+        //Speaker speaker = new Speaker(media, UUID.fromString(id), radius, mappedLocation, speakerType, extraOptions);
+        //return speaker;
+    }*/
 
 }

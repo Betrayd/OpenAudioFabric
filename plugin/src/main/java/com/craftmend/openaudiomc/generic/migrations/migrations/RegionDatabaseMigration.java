@@ -1,4 +1,4 @@
-package com.craftmend.openaudiomc.generic.migrations.migrations;
+/*package com.craftmend.openaudiomc.generic.migrations.migrations;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.database.DatabaseService;
@@ -8,9 +8,6 @@ import com.craftmend.openaudiomc.generic.migrations.interfaces.SimpleMigration;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageLocation;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
-import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties;
-import com.craftmend.openaudiomc.spigot.services.server.ServerService;
-import com.craftmend.openaudiomc.spigot.services.server.enums.ServerVersion;
 
 public class RegionDatabaseMigration extends SimpleMigration {
 
@@ -63,4 +60,4 @@ public class RegionDatabaseMigration extends SimpleMigration {
             config.setString(StorageLocation.DATA_FILE, "regionsvolume." + id, null);
         }
     }
-}
+}*/

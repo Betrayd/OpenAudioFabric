@@ -26,8 +26,8 @@ import com.craftmend.openaudiomc.generic.proxy.interfaces.UserHooks;
 import com.craftmend.openaudiomc.generic.state.StateService;
 import com.craftmend.openaudiomc.generic.state.states.ReconnectingState;
 import com.craftmend.openaudiomc.generic.user.User;
-import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
-import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
+//import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
+//import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
@@ -250,8 +250,8 @@ public class DefaultNetworkingService extends NetworkingService {
 
             // are we in stand alone mode? then kick this client
             if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
-                if (OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.STAND_ALONE)
-                    client.kick(removeCallback);
+                //if (OpenAudioMcSpigot.getInstance().getProxyModule().getMode() == OAClientMode.STAND_ALONE)
+                //    client.kick(removeCallback);
             } else {
                 client.kick(removeCallback);
             }

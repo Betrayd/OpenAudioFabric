@@ -39,11 +39,11 @@ public class StateService extends Service {
 
         if (OpenAudioMc.getInstance().getPlatform() == Platform.SPIGOT) {
             // minecraft specific shit
-            registerDetail(new SpigotConnectedClients());
-            registerDetail(new SpigotRegionDetail());
-            registerDetail(new SpigotSpeakerDetail());
-            registerDetail(new SpigotAliasDetail());
-            registerDetail(new SpigotVersionDetail());
+            //registerDetail(new SpigotConnectedClients());
+            //registerDetail(new SpigotRegionDetail());
+            //registerDetail(new SpigotSpeakerDetail());
+            //registerDetail(new SpigotAliasDetail());
+            //registerDetail(new SpigotVersionDetail());
         } else {
             registerDetail(new GeneralConnectedClients());
         }

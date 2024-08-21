@@ -1,4 +1,4 @@
-package com.craftmend.openaudiomc.generic.state.collectors;
+/*package com.craftmend.openaudiomc.generic.state.collectors;
 
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.state.interfaces.StateDetail;
@@ -15,4 +15,4 @@ public class SpigotSpeakerDetail implements StateDetail {
     public String value() {
         return OpenAudioMc.getService(SpeakerService.class).getSpeakerMap().size() + "";
     }
-}
+}*/

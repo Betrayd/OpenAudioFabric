@@ -8,7 +8,6 @@ import com.craftmend.openaudiomc.generic.migrations.interfaces.SimpleMigration;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageLocation;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
-import com.craftmend.openaudiomc.spigot.modules.shortner.data.Alias;
 
 public class AliasDatabaseMigration extends SimpleMigration {
 
@@ -28,8 +27,8 @@ public class AliasDatabaseMigration extends SimpleMigration {
 
         for (String id : config.getStringSet("aliases", StorageLocation.DATA_FILE)) {
             OpenAudioLogger.info("Migrating alias " + id);
-            service.getRepository(Alias.class)
-                    .save(new Alias(id, config.getStringFromPath("aliases." + id, StorageLocation.DATA_FILE)));
+            //service.getRepository(Alias.class)
+            //        .save(new Alias(id, config.getStringFromPath("aliases." + id, StorageLocation.DATA_FILE)));
             config.setString(StorageLocation.DATA_FILE, "aliases." + id, null);
         }
     }

@@ -6,12 +6,6 @@ import com.craftmend.openaudiomc.generic.networking.addapter.StandardPacketAdapt
 import com.craftmend.openaudiomc.generic.proxy.messages.StandardPacket;
 import com.craftmend.openaudiomc.generic.redis.packets.adapter.RedisTypeAdapter;
 import com.craftmend.openaudiomc.generic.redis.packets.interfaces.OARedisPacket;
-import com.craftmend.openaudiomc.spigot.modules.rules.adapter.RuleTestTypeAdapter;
-import com.craftmend.openaudiomc.spigot.modules.rules.adapter.RuleTypeAdapter;
-import com.craftmend.openaudiomc.spigot.modules.rules.data.Rule;
-import com.craftmend.openaudiomc.spigot.modules.rules.data.RuleTest;
-import com.craftmend.openaudiomc.spigot.modules.show.adapter.RunnableTypeAdapter;
-import com.craftmend.openaudiomc.spigot.modules.show.interfaces.ShowRunnable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -23,11 +17,11 @@ public class GsonFactory {
         return new GsonBuilder()
                 .registerTypeAdapter(AbstractPacketPayload.class, new AbstractPacketAdapter())
                 .registerTypeAdapter(StandardPacket.class, new StandardPacketAdapter())
-                .registerTypeAdapter(ShowRunnable.class, new RunnableTypeAdapter())
+                //.registerTypeAdapter(ShowRunnable.class, new RunnableTypeAdapter())
                 .registerTypeAdapter(OARedisPacket.class, new RedisTypeAdapter())
                 .registerTypeAdapter(Instant.class, new InstantTypeAdapter())
-                .registerTypeAdapter(Rule.class, new RuleTypeAdapter())
-                .registerTypeAdapter(RuleTest.class, new RuleTestTypeAdapter())
+                //.registerTypeAdapter(Rule.class, new RuleTypeAdapter())
+                //.registerTypeAdapter(RuleTest.class, new RuleTestTypeAdapter())
                 .create();
     }
 
