@@ -15,13 +15,6 @@ import com.craftmend.openaudiomc.generic.media.MediaService;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.utils.data.Filter;
-import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
-import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties;
-import com.craftmend.openaudiomc.spigot.modules.regions.objects.TimedRegionProperties;
-import com.craftmend.openaudiomc.spigot.modules.regions.registry.WorldRegionManager;
-import com.craftmend.openaudiomc.spigot.modules.shortner.AliasService;
-import com.craftmend.openaudiomc.spigot.modules.shortner.data.Alias;
-import com.craftmend.openaudiomc.spigot.modules.voicechat.SpigotVoiceChatService;
 
 import lombok.Getter;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,19 +39,19 @@ public class RegistryApiImpl implements RegistryApi {
     @Override
     @Deprecated
     public void registerAlias(String aliasName, String value) {
-        OpenAudioMc.getService(AliasService.class).getAliasMap().put(aliasName, new Alias(aliasName, value));
+        //OpenAudioMc.getService(AliasService.class).getAliasMap().put(aliasName, new Alias(aliasName, value));
     }
 
     @Override
     @Deprecated
     public void setProximityFilter(Filter<ClientConnection, PlayerEntity> filter) {
-        OpenAudioMc.getService(SpigotVoiceChatService.class).getPeerTicker().setFilter(filter);
+        //OpenAudioMc.getService(SpigotVoiceChatService.class).getPeerTicker().setFilter(filter);
     }
 
     @Override
     @Deprecated
     public void addProximityFilter(Filter<ClientConnection, PlayerEntity> filter) {
-        OpenAudioMc.getService(SpigotVoiceChatService.class).getPeerTicker().addFilter(filter);
+        //OpenAudioMc.getService(SpigotVoiceChatService.class).getPeerTicker().addFilter(filter);
     }
 
     @Override
@@ -76,7 +69,7 @@ public class RegistryApiImpl implements RegistryApi {
     @Override
     @Deprecated
     public void removeRegion(String worldName, String regionName) throws RegionException {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new RegionException("This API functionality is only accessible on Spigot");
+        /*if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new RegionException("This API functionality is only accessible on Spigot");
         OpenAudioMcSpigot openAudioMcSpigot = OpenAudioMcSpigot.getInstance();
         if (!openAudioMcSpigot.getRegionModule().getRegionAdapter().doesRegionExist(regionName)) {
             throw new RegionException("The region " + regionName + " isn't registered in your region provider plugin");
@@ -94,13 +87,13 @@ public class RegistryApiImpl implements RegistryApi {
             }
             worldRegionManager.unregisterRegion(regionName);
             openAudioMcSpigot.getRegionModule().forceUpdateRegions();
-        }
+        }*/
     }
 
-    @Override
-    @Deprecated
-    public void registerTempRegion(String worldName, TimedRegionProperties regionProperties) throws RegionException {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new RegionException("This API functionality is only accessible on Spigot");
+    //@Override
+    //@Deprecated
+    //public void registerTempRegion(String worldName, TimedRegionProperties regionProperties) throws RegionException {
+       /*  if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new RegionException("This API functionality is only accessible on Spigot");
         OpenAudioMcSpigot openAudioMcSpigot = OpenAudioMcSpigot.getInstance();
         String regionName = regionProperties.getRegionName().toLowerCase();
         // check if this region already is defined
@@ -122,13 +115,13 @@ public class RegistryApiImpl implements RegistryApi {
         regionProperties.setRegionName(regionName);
 
         worldRegionManager.registerRegion(regionProperties);
-        openAudioMcSpigot.getRegionModule().forceUpdateRegions();
-    }
+        openAudioMcSpigot.getRegionModule().forceUpdateRegions();*/
+    //}
 
-    @Override
-    @Deprecated
-    public void registerRegion(String worldName, RegionProperties regionProperties) throws RegionException {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new RegionException("This API functionality is only accessible on Spigot");
+    //@Override
+    //@Deprecated
+   // public void registerRegion(String worldName, RegionProperties regionProperties) throws RegionException {
+        /*if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new RegionException("This API functionality is only accessible on Spigot");
         OpenAudioMcSpigot openAudioMcSpigot = OpenAudioMcSpigot.getInstance();
         String regionName = regionProperties.getRegionName().toLowerCase();
         if (!openAudioMcSpigot.getRegionModule().getRegionAdapter().doesRegionExist(regionName)) {
@@ -141,7 +134,7 @@ public class RegistryApiImpl implements RegistryApi {
                 .save(regionProperties);
 
         worldRegionManager.registerRegion(regionProperties);
-        openAudioMcSpigot.getRegionModule().forceUpdateRegions();
-    }
+        openAudioMcSpigot.getRegionModule().forceUpdateRegions();*/
+    //}
 
 }

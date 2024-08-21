@@ -6,8 +6,8 @@ import com.craftmend.openaudiomc.generic.client.objects.ClientConnection;
 import com.craftmend.openaudiomc.generic.commands.interfaces.SubCommand;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.utils.data.Filter;
-import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties;
-import com.craftmend.openaudiomc.spigot.modules.regions.objects.TimedRegionProperties;
+//import com.craftmend.openaudiomc.spigot.modules.regions.objects.RegionProperties;
+//import com.craftmend.openaudiomc.spigot.modules.regions.objects.TimedRegionProperties;
 
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -81,7 +81,7 @@ public interface RegistryApi {
      * @param regionProperties Region properties with timing metadata
      * @throws RegionException Thrown if the region doesn't exist (in worldguard) or if there is no registered region provider
      */
-    void registerTempRegion(String worldName, TimedRegionProperties regionProperties) throws RegionException;
+    //void registerTempRegion(String worldName, TimedRegionProperties regionProperties) throws RegionException;
 
     /**
      * Register a region, like it's done with /oa region create
@@ -90,6 +90,6 @@ public interface RegistryApi {
      * @param regionProperties Region metadata
      * @throws RegionException Thrown if the region doesn't exist (in worldguard) or if there is no registered region provider
      */
-    void registerRegion(String worldName, RegionProperties regionProperties) throws RegionException;
+    //void registerRegion(String worldName, RegionProperties regionProperties) throws RegionException;
 
 }

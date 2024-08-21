@@ -13,38 +13,31 @@ import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.utils.Location;
 import com.craftmend.openaudiomc.generic.utils.MappedLocation;
 import com.craftmend.openaudiomc.generic.utils.data.ConcurrentHeatMap;
-import com.craftmend.openaudiomc.spigot.OpenAudioMcSpigot;
-import com.craftmend.openaudiomc.spigot.modules.predictive.PredictiveMediaService;
-import com.craftmend.openaudiomc.spigot.modules.regions.RegionModule;
-import com.craftmend.openaudiomc.spigot.modules.regions.interfaces.AbstractRegionAdapter;
-import com.craftmend.openaudiomc.spigot.modules.regions.interfaces.IRegion;
-import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
-import com.craftmend.openaudiomc.spigot.modules.speakers.objects.Speaker;
 
 @Deprecated
 public class WorldApiImpl implements WorldApi {
 
-    @Override
-    @Deprecated
-    public void setRegionHandler(AbstractRegionAdapter regionHandler) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new IllegalStateException("This method is only available in a SPIGOT server.");
-        OpenAudioMcSpigot.getInstance().setRegionModule(new RegionModule(regionHandler));
-    }
+    //@Override
+    //@Deprecated
+    //public void setRegionHandler(AbstractRegionAdapter regionHandler) {
+    //    if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new IllegalStateException("This method is only available in a SPIGOT server.");
+    //    OpenAudioMcSpigot.getInstance().setRegionModule(new RegionModule(regionHandler));
+    //}
 
-    @Override
-    @Deprecated
-    public Collection<IRegion> getApplicableRegions(Location location) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new IllegalStateException("This method is only available in a SPIGOT server.");
-        if (OpenAudioMcSpigot.getInstance().getRegionModule() == null ) throw new IllegalStateException("The region module is not enabled.");
-        return OpenAudioMcSpigot.getInstance().getRegionModule().getRegionAdapter().getAudioRegions(location);
-    }
+    //@Override
+    //@Deprecated
+    //public Collection<IRegion> getApplicableRegions(Location location) {
+    //    if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new IllegalStateException("This method is only available in a SPIGOT server.");
+    //    if (OpenAudioMcSpigot.getInstance().getRegionModule() == null ) throw new IllegalStateException("The region module is not enabled.");
+    //    return OpenAudioMcSpigot.getInstance().getRegionModule().getRegionAdapter().getAudioRegions(location);
+    //}
 
-    @Nullable
-    @Override
-    public Speaker getPhysicalSpeaker(Location location) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new IllegalStateException("This method is only available in a SPIGOT server.");
-        return OpenAudioMc.getService(SpeakerService.class).getSpeaker(new MappedLocation(location));
-    }
+    //@Nullable
+    //@Override
+    //public Speaker getPhysicalSpeaker(Location location) {
+    //    if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new IllegalStateException("This method is only available in a SPIGOT server.");
+    //    return OpenAudioMc.getService(SpeakerService.class).getSpeaker(new MappedLocation(location));
+    //}
 
     @Override
     @Deprecated
@@ -63,15 +56,16 @@ public class WorldApiImpl implements WorldApi {
     @Override
     @Deprecated
     public ConcurrentHeatMap<String, Byte> getChunkContext(Location location) {
-        if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new IllegalStateException("This method is only available in a SPIGOT server.");
-
-        return getPredictionModule()
-                .getChunkTracker()
-                .get(
-                        getPredictionModule().locationToAudioChunkId(location)
-                )
-                .bump()
-                .getContext();
+        //if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) {
+        throw new IllegalStateException("This method is only available in a SPIGOT server.");
+        //}
+       // return getPredictionModule()
+       //         .getChunkTracker()
+       //         .get(
+       //                 getPredictionModule().locationToAudioChunkId(location)
+       //         )
+      //          .bump()
+      //          .getContext();
     }
 
     @Override
@@ -89,11 +83,12 @@ public class WorldApiImpl implements WorldApi {
     @Override
     @Deprecated
     public String getChunkId(Location location) {
-        return getPredictionModule().locationToAudioChunkId(location);
+        return null;
+       // return getPredictionModule().locationToAudioChunkId(location);
     }
 
-    @Deprecated
-    private PredictiveMediaService getPredictionModule() {
-        return OpenAudioMc.getService(PredictiveMediaService.class);
-    }
+    //@Deprecated
+    //private PredictiveMediaService getPredictionModule() {
+    //    return OpenAudioMc.getService(PredictiveMediaService.class);
+    //}
 }
