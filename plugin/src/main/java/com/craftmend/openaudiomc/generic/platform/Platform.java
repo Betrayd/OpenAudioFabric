@@ -1,11 +1,7 @@
 package com.craftmend.openaudiomc.generic.platform;
 
-import com.craftmend.openaudiomc.OpenAudioMc;
-import com.craftmend.openaudiomc.bungee.modules.player.objects.BungeePlayerSelector;
 import com.craftmend.openaudiomc.generic.commands.selectors.SelectorTranslator;
-import com.craftmend.openaudiomc.spigot.modules.players.objects.SpigotPlayerSelector;
-import com.craftmend.openaudiomc.velocity.modules.player.objects.VelocityPlayerSelector;
-import com.craftmend.openaudiomc.velocity.utils.VelocityChatColor;
+import com.openaudiofabric.utils.PluginColorTranslator;
 
 public enum Platform {
 
@@ -17,7 +13,7 @@ public enum Platform {
     ;
 
     public static String translateColors(String input) {
-        return VelocityChatColor.translateAlternateColorCodes('&', input);
+        return PluginColorTranslator.translateAlternateColorCodes('&', input);
         // switch (OpenAudioMc.getInstance().getPlatform()) {
         //     case SPIGOT:
         //         return org.bukkit.ChatColor.translateAlternateColorCodes('&', input);
@@ -31,20 +27,20 @@ public enum Platform {
     }
 
     public static SelectorTranslator<?> getSelectorTranslator() {
-        switch (OpenAudioMc.getInstance().getPlatform()){
-            case SPIGOT:
-                return new SpigotPlayerSelector();
-            case BUNGEE:
-                return new BungeePlayerSelector();
-            case VELOCITY:
-                return new VelocityPlayerSelector();
-            default:
+        //switch (OpenAudioMc.getInstance().getPlatform()){
+            //case SPIGOT:
+            //    return new SpigotPlayerSelector();
+            //case BUNGEE:
+            //    return new BungeePlayerSelector();
+            //case VELOCITY:
+            //    return new VelocityPlayerSelector();
+            //default:
                 return new FallbackPlayerSelector();
-        }
+        //}
     }
 
     public static String makeColor(String color) {
-        return VelocityChatColor.valueOf(color).toString();
+        return PluginColorTranslator.valueOf(color).toString();
         // switch (OpenAudioMc.getInstance().getPlatform()){
         //     case SPIGOT:
         //         return org.bukkit.ChatColor.valueOf(color).toString();
