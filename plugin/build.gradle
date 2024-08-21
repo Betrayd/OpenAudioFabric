@@ -32,21 +32,18 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
 	implementation include(project(':openaudiomc-api'))
-<<<<<<< HEAD
-	implementation "com.github.Igrium:Storm:74a0d4b775"
-
-	implementation 'com.squareup.okhttp3:okhttp:4.7.0'
-	implementation 'io.socket:socket.io-client:1.0.0'
-	api 'org.projectlombok:lombok:1.18.34'
-	
-=======
 	implementation 'com.github.Igrium:Storm:74a0d4b775'
 	implementation 'org.yaml:snakeyaml:2.0'
 	implementation 'com.squareup.okhttp3:okhttp:4.7.2'
 	implementation 'io.socket:socket.io-client:1.0.2'
 	implementation 'org.nanohttpd:nanohttpd:2.3.1'
 	implementation 'io.lettuce:lettuce-core:6.3.2.RELEASE'
->>>>>>> origin/port-restart
+
+	//if the mod is not compiling, chances are that it is one of these, as I just guessed the version since I could not find it in the XML file, and no one uses gradlew imports for these even in gradle projects for some reason
+	// https://mvnrepository.com/artifact/ninja.leaping.configurate/configurate-core
+	implementation group: 'ninja.leaping.configurate', name: 'configurate-core', version: '3.7.1'
+	// https://mvnrepository.com/artifact/ninja.leaping.configurate/configurate-yaml
+	implementation group: 'ninja.leaping.configurate', name: 'configurate-yaml', version: '3.7.1'
 }
 
 processResources {

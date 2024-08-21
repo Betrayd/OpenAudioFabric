@@ -23,6 +23,7 @@ import com.craftmend.openaudiomc.generic.state.states.IdleState;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.utils.FabricUtils;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
+import com.openaudiofabric.modules.configuration.FabricConfiguration;
 import com.openaudiofabric.modules.platform.FabricUserHooks;
 import com.openaudiofabric.modules.scheduling.FabricTaskService;
 
@@ -95,7 +96,6 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
             		//this.commandModule = new VelocityCommandModule(this);
 			
 					this.messageReceiver = new FabricPacketManager("openaudiomc:node");
-            		//this.messageReceiver = new VelocityPacketManager(this, getServer(),"openaudiomc:node");
 
 
             		OpenAudioMc.getService(RestDirectService.class).boot();
@@ -160,7 +160,7 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 	@Override
 	public Configuration getConfigurationProvider() {
-		//return new VelocityConfiguration();
+		return new FabricConfiguration();
 	}
 
 	@Override
