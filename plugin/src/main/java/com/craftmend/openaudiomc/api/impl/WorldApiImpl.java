@@ -43,7 +43,7 @@ public class WorldApiImpl implements WorldApi {
     @Override
     public Speaker getPhysicalSpeaker(Location location) {
         if (OpenAudioMc.getInstance().getPlatform() != Platform.SPIGOT) throw new IllegalStateException("This method is only available in a SPIGOT server.");
-        return OpenAudioMc.getService(SpeakerService.class).getSpeaker(MappedLocation.fromBukkit(location));
+        return OpenAudioMc.getService(SpeakerService.class).getSpeaker(new MappedLocation(location));
     }
 
     @Override

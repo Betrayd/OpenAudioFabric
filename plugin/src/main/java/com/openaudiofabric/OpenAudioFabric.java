@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.environment.MagicValue;
 import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
+import com.craftmend.openaudiomc.generic.networking.DefaultNetworkingService;
 import com.craftmend.openaudiomc.generic.networking.interfaces.NetworkingService;
 import com.craftmend.openaudiomc.generic.platform.Platform;
 import com.craftmend.openaudiomc.generic.platform.interfaces.OpenAudioInvoker;
@@ -22,7 +23,6 @@ import com.craftmend.openaudiomc.generic.state.StateService;
 import com.craftmend.openaudiomc.generic.state.states.IdleState;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.utils.FabricUtils;
-import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
 import com.openaudiofabric.commands.AudioCommand;
 import com.openaudiofabric.commands.VolumeCommand;
 import com.openaudiofabric.modules.configuration.FabricConfiguration;
@@ -156,7 +156,7 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 	@Override
 	public Class<? extends NetworkingService> getServiceClass() {
-		return OAClientMode.STAND_ALONE.getServiceClass();
+		return DefaultNetworkingService.class;
 	}
 
 	@Override
