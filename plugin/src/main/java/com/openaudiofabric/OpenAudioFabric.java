@@ -23,6 +23,8 @@ import com.craftmend.openaudiomc.generic.state.states.IdleState;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.utils.FabricUtils;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
+import com.openaudiofabric.commands.AudioCommand;
+import com.openaudiofabric.commands.OpenAudioMcCommand;
 import com.openaudiofabric.modules.configuration.FabricConfiguration;
 import com.openaudiofabric.modules.platform.FabricUserHooks;
 import com.openaudiofabric.modules.player.PlayerConnectionListener;
@@ -77,6 +79,9 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 		instance = this;
 
         PlayerConnectionListener.register();
+
+		//register the commadns please
+		//AudioCommand.register(null, null, null);
 
 		ServerLifecycleEvents.SERVER_STARTED.register((MinecraftServer startedServer) -> 
 		{
