@@ -24,7 +24,7 @@ import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
 import com.craftmend.openaudiomc.generic.utils.FabricUtils;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
 import com.openaudiofabric.commands.AudioCommand;
-import com.openaudiofabric.commands.OpenAudioMcCommand;
+import com.openaudiofabric.commands.VolumeCommand;
 import com.openaudiofabric.modules.configuration.FabricConfiguration;
 import com.openaudiofabric.modules.platform.FabricUserHooks;
 import com.openaudiofabric.modules.player.PlayerConnectionListener;
@@ -32,6 +32,7 @@ import com.openaudiofabric.modules.scheduling.FabricTaskService;
 
 import lombok.Getter;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -80,8 +81,8 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
         PlayerConnectionListener.register();
 
-		//register the commadns please
-		//AudioCommand.register(null, null, null);
+		CommandRegistrationCallback.EVENT.register(AudioCommand::register);
+		CommandRegistrationCallback.EVENT.register(VolumeCommand::register);
 
 		ServerLifecycleEvents.SERVER_STARTED.register((MinecraftServer startedServer) -> 
 		{
