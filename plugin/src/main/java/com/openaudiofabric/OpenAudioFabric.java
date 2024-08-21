@@ -25,6 +25,7 @@ import com.craftmend.openaudiomc.generic.utils.FabricUtils;
 import com.craftmend.openaudiomc.spigot.modules.proxy.enums.OAClientMode;
 import com.openaudiofabric.modules.configuration.FabricConfiguration;
 import com.openaudiofabric.modules.platform.FabricUserHooks;
+import com.openaudiofabric.modules.player.PlayerConnectionListener;
 import com.openaudiofabric.modules.scheduling.FabricTaskService;
 
 import lombok.Getter;
@@ -75,7 +76,7 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
 		instance = this;
 
-        
+        PlayerConnectionListener.register();
 
 		ServerLifecycleEvents.SERVER_STARTED.register((MinecraftServer startedServer) -> 
 		{
@@ -92,7 +93,7 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 					//add fabric of this
             		//getServer().getEventManager().register(this, new PlayerConnectionListener());
 
-					//remove this one
+					//remove this one prolly
             		//this.commandModule = new VelocityCommandModule(this);
 			
 					this.messageReceiver = new FabricPacketManager("openaudiomc:node");
@@ -111,8 +112,7 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
             		OpenAudioMc.getInstance().postBoot();
 				}
-				catch (Exception e)
-				{
+				catch (Exception e) {
 					OpenAudioLogger.error(e, "Failed to start OpenAudioMc");
 				}
 		});
