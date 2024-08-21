@@ -3,6 +3,7 @@ package com.craftmend.openaudiomc.spigot.modules.speakers.objects;
 import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.api.speakers.BasicSpeaker;
 import com.craftmend.openaudiomc.generic.database.internal.DataStore;
+import com.craftmend.openaudiomc.generic.utils.MappedLocation;
 import com.craftmend.openaudiomc.spigot.modules.speakers.SpeakerService;
 import com.craftmend.openaudiomc.api.speakers.ExtraSpeakerOptions;
 import com.craftmend.openaudiomc.api.speakers.SpeakerType;
