@@ -16,8 +16,8 @@ import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.storage.enums.StorageLocation;
 import com.craftmend.openaudiomc.generic.storage.interfaces.Configuration;
-import com.craftmend.openaudiomc.velocity.OpenAudioMcVelocity;
 import com.google.common.reflect.TypeToken;
+import com.openaudiofabric.OpenAudioFabric;
 
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
@@ -302,8 +302,8 @@ public class FabricConfiguration implements Configuration {
     @Override
     public void saveAll(boolean ignored) {
         try {
-            File config = new File(OpenAudioMcVelocity.getInstance().getDataDir(), "config.yml");
-            File data = new File(OpenAudioMcVelocity.getInstance().getDataDir(), "data.yml");
+            File config = new File(OpenAudioFabric.getInstance().getDataDir(), "config.yml");
+            File data = new File(OpenAudioFabric.getInstance().getDataDir(), "data.yml");
 
             YAMLConfigurationLoader.builder()
                     .setFile(config)
@@ -337,7 +337,7 @@ public class FabricConfiguration implements Configuration {
     }
 
     private ConfigurationNode getFile(String filename) {
-        File file = new File(OpenAudioMcVelocity.getInstance().getDataDir(), filename);
+        File file = new File(OpenAudioFabric.getInstance().getDataDir(), filename);
         YAMLConfigurationLoader yamlLoader = YAMLConfigurationLoader.builder()
                 .setFile(file)
                 .setFlowStyle(DumperOptions.FlowStyle.BLOCK)
@@ -351,10 +351,10 @@ public class FabricConfiguration implements Configuration {
     }
 
     private void saveDefaultFile(String filename, boolean hard) {
-        if (!OpenAudioMcVelocity.getInstance().getDataDir().exists())
-            OpenAudioMcVelocity.getInstance().getDataDir().mkdir();
+        if (!OpenAudioFabric.getInstance().getDataDir().exists())
+            OpenAudioFabric.getInstance().getDataDir().mkdir();
 
-        File file = new File(OpenAudioMcVelocity.getInstance().getDataDir(), filename);
+        File file = new File(OpenAudioFabric.getInstance().getDataDir(), filename);
 
         if (hard && file.exists()) {
             try {
@@ -365,7 +365,7 @@ public class FabricConfiguration implements Configuration {
         }
 
         if (!file.exists() || hard) {
-            try (InputStream in = OpenAudioMcVelocity.getInstance().getClass().getClassLoader().getResourceAsStream(filename)) {
+            try (InputStream in = OpenAudioFabric.getInstance().getClass().getClassLoader().getResourceAsStream(filename)) {
                 Files.copy(in, file.toPath());
             } catch (IOException e) {
                 OpenAudioLogger.error(e, "Failed to save default file " + filename);
