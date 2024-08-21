@@ -11,7 +11,10 @@ public class ProjectStatus extends AbstractRestResponse {
     private Announcement announcement;
 
     public boolean isLocalLatest() {
-        return OpenAudioMc.BUILD.getBuildNumber() >= versioning.getBuildNumber();
+        //TODO: actually fix the OpenAudioMC.BUILD system
+        //the chance of updating this is low so... yeah probably
+        return true;
+        //return OpenAudioMc.BUILD.getBuildNumber() >= versioning.getBuildNumber();
     }
 
     public int getLatestBuildNumber() {

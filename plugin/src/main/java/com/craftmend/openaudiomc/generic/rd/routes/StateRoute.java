@@ -10,6 +10,8 @@ import com.craftmend.openaudiomc.generic.rd.http.Route;
 import com.craftmend.openaudiomc.generic.service.Service;
 import com.craftmend.openaudiomc.generic.state.StateService;
 import com.craftmend.openaudiomc.generic.state.interfaces.StateDetail;
+import com.openaudiofabric.OpenAudioFabric;
+
 import fi.iki.elonen.NanoHTTPD;
 import lombok.AllArgsConstructor;
 
@@ -36,7 +38,7 @@ public class StateRoute extends Route {
 
         Map<String, Object> r = new HashMap<>();
 
-        r.put("version", OpenAudioMc.BUILD);
+        r.put("version", OpenAudioFabric.getInstance().getPluginVersion());
 
         // list services
         List<String> services = new ArrayList<>();

@@ -32,6 +32,8 @@ public class ServiceManager {
     public Service loadService(Class<? extends Service> target) {
         try {
             // first, check if its already enabled, if so, just re-use that one
+            //OpenAudioLogger.info("OtherInjectables: " + serviceMap.toString());
+            //OpenAudioLogger.info("ServiceMap: " + serviceMap.toString());
             if (isServiceEnabled(target)) {
                 return serviceMap.get(target);
             }
@@ -50,6 +52,8 @@ public class ServiceManager {
                 }
             }
             if (i == null) {
+                //OpenAudioLogger.info("What is i anyway? " + target);
+                //OpenAudioLogger.info("What is BIE anyway? " + target.getConstructor());
                 i = target.getConstructor().newInstance();
             }
 

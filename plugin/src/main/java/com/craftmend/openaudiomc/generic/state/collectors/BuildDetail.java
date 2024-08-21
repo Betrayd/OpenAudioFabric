@@ -4,6 +4,7 @@ import com.craftmend.openaudiomc.OpenAudioMc;
 import com.craftmend.openaudiomc.generic.environment.GlobalConstantService;
 import com.craftmend.openaudiomc.generic.environment.models.ProjectStatus;
 import com.craftmend.openaudiomc.generic.state.interfaces.StateDetail;
+import com.openaudiofabric.OpenAudioFabric;
 
 public class BuildDetail implements StateDetail {
 
@@ -22,7 +23,7 @@ public class BuildDetail implements StateDetail {
             l = ps.getLatestBuildNumber() + "";
         }
 
-        return "Running build: " + OpenAudioMc.BUILD.getBuildNumber() + ", latest: " + l;
+        return "Running build: " + OpenAudioFabric.getInstance().getPluginVersion() + ", latest: " + l;
     }
 
 }

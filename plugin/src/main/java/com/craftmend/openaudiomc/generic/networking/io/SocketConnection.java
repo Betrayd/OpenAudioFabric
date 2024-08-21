@@ -25,6 +25,8 @@ import com.craftmend.openaudiomc.generic.networking.interfaces.SocketDriver;
 
 import com.craftmend.openaudiomc.generic.storage.enums.StorageKey;
 import com.craftmend.openaudiomc.generic.uploads.UploadIndexService;
+import com.openaudiofabric.OpenAudioFabric;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
@@ -81,7 +83,7 @@ public class SocketConnection {
 
         if (!registeredLogout) {
             relayLoginRequest = new RestRequest(RelayLoginResponse.class, Endpoint.RELAY_LOGIN);
-            relayLoginRequest.setQuery("oa-version", OpenAudioMc.BUILD.getBuildNumber() + "");
+            relayLoginRequest.setQuery("oa-version", OpenAudioFabric.getInstance().getPluginVersion() + "");
             relayLogoutRequest = new RestRequest(NoResponse.class, Endpoint.RELAY_LOGOUT);
 
             EventApi.getInstance().registerHandler(StateChangeEvent.class, event -> {

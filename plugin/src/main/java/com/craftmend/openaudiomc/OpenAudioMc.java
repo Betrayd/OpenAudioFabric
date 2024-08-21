@@ -73,7 +73,7 @@ public class OpenAudioMc {
     public static ServerEnvironment SERVER_ENVIRONMENT = ServerEnvironment.PRODUCTION;
     @Getter
     private static OpenAudioMc instance;
-    public static final OpenAudioMcBuild BUILD = new OpenAudioMcBuild();
+    //public static final OpenAudioMcBuild BUILD = new OpenAudioMcBuild();
 
     @Getter
     private static final Gson gson = GsonFactory.create();
@@ -100,7 +100,7 @@ public class OpenAudioMc {
 
         // random bullshit, go!
         instance = this;
-        OpenAudioLogger.info("Starting OpenAudioMc, build " + BUILD.getBuildNumber() + " by " + BUILD.getBuildAuthor());
+        OpenAudioLogger.info("Starting OpenAudioMc, build " + "BUILD.getBuildNumber()" + " by " + "BUILD.getBuildAuthor()");
 
         // load core internal API's which are heavily used by the rest of the plugin
         serviceManager.loadServices(

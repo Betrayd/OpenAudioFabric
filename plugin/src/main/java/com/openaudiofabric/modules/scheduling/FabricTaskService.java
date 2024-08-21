@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.craftmend.openaudiomc.generic.logging.OpenAudioLogger;
 import com.craftmend.openaudiomc.generic.platform.interfaces.TaskService;
 import com.mojang.logging.LogUtils;
 
@@ -65,7 +66,8 @@ public class FabricTaskService implements TaskService {
 
     @Override
     public int scheduleAsyncRepeatingTask(Runnable runnable, int delayUntilFirst, int tickInterval) {
-        return scheduleAsyncRepeatingTask(() -> Util.getMainWorkerExecutor().submit(runnable), delayUntilFirst, tickInterval);
+
+        return scheduleSyncRepeatingTask(() -> Util.getMainWorkerExecutor().submit(runnable), delayUntilFirst, tickInterval);
     }
 
     @Override
@@ -82,7 +84,7 @@ public class FabricTaskService implements TaskService {
 
     @Override
     public int schduleSyncDelayedTask(Runnable runnable, int delay) {
-        return scheduleAsyncRepeatingTask(runnable, delay, -1);
+        return scheduleSyncRepeatingTask(runnable, delay, -1);
     }
 
     @Override

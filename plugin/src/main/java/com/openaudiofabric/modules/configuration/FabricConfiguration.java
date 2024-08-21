@@ -33,6 +33,7 @@ public class FabricConfiguration implements Configuration {
 
     public FabricConfiguration() {
         //save default
+        //TODO: fix this and prevent crashes so you don't need to create them yourself cause uhhh...
         saveDefaultFile("data.yml", false);
         saveDefaultFile("config.yml", false);
 
@@ -354,6 +355,7 @@ public class FabricConfiguration implements Configuration {
         if (!OpenAudioFabric.getInstance().getDataDir().exists())
             OpenAudioFabric.getInstance().getDataDir().mkdir();
 
+        OpenAudioLogger.info("Part1: " + OpenAudioFabric.getInstance().getDataDir() + ", Part2: " + filename);
         File file = new File(OpenAudioFabric.getInstance().getDataDir(), filename);
 
         if (hard && file.exists()) {
@@ -365,11 +367,13 @@ public class FabricConfiguration implements Configuration {
         }
 
         if (!file.exists() || hard) {
-            try (InputStream in = OpenAudioFabric.getInstance().getClass().getClassLoader().getResourceAsStream(filename)) {
-                Files.copy(in, file.toPath());
-            } catch (IOException e) {
-                OpenAudioLogger.error(e, "Failed to save default file " + filename);
-            }
+            //TODO: replace this with the correct default file
+            //try (InputStream in = OpenAudioFabric.getInstance().getClass().getClassLoader().getResourceAsStream(filename)) {
+            //    Files.copy(in, file.toPath());
+            //} catch (IOException e) {
+                //OpenAudioLogger.error(e, "Failed to save default file " + filename);
+            //}
+            OpenAudioLogger.warn("Failed to save default file " + filename);
         }
     }
 

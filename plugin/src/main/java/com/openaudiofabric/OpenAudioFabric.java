@@ -69,6 +69,7 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 
     private WeakHashMap<MinecraftServer, FabricTaskService> taskServices = new WeakHashMap<>();
 
+	//TODO:if the mod fails to initialize don't crash on join please
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -95,7 +96,8 @@ public class OpenAudioFabric implements ModInitializer, OpenAudioInvoker {
 				try {
 					Instant.now();
 
-					new OpenAudioMc(this);
+					LOGGER.info(OpenAudioFabric.getInstance().toString());
+					new OpenAudioMc(OpenAudioFabric.getInstance());
 					//add fabric of this
             		//getServer().getEventManager().register(this, new PlayerConnectionListener());
 
